@@ -3,9 +3,20 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "start": "nodemon -w src --ext ts --exec ts-node src/index.ts",
+    "db:start": "sudo docker-compose up -d"
+  },
   "dependencies": {
     "apollo-server": "^2.16.1",
+    "pg": "^8.3.0",
     "type-graphql": "^1.0.0-rc.3",
     "typeorm": "^0.2.25"
+  },
+  "devDependencies": {
+    "class-validator": "^0.12.2",
+    "nodemon": "^2.0.4",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7"
   }
 }
