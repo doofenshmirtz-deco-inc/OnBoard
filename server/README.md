@@ -1,6 +1,6 @@
 # Getting started
 
-1. Install `npm` and `yarn` however you'd like.
+1. Install `npm`, `yarn` and `docker` however you'd like.
 2. `cd server` and install dependencies with `yarn`.
 3. Start the database with `yarn db:start`.
 4. Install TypeORM with `npm install -g typeorm`.
