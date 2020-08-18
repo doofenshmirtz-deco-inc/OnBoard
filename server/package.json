@@ -2,5 +2,10 @@
   "name": "onboard-server",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "apollo-server": "^2.16.1",
+    "type-graphql": "^1.0.0-rc.3",
+    "typeorm": "^0.2.25"
+  }
 }
