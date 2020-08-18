@@ -1,0 +1,9 @@
+{
+	"type": "postgres",
+	"host": "localhost",
+	"port": 5432,
+	"username": "onboard",
+	"password": "y@yCKiL2oUmJ",
+	"database": "onboard",
+	"entities": ["./src/models/*.ts"]
+}
