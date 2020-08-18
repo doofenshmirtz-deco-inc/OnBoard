@@ -3,9 +3,8 @@
 1. Install `npm`, `yarn` and `docker` however you'd like.
 2. `cd server` and install dependencies with `yarn`.
 3. Start the database with `yarn db:start`.
-4. Install TypeORM with `npm install -g typeorm`.
-5. Sync schema with `yarn typeorm schema:sync`.
-6. Try starting database with `yarn start`. It should print this:
+4. Sync schema with `yarn typeorm schema:sync`.
+5. Try starting database with `yarn start`. It should print this:
 
 ```bash
 yarn run v1.22.4
