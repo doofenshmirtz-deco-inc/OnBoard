@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon -w src --ext ts --exec ts-node src/index.ts",
-    "db:start": "sudo docker-compose up -d"
+    "db:start": "sudo docker-compose up -d",
+    "typeorm": "TS_NODE_PROJECT=tsconfig.json TS_NODE_TRANSPILE_ONLY=true ts-node ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
     "apollo-server-express": "^2.16.1",
