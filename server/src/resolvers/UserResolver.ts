@@ -1,10 +1,12 @@
-import { Resolver, Query, Args, Arg, ID, Int } from "type-graphql";
+import { Resolver, Query, Args, Arg, ID, Int, UseMiddleware } from "type-graphql";
 import {User} from "../models/User";
 import {PaginationArgs, getOrder} from "./Types";
+import {isAuth} from "../middleware/isAuth";
 
 @Resolver()
 export class UserResolver {
 	@Query(() => [User])
+	@UseMiddleware(isAuth)
 	async users(@Args() pag: PaginationArgs) {
 
 		return (await User.findAndCount({
