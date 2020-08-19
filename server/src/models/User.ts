@@ -7,7 +7,7 @@ import {ObjectType, ID, Field} from "type-graphql";
 export class User extends BaseEntity {
 	@PrimaryColumn()
 	@Field(() => ID)
-	id: number;  // From firebase auth
+	id: string;  // From firebase auth
 
 	@Column()
 	@Field()
