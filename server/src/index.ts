@@ -11,16 +11,6 @@ import firebase from "firebase/app";
 async function main() {
 	const port = 5000;
 	const connection = await createConnection();
-
-	for (let i = 0; i++; i < 20) {
-		// Sample db insert command
-		console.log(await User.create({
-			id: 123,
-			name: 'User',
-			email: 'aaa@bbb.ccc'
-		}).save());
-	}
-
 	const serviceAccount = require("../firebase-admin.json");
 
 	admin.initializeApp({
