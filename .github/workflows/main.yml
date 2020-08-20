@@ -33,3 +33,7 @@ jobs:
       working-directory: server
       run: |
         yarn test
+    - name: Run prettier check
+      working-directory: server
+      run: |
+        yarn prettier:check
