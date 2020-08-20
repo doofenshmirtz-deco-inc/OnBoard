@@ -1,6 +1,5 @@
 import {Resolver, Query} from "type-graphql";
 import admin from "firebase-admin";
-import {User} from "../models/User";
 import {AuthToken} from "../models/Auth";
 
 import * as firebase from "firebase/app";

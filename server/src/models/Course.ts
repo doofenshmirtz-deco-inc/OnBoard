@@ -46,6 +46,8 @@ export class Course extends BaseEntity {
 
 	// TODO course coordinator, tutors, students
 	@Column()
-	@OneToMany(type => Permission, permission => permission.course)
+	@OneToMany(() => Permission, permission => permission.course)
 	users: [Permission]
 }
+
+

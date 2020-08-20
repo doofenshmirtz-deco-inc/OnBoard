@@ -12,7 +12,5 @@ define(User, (faker: typeof Faker) => {
 	user.name = `${firstName} ${lastName}`;
 	user.email = `${firstName}@decodoof.net`;
 
-	console.log(user);
-
 	return user;
 })

@@ -3,7 +3,7 @@ import { IsEmail } from "class-validator";
 import {ObjectType, ID, Field} from "type-graphql";
 import {Course} from "./Course";
 
-enum Permissions {
+enum CoursePermissions {
 	Admin, // Coordinator permissions but not listed as coordinator
 	Coordinator,
 	Tutor,
@@ -27,7 +27,7 @@ export class User extends BaseEntity {
 	email: string;
 
 	@Column()
-	@OneToMany(type => Permission, permission => permission.user)
+	@OneToMany(() => Permission, permission => permission.user)
 	permissions: [Permission]
 }
 
@@ -35,17 +35,17 @@ export class User extends BaseEntity {
 @Entity()
 export class Permission extends BaseEntity {
 	@PrimaryColumn()
-	@ManyToOne(type => User)
+	@ManyToOne(() => User)
 	user: User;
 
 	@PrimaryColumn()
-	@ManyToOne(type => Course)
+	@ManyToOne(() => Course)
 	course: Course;
 
 	@Column({
 		type: "enum",
-		enum: Permissions
+		enum: CoursePermissions
 	})
-	permission: Permissions;
+	coursePermission: CoursePermissions;
 }
 
