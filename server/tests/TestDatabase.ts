@@ -7,7 +7,7 @@ export const createTestConnection = async () => {
     port: 5432,
     username: "onboard",
     password: "y@yCKiL2oUmJ",
-    database: "onboard-test",
+    database: "onboardtest",
     synchronize: true,
     dropSchema: true,
     logging: false,
