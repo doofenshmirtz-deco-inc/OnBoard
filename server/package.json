@@ -10,7 +10,7 @@
     "db:drop": "ts-node ./node_modules/typeorm/cli.js schema:drop",
     "db:seed:config": "ts-node ./node_modules/typeorm-seeding/dist/cli.js config",
     "db:seed": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed",
-	"db:test:create": "yarn typeorm query 'CREATE DATABASE onboardtest'",
+    "db:test:create": "yarn typeorm query 'CREATE DATABASE onboardtest'",
     "typeorm": "TS_NODE_PROJECT=tsconfig.json TS_NODE_TRANSPILE_ONLY=true ts-node ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
@@ -34,6 +34,7 @@
     "class-validator": "^0.12.2",
     "jest": "^26.4.0",
     "nodemon": "^2.0.4",
+    "prettier": "^2.0.5",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7"
   }
