@@ -38,4 +38,4 @@ jobs:
     - name: Run prettier check
       working-directory: server
       run: |
-        yarn prettier:check
+        yarn pretty:check
