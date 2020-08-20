@@ -5,5 +5,8 @@
 	"username": "onboard",
 	"password": "y@yCKiL2oUmJ",
 	"database": "onboard",
-	"entities": ["./src/models/*.ts"]
+	"entities": ["./src/models/*.ts"],
+	"seeds": ["./src/db/seeds/*.ts"],
+	"factories": ["./src/db/factories/*.ts"],
+	"synchronize": true
 }
