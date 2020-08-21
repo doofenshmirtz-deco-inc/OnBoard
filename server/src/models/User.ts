@@ -13,13 +13,13 @@ enum Permissions {
 @Entity()
 @ObjectType()
 export class User extends BaseEntity {
-	@PrimaryColumn()
-	@Field(() => ID)
-	id: string;  // From firebase auth
+  @PrimaryColumn()
+  @Field(() => ID)
+  id: string; // From firebase auth
 
-	@Column()
-	@Field()
-	name: string;
+  @Column()
+  @Field()
+  name: string;
 
 	@Column()
 	@IsEmail()
