@@ -1,21 +1,3 @@
-# OnBoard Client
-
-## Getting Started
-
-1. Clone this repository and cd to this folder.
-2. Make sure gulp is installed with `sudo yarn global add gulp` or similar.
-3. Restore packages with `yarn`.
-4. This may error. If it does, do this to generate the Semantic UI components:
-    1. `cd node_modules/semantic-ui && gulp`.
-    2. Choose automatic options and make sure output is in semantic/.
-    3. `cd ../../semantic && gulp build`.
-    4. Try `yarn` again.
-
-See https://medium.com/@peterbrecska/how-to-install-semantic-ui-by-using-yarn-d78e68afe62b
-
-
------------
-
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
