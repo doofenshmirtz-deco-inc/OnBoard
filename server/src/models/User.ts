@@ -1,14 +1,7 @@
-import { Column, PrimaryColumn, BaseEntity, Entity, ManyToOne, OneToMany } from "typeorm";
+import { Column, PrimaryColumn, BaseEntity, Entity, ManyToOne, OneToMany, ManyToMany, JoinTable } from "typeorm";
 import { IsEmail } from "class-validator";
 import {ObjectType, ID, Field} from "type-graphql";
-import {Course} from "./Course";
-
-enum CoursePermissions {
-	Admin, // Coordinator permissions but not listed as coordinator
-	Coordinator,
-	Tutor,
-	Student
-}
+import {UserGroup} from "./UserGroup";
 
 @Entity()
 @ObjectType()
@@ -26,26 +19,8 @@ export class User extends BaseEntity {
 	@Field()
 	email: string;
 
-	@Column()
-	@OneToMany(() => Permission, permission => permission.user)
-	permissions: [Permission]
+	@ManyToMany(() => UserGroup)
+	groups: Promise<UserGroup[]>;
 }
 
-
-@Entity()
-export class Permission extends BaseEntity {
-	@PrimaryColumn()
-	@ManyToOne(() => User)
-	user: User;
-
-	@PrimaryColumn()
-	@ManyToOne(() => Course)
-	course: Course;
-
-	@Column({
-		type: "enum",
-		enum: CoursePermissions
-	})
-	coursePermission: CoursePermissions;
-}
 

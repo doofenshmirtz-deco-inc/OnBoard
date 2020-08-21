@@ -1,15 +1,15 @@
-import { Column, PrimaryColumn, BaseEntity, Entity, OneToMany } from "typeorm";
+import { Column, PrimaryColumn, BaseEntity, Entity, OneToMany, OneToOne, JoinColumn } from "typeorm";
 import {ObjectType, ID, Field, Int} from "type-graphql";
-import {Permission} from "./User";
+import {UserGroup} from "./UserGroup";
 
-enum Semesters {
+export enum Semesters {
 	One = "Semester One",
 	Two = "Semester Two",
 	Summer = "Summer Semester"
 }
 
 
-enum CourseLevel {
+export enum CourseLevel {
 	NonAward = "Non-Award Study",
 	Undergrad = "Undergraduate",
 	Postgrad = "Postgraduate",
@@ -44,10 +44,22 @@ export class Course extends BaseEntity {
 	@Field()
 	courseLevel: CourseLevel; 
 
-	// TODO course coordinator, tutors, students
-	@Column()
-	@OneToMany(() => Permission, permission => permission.course)
-	users: [Permission]
+	@OneToOne(() => UserGroup)
+	@JoinColumn()
+	@Field()
+	coordinators: UserGroup;
+
+	@OneToOne(() => UserGroup)
+	@JoinColumn()
+	@Field()
+	tutors: UserGroup;
+
+	@OneToOne(() => UserGroup)
+	@JoinColumn()
+	@Field()
+	students: UserGroup;
+
+	// TODO validation that user groups are disjoint
 }
 
 
