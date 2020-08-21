@@ -20,12 +20,23 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
       
-    - uses: actions/cache@v2.1.1
+    - name: Cache server dependencies
+      uses: actions/cache@v2.1.1
       with:
         path: |
           server/node_modules
+        key: server-${{ runner.os }}-${{ hashFiles('server/yarn.lock') }}
+        restore-keys: |
+          server-${{ runner.os }}-
+          
+    - name: Cache client dependencies
+      uses: actions/cache@v2.1.1
+      with:
+        path: |
           client/node_modules
-        key: ${{ runner.os }}-${{ hashFiles('server/yarn.lock') }}-${{ hashFiles('client/yarn.lock') }}
+        key: client-${{ runner.os }}-${{ hashFiles('client/yarn.lock') }}
+        restore-keys: |
+          client-${{ runner.os }}-
 
     # Runs a single command using the runners shell
     - name: Install dependencies
