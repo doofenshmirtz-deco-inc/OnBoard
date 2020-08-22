@@ -1,5 +1,5 @@
 import Faker from 'faker'
-import { define, factory } from 'typeorm-seeding'
+import { define, factory } from '@doofenshmirtz-deco-inc/typeorm-seeding';
 import {UserGroup} from '../../models/UserGroup';
 import {User} from '../../models/User';
 

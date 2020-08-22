@@ -1,5 +1,5 @@
 import Faker from 'faker'
-import { define } from 'typeorm-seeding'
+import { define, factory } from '@doofenshmirtz-deco-inc/typeorm-seeding';
 import {User} from '../../models/User'
 
 define(User, (faker: typeof Faker) => { 

@@ -1,4 +1,4 @@
-import {Seeder, Factory} from "typeorm-seeding";
+import {Seeder, Factory} from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import {Connection} from "typeorm";
 import {User} from "../../models/User";
 
