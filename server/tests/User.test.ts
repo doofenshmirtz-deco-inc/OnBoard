@@ -1,8 +1,13 @@
 import {Connection, getConnection} from "typeorm";
 import {createTestConnection} from "./TestDatabase";
 import {graphqlTestCall} from "./GraphqlTestCall";
-import {useSeeding, runSeeder} from "typeorm-seeding";
+import {useSeeding, runSeeder} from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import UserSeeder from "../src/db/seeds/UserSeeder";
+
+jest.mock("../src/middleware/isAuth", () => ({
+	__esModule: true,
+	isAuth: jest.fn(() => console.log("isAuth isn't implemented"))
+}));
 
 
 const getUserQuery = `
@@ -12,6 +17,15 @@ const getUserQuery = `
 		}
 	}
 `;
+
+const getUsersQuery = `
+	query {
+		users {
+			name
+		}
+	}
+`;
+
 
 let connection: Connection;
 
@@ -26,6 +40,10 @@ afterAll(async () => {
 	await connection.close();
 });
 
+const setup = (overrides: any) => {
+	
+};
+
 
 describe("User Resolver", () => {
 	it("user query", async () => {
@@ -34,4 +52,14 @@ describe("User Resolver", () => {
 		expect(user.data?.user.name).toBe('Heinz Doofenshmirtz');
 		expect(user.data?.user.email).toBeUndefined();
 	});
+
+	it("users query", async () => {
+		const users = await graphqlTestCall(getUsersQuery);
+	});
 });
+
+
+
+
+
+
