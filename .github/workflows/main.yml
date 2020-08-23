@@ -38,7 +38,7 @@ jobs:
         restore-keys: |
           client-${{ runner.os }}-
 
-    -name: Setup github packages
+    - name: Setup github packages
       working-directory: server
       run: |
         echo //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }} > ~/.npmrc
