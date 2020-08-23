@@ -38,6 +38,11 @@ jobs:
         restore-keys: |
           client-${{ runner.os }}-
 
+    -name: Setup github packages
+      working-directory: server
+      run: |
+        echo //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }} > ~/.npmrc
+
     # Runs a single command using the runners shell
     - name: Install dependencies on server
       working-directory: server
@@ -47,7 +52,7 @@ jobs:
         sudo docker ps
         yarn db:test:create
       env:
-        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     # Runs a set of commands using the runners shell
     - name: Run tests on server
