@@ -46,6 +46,8 @@ jobs:
         yarn db:start
         sudo docker ps
         yarn db:test:create
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     # Runs a set of commands using the runners shell
     - name: Run tests on server
