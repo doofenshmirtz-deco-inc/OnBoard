@@ -1,4 +1,4 @@
-import { Resolver, Query, Args, Arg, ID, Int, UseMiddleware, Ctx } from "type-graphql";
+import { Resolver, Query, Args, Arg, ID, Int, UseMiddleware, Ctx, FieldResolver, Root } from "type-graphql";
 import {User} from "../models/User";
 import {PaginationArgs, getOrder} from "./Types";
 import {isAuth} from "../middleware/isAuth";
@@ -6,7 +6,7 @@ import {Context} from "../middleware/Context";
 import {Course, CoursePK} from "../models/Course";
 import {UserGroup} from "../models/UserGroup";
 
-@Resolver()
+@Resolver(of => Course)
 export class CourseResolver {
 	@Query(() => UserGroup)
 	@UseMiddleware(isAuth)
@@ -17,7 +17,7 @@ export class CourseResolver {
 		if (!user) throw new Error("User is invalid");
 
 		const course = await Course.findOne({ where: {...coursePK}});
-		if (!(await course?.coordinators.users)?.includes(user) && !(await course?.tutors.users)?.includes(user)) throw new Error("Unauthorised access");
+		if (!(await course?.coordinators.users)?.map(user => user.id).includes(user.id) && !(await course?.tutors.users)?.map(user => user.id).includes(user.id)) throw new Error("Unauthorised access");
 
 		return course?.students;
 	}

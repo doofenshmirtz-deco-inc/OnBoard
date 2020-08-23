@@ -50,17 +50,17 @@ export class Course extends BaseEntity {
 	@Field()
 	courseLevel: CourseLevel; 
 
-	@OneToOne(() => UserGroup)
+	@OneToOne(() => UserGroup, { eager: true })
 	@JoinColumn()
 	@Field()
 	coordinators: UserGroup;
 
-	@OneToOne(() => UserGroup)
+	@OneToOne(() => UserGroup, { eager: true })
 	@JoinColumn()
 	@Field()
 	tutors: UserGroup;
 
-	@OneToOne(() => UserGroup)
+	@OneToOne(() => UserGroup, { eager: true })
 	@JoinColumn()
 	@Field()
 	students: UserGroup;
