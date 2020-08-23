@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 export interface Payload {
- uid: string;
+  uid: string;
 }
 
 export interface Context {
