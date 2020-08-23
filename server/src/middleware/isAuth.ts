@@ -1,8 +1,9 @@
-import { MiddlewareFn } from "type-graphql";
-import {Context} from "./Context";
+import { MiddlewareFn, ResolverData } from "type-graphql";
+import {Context, Payload} from "./Context";
 import admin from "firebase-admin";
 
-export const isAuth: MiddlewareFn<Context> = async (data, next) => {
+export const isAuth: MiddlewareFn<Context> = async (data: ResolverData<Context>, next) => {
+  console.log(data.context.req.headers);
   const authorization = data.context.req.headers["authorization"];
 
   if (!authorization) {

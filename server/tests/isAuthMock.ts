@@ -1,9 +1,13 @@
 import {ResolverData, NextFn, MiddlewareFn} from "type-graphql";
-import {Context} from "../src/middleware/Context";
+import {Context, Payload} from "../src/middleware/Context";
 
+export interface TestingData {
+	context: {
+		payload?: Payload
+	}
+}
 
-// For some reason data is undefined. I've given up for the moment
-export const isAuthMock = async (data: ResolverData<Context>, next: NextFn, uid: string) => {
+export const isAuthMock = async (data: TestingData, next: NextFn, uid: string) => {
 	console.log(data);
 	data.context.payload = { uid };
 

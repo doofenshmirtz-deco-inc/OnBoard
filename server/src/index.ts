@@ -7,6 +7,7 @@ import express from "express";
 import admin from "firebase-admin";
 import {AuthResolver} from "./resolvers/AuthResolver";
 import firebase from "firebase/app";
+import {CourseResolver} from "./resolvers/CourseResolver";
 
 async function main() {
 	const port = 5000;
@@ -29,7 +30,7 @@ async function main() {
 
 
 	const schema = await buildSchema({
-		resolvers: [UserResolver, AuthResolver]
+		resolvers: [UserResolver, AuthResolver, CourseResolver]
 	});
 
 	const app = express();

@@ -1,5 +1,5 @@
 import { Column, PrimaryColumn, BaseEntity, Entity, OneToMany, OneToOne, JoinColumn } from "typeorm";
-import {ObjectType, ID, Field, Int} from "type-graphql";
+import {ObjectType, ID, Field, Int, InputType, ArgsType, registerEnumType} from "type-graphql";
 import {UserGroup} from "./UserGroup";
 
 export enum Semesters {
@@ -7,6 +7,9 @@ export enum Semesters {
 	Two = "Semester Two",
 	Summer = "Summer Semester"
 }
+registerEnumType(Semesters, {
+	name: "Semesters"
+});
 
 
 export enum CourseLevel {
@@ -14,6 +17,9 @@ export enum CourseLevel {
 	Undergrad = "Undergraduate",
 	Postgrad = "Postgraduate",
 }
+registerEnumType(CourseLevel, {
+	name: "CourseLevel"
+});
 
 @Entity()
 @ObjectType()
@@ -60,6 +66,18 @@ export class Course extends BaseEntity {
 	students: UserGroup;
 
 	// TODO validation that user groups are disjoint
+}
+
+@ArgsType()
+export class CoursePK {
+	@Field(() => String)
+	id: string;
+
+	@Field(() => Int)
+	year: number;
+
+	@Field(() => Semesters)
+	semester: Semesters;
 }
 
 

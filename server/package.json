@@ -17,6 +17,7 @@
     "@doofenshmirtz-deco-inc/typeorm-seeding": "1.6.0-1",
     "@types/jest": "^26.0.10",
     "apollo-server-express": "^2.16.1",
+    "apollo-server-testing": "^2.16.1",
     "express": "^4.17.1",
     "firebase": "^7.18.0",
     "firebase-admin": "^9.1.0",

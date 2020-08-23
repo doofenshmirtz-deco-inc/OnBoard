@@ -18,7 +18,7 @@ export const graphqlTestCall = async (
   return graphql(
     schema,
     query,
-    undefined,
+    variables,
     {
       req: {
         session: {
@@ -26,9 +26,8 @@ export const graphqlTestCall = async (
         }
       },
       res: {
-        clearCookie: () => {}
+        clearCookie: jest.fn()
       }
     },
-    variables
   );
 };
