@@ -19,7 +19,7 @@ export class User extends BaseEntity {
 	@Field()
 	email: string;
 
-	@ManyToMany(() => UserGroup)
+	@ManyToMany(() => UserGroup, group => group.users)
 	groups: Promise<UserGroup[]>;
 }
 

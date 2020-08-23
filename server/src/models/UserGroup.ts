@@ -9,7 +9,7 @@ export class UserGroup extends BaseEntity {
 	@Field(() => ID)
 	id: number;
 
-	@ManyToMany(() => User)
+	@ManyToMany(() => User, user => user.groups)
 	@JoinTable()
 	users: Promise<User[]>;
 }
