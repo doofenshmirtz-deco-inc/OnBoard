@@ -18,7 +18,7 @@ export class UserGroup extends BaseEntity {
   @Field(() => ID)
   id: number;
 
-  @ManyToMany(() => User, (user) => user.groups)
+  @ManyToMany(() => User, (user) => user.groups, { cascade: true })
   @JoinTable()
   users: Promise<User[]>;
 }

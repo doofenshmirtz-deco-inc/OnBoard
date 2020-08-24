@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon -w src --ext ts --exec ts-node src/index.ts",
-    "test": "jest",
+    "test": "jest --runInBand",
     "db:start": "sudo docker-compose up -d",
     "db:drop": "ts-node ./node_modules/typeorm/cli.js schema:drop",
     "db:seed:config": "ts-node ./node_modules/@doofenshmirtz-deco-inc/typeorm-seeding/dist/cli.js config",

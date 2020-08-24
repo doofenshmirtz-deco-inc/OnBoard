@@ -1,4 +1,4 @@
-import { Resolver, Query } from "type-graphql";
+import { Resolver, Query, Arg } from "type-graphql";
 import admin from "firebase-admin";
 import { AuthToken } from "../models/Auth";
 
@@ -8,9 +8,9 @@ import "firebase/auth";
 @Resolver()
 export class AuthResolver {
   @Query(() => AuthToken)
-  async getTestingToken(): Promise<AuthToken> {
-    const testUID = "test-uid";
-
+  async getTestingToken(
+    @Arg("testUID", { defaultValue: "test-uid" }) testUID: string
+  ): Promise<AuthToken> {
     let customToken = await admin.auth().createCustomToken(testUID);
 
     // TODO: this is hacky (firebase shouldnt really be on the backend)

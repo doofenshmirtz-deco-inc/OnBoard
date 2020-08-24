@@ -1,60 +1,17 @@
 import {Connection, getConnection} from "typeorm";
 import {createTestConnection} from "./TestDatabase";
-import {graphqlTestCall} from "./GraphqlTestCall";
 import {useSeeding, runSeeder} from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import UserSeeder from "../src/db/seeds/UserSeeder";
-import {isAuthMock} from "./isAuthMock";
-import {ResolverData, NextFn, buildSchema} from "type-graphql";
-import {Context} from "../src/middleware/Context";
-import { createTestClient } from "apollo-server-testing";
-import {ApolloServer} from "apollo-server-express";
 import {UserResolver} from "../src/resolvers/UserResolver";
-import {AuthResolver} from "../src/resolvers/AuthResolver";
-import {CourseResolver} from "../src/resolvers/CourseResolver";
-
-let uid = "test-uid";
-let query: any;
-let mutate: any;
-
-/* TODO this is broken
-jest.mock("../src/middleware/isAuth", () => ({
-	__esModule: true,
-	isAuth: jest.fn((data: ResolverData<Context>, next: NextFn) => isAuthMock(
-		{
-			context: {
-			}
-		},	
-		next, 
-		uid
-	)),
-}));
-*/
-
-const getUserQuery = `
-	query {
-		user (id: "doof-uid") {
-			name
-		}
-	}
-`;
-
-const getUsersQuery = `
-	query {
-		users {
-			name
-		}
-	}
-`;
+import CourseSeeder from "../src/db/seeds/CourseSeeder";
+import TestingUserSeeder from "../src/db/seeds/TestingUserSeeder";
 
 
-const meQuery = `
-	query {
-		me {
-			name
-		}
-	}
-`;
-
+const userResolver = new UserResolver();
+const emptyReqRes = { 
+	req: {} as any,
+	res: {} as any
+};
 
 let connection: Connection;
 
@@ -62,6 +19,8 @@ beforeAll(async () => {
 	connection = await createTestConnection();
 	await useSeeding();
 	await runSeeder(UserSeeder);
+	await runSeeder(CourseSeeder);
+	await runSeeder(TestingUserSeeder);
 });
 
 
@@ -71,29 +30,43 @@ afterAll(async () => {
 
 describe("User Resolver", () => {
 	it("user query", async () => {
-		const user = await graphqlTestCall(getUserQuery);
+		const user = await userResolver.user("doof-uid");
+		if (!user) fail("user is not defined");
 
-		expect(user.data?.user.name).toBe('Heinz Doofenshmirtz');
-		expect(user.data?.user.email).toBeUndefined();
+		expect(user.name).toBe('Heinz Doofenshmirtz');
+		expect(user.email).toBe('heinz@evilinc.com');
 	});
 
 	it("users query", async () => {
-		// TODO test properly when there is actual data/auth
-		uid = "test-uid";	
+		let users = await userResolver.users({
+			orderBy: 'name',
+			order: 'DESC'
+		});;
+		expect(users[0].name.localeCompare(users[1].name)).toBe(1);
 
-		const users = await graphqlTestCall(getUsersQuery);
+
+		users = await userResolver.users({
+			orderBy: 'id',
+			order: 'ASC',
+			limit: 3,
+		});;
+
+		expect(users.length).toBe(3);
+		expect(users[0].id.localeCompare(users[1].id)).toBe(-1);
 	});
 
+	it("me query", async () => {
+		const user = await userResolver.me({
+			...emptyReqRes,
+			payload: {
+				uid: "doof-uid"
+			}
+		});
+		if (!user) fail("user is not defined");
 
-	/*
-	it("users query", async () => {
-		uid = "doof-uid";	
-
-		const me = await graphqlTestCall(meQuery);
-
-		expect(me.data?.name).toBe('Heinz Doofenshmitz');
+		expect(user.name).toBe('Heinz Doofenshmirtz');
+		expect(user.email).toBe('heinz@evilinc.com');
 	});
-	*/
 });
 
 

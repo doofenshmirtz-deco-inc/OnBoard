@@ -31,6 +31,7 @@ export class UserGroupResolver {
   }
 
   @Query(() => UserGroup, { nullable: true })
+  @UseMiddleware(isAuth)
   async userGroup(@Arg("id", () => String) id: String) {
     return UserGroup.findOne({
       where: { id },
@@ -38,7 +39,15 @@ export class UserGroupResolver {
   }
 
   @FieldResolver((type) => [User])
-  async users(@Root() group: UserGroup) {
-    return await group.users;
+  @UseMiddleware(isAuth)
+  async users(@Root() group: UserGroup, @Ctx() ctx: Context) {
+    /* TODO need to decide how to handle permissions
+    const user = await User.findOne({ where: { id: ctx.payload?.uid } });
+    if (!user) throw new Error("User is invalid");
+	  if (!users.map(user => user.id).includes(user.id)) throw new Error("Invali persmissions to view group members");
+	  */
+
+    const users = await group.users;
+    return users;
   }
 }
