@@ -16,7 +16,6 @@ export default class TestingUserSeeder implements Seeder {
       courseEnrolment: "student",
     });
 
-
     await generateTestingUser({
       uid: "bad-uid",
       name: "Bad User",
