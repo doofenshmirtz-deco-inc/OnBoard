@@ -31,8 +31,8 @@ const useStyles = makeStyles((theme: Theme) =>
     drawerPaper: {
       width: drawerWidth,
       backgroundColor: "#0B3954",
-      color: "#BFD7EA"
-    }
+      color: "#BFD7EA",
+    },
   })
 );
 
@@ -60,7 +60,9 @@ export default function Sidebar(props: {
             key={item.name}
             {...{ component: NavLink, to: item.routeProps.path }}
           >
-            <ListItemIcon className={classes.icon}>{<item.icon />}</ListItemIcon>
+            <ListItemIcon className={classes.icon}>
+              {<item.icon />}
+            </ListItemIcon>
             <ListItemText primary={item.name} />
           </ListItem>
         ))}
