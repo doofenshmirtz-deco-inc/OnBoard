@@ -24,10 +24,15 @@ const useStyles = makeStyles((theme: Theme) =>
         flexShrink: 0,
       },
     },
+    icon: {
+      color: "#BFD7EA",
+    },
     toolbar: theme.mixins.toolbar,
     drawerPaper: {
       width: drawerWidth,
-    },
+      backgroundColor: "#0B3954",
+      color: "#BFD7EA"
+    }
   })
 );
 
@@ -41,10 +46,10 @@ export default function Sidebar(props: {
     <div>
       <div className={classes.toolbar} />
       <div />
-      <Divider />
+      {/* <Divider /> */}
       <List>
         <ListItem button key="Home" {...{ component: NavLink, to: "/" }}>
-          <ListItemIcon>
+          <ListItemIcon className={classes.icon}>
             <HomeIcon />
           </ListItemIcon>
           <ListItemText primary="Home" />
@@ -55,7 +60,7 @@ export default function Sidebar(props: {
             key={item.name}
             {...{ component: NavLink, to: item.routeProps.path }}
           >
-            <ListItemIcon>{<item.icon />}</ListItemIcon>
+            <ListItemIcon className={classes.icon}>{<item.icon />}</ListItemIcon>
             <ListItemText primary={item.name} />
           </ListItem>
         ))}

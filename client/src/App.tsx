@@ -82,7 +82,7 @@ export default function App() {
             mobileOpen={mobileOpen}
             handleDrawerToggle={handleDrawerToggle}
           />
-          <AppBar position="fixed" className={classes.appBar}>
+          {/* <AppBar position="fixed" className={classes.appBar}>
             <Toolbar>
               <IconButton
                 color="inherit"
@@ -97,7 +97,7 @@ export default function App() {
                 OnBoard
               </Typography>
             </Toolbar>
-          </AppBar>
+          </AppBar> */}
           <main className={classes.content}>
             <div className={classes.toolbar} />
             {modules.map((module) => (
