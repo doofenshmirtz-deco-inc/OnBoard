@@ -304,6 +304,18 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@doofenshmirtz-deco-inc/typeorm-seeding@1.6.0-1":
+  version "1.6.0-1"
+  resolved "https://npm.pkg.github.com/download/@doofenshmirtz-deco-inc/typeorm-seeding/1.6.0-1/9b981a46533bbeb27d5bca819df8096d7a06dcb9b0d461cd522b1927c8a67666#be60e025c7a7839afce21a97806df509f07acb6d"
+  integrity sha512-p7c7cRZ6HRDu6ZWq8/6RKsjmlIFyOp065APeuL+UkPMjWfvBV4wRGqBswYHIrUdpcXDGFxFQ/EUVFdgDCBJnSw==
+  dependencies:
+    chalk "^4.0.0"
+    faker "4.1.0"
+    glob "7.1.6"
+    ora "4.0.3"
+    reflect-metadata "0.1.13"
+    yargs "15.3.1"
+
 "@firebase/analytics-types@0.3.1":
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/@firebase/analytics-types/-/analytics-types-0.3.1.tgz#3c5f5d71129c88295e17e914e34b391ffda1723c"
@@ -1487,6 +1499,13 @@ apollo-server-plugin-base@^0.9.1:
   integrity sha512-kvrX4Z3FdpjrZdHkyl5iY2A1Wvp4b6KQp00DeZqss7GyyKNUBKr80/7RQgBLEw7EWM7WB19j459xM/TjvW0FKQ==
   dependencies:
     apollo-server-types "^0.5.1"
+
+apollo-server-testing@^2.16.1:
+  version "2.16.1"
+  resolved "https://registry.yarnpkg.com/apollo-server-testing/-/apollo-server-testing-2.16.1.tgz#3ca989cec56002ce28d881b9d8e51e09c29c5dfc"
+  integrity sha512-N26wRQqFFFM//D1dlHBDq7pJys2gB1wui/iUbqM504l5xQmgFHX+Pd5SJyzNFrIsDahg8dyj12dXQ3CpphcRaA==
+  dependencies:
+    apollo-server-core "^2.16.1"
 
 apollo-server-types@^0.5.1:
   version "0.5.1"
@@ -6276,18 +6295,6 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
-
-typeorm-seeding@^1.6.1:
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/typeorm-seeding/-/typeorm-seeding-1.6.1.tgz#4fe3a1aec9a611007d1135419cde286cced8defd"
-  integrity sha512-xJIW1pp72hv6npPqbQ7xDvawcDmS60EDUjK++UCfiqT0WE4xTzCn+QK1ZijLkD3GYCqFPuFt4nmeyRJn6VO2Vw==
-  dependencies:
-    chalk "^4.0.0"
-    faker "4.1.0"
-    glob "7.1.6"
-    ora "4.0.3"
-    reflect-metadata "0.1.13"
-    yargs "15.3.1"
 
 typeorm@^0.2.25:
   version "0.2.25"

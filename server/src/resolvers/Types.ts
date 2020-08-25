@@ -20,7 +20,7 @@ export class PaginationArgs {
 
 export function getOrder(pag: PaginationArgs) {
   let order = {};
-  if (pag.order && pag.orderBy) order = { id: pag.order };
+  if (pag.order && pag.orderBy) order = { [pag.orderBy]: pag.order };
 
   return order;
 }
