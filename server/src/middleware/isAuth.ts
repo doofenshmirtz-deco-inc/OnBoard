@@ -1,5 +1,5 @@
 import { MiddlewareFn } from "type-graphql";
-import {Context} from "./Context";
+import { Context } from "./Context";
 import admin from "firebase-admin";
 
 export const isAuth: MiddlewareFn<Context> = async (data, next) => {
@@ -12,8 +12,8 @@ export const isAuth: MiddlewareFn<Context> = async (data, next) => {
   try {
     // const token = authorization.split(" ")[1];
 
-	const token = await admin.auth().verifyIdToken(authorization);
-	console.log(token);
+    const token = await admin.auth().verifyIdToken(authorization);
+    console.log(token);
 
     // const payload = verify(token, "MySecretKey");
     data.context.payload = { uid: token.uid }; //payload as any;
