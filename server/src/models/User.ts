@@ -28,6 +28,9 @@ export class User extends BaseEntity {
   @Field()
   email: string;
 
+  @Column()
+  calendarUrl: string;
+
   @ManyToMany(() => UserGroup, (group) => group.users)
   groups: Promise<UserGroup[]>;
 }
