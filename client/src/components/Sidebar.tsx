@@ -48,12 +48,6 @@ export default function Sidebar(props: {
       <div />
       {/* <Divider /> */}
       <List>
-        <ListItem button key="Home" {...{ component: NavLink, to: "/" }}>
-          <ListItemIcon className={classes.icon}>
-            <HomeIcon />
-          </ListItemIcon>
-          <ListItemText primary="Home" />
-        </ListItem>
         {modules.map((item) => (
           <ListItem
             button
