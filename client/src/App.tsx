@@ -65,6 +65,10 @@ export default function App() {
         '"Segoe UI Emoji"',
         '"Segoe UI Symbol"',
       ].join(","),
+      body1: {
+        fontWeight: "inherit", // omg don't change this took me FOREVER TO FIND - nat
+        fontSize: "inherit",
+      }
     },
   });
 
