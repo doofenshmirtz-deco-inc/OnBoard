@@ -13,10 +13,14 @@ const useStyles = makeStyles((theme: Theme) =>
       maxHeight: 400,
       maxWidth: `calc(100% - ${200}px)`,
       overflow: "hidden",
+      border: "1px solid black",
     },
     enrolledClass: {
       height: 300, // Subject to change
       minWidth: 250,
+      border: "1px solid black",
+      marginLeft: "5px",
+      marginRight: "5px"
     },
     classList: {
       overflow: "auto",
@@ -46,7 +50,7 @@ function renderAnnouncement(announcementObj: any, classes: any, key: number) {
     <ListItem button className={classes.enrolledClass} 
       key={key}
       style={{
-        "borderLeft":`3px solid ${announcementObj.colour}`,
+        "borderLeft":`5px solid ${announcementObj.colour}`,
         "fontWeight": "bolder",
         "fontSize": "1.2rem",
       }}>
