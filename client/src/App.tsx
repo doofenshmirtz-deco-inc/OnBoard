@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: "flex",
+      overflowX: "hidden"
     },
     appBar: {
       [theme.breakpoints.up("sm")]: {
