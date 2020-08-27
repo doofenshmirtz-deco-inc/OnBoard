@@ -1,11 +1,6 @@
 import React from "react";
-import AppBar from "@material-ui/core/AppBar";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import {
   makeStyles,
   Theme,
@@ -23,6 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: "flex",
+      overflowX: "hidden"
     },
     appBar: {
       [theme.breakpoints.up("sm")]: {
@@ -64,6 +60,10 @@ export default function App() {
         '"Segoe UI Emoji"',
         '"Segoe UI Symbol"',
       ].join(","),
+      body1: {
+        fontWeight: "inherit", // omg don't change this took me FOREVER TO FIND - nat
+        fontSize: "inherit",
+      }
     },
   });
 
