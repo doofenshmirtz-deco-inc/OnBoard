@@ -1,5 +1,4 @@
 import { createConnection } from "typeorm";
-import { User } from "./models/User";
 import { UserResolver } from "./resolvers/UserResolver";
 import { buildSchema } from "type-graphql";
 import { ApolloServer } from "apollo-server-express";
@@ -7,6 +6,8 @@ import express from "express";
 import admin from "firebase-admin";
 import { AuthResolver } from "./resolvers/AuthResolver";
 import firebase from "firebase/app";
+import { CourseResolver } from "./resolvers/CourseResolver";
+import { UserGroupResolver } from "./resolvers/UserGroupResolver";
 
 async function main() {
   const port = 5000;
@@ -28,7 +29,7 @@ async function main() {
   });
 
   const schema = await buildSchema({
-    resolvers: [UserResolver, AuthResolver],
+    resolvers: [UserResolver, AuthResolver, CourseResolver, UserGroupResolver],
   });
 
   const app = express();
@@ -39,7 +40,7 @@ async function main() {
 
   server.applyMiddleware({ app });
   app.listen(port, () => {
-    console.log("Server running on 5000...");
+    console.log(`Server running on ${port}...`);
   });
 }
 

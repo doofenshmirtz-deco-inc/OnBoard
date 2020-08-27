@@ -7,13 +7,16 @@ import {
   Int,
   UseMiddleware,
   Ctx,
+  FieldResolver,
+  Root,
 } from "type-graphql";
 import { User } from "../models/User";
 import { PaginationArgs, getOrder } from "./Types";
 import { isAuth } from "../middleware/isAuth";
 import { Context } from "../middleware/Context";
+import { UserGroup } from "../models/UserGroup";
 
-@Resolver()
+@Resolver((of) => User)
 export class UserResolver {
   @Query(() => [User])
   @UseMiddleware(isAuth)
@@ -40,5 +43,10 @@ export class UserResolver {
     return User.findOne({
       where: { id: ctx.payload?.uid },
     });
+  }
+
+  @FieldResolver((type) => [UserGroup])
+  async groups(@Root() user: User) {
+    return await user.groups;
   }
 }
