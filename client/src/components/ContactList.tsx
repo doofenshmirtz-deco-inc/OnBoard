@@ -43,9 +43,9 @@ export default function ContactList() {
       <h2>Contacts</h2>
       <TextField className={classes.searchbar} id="contacts-search" label="Search" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}/>
       <List>
-        {contacts.map((item) => (item.toLowerCase().includes(searchTerm.toLowerCase()) ? 
-          <ListItem button>
-            <ListItemText primary={item} />
+        {contacts.map((item, index) => (item.toLowerCase().includes(searchTerm.toLowerCase()) ? 
+          <ListItem button key={index}>
+            <ListItemText primary={item} key={item}/>
             <ListItemSecondaryAction>
               <IconButton edge="end" aria-label="call">
                 <CallIcon />

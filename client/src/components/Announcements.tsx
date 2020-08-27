@@ -1,14 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from '@material-ui/core/Typography';
 import announcements from "./announcements.json"
-
-interface Props {
-  color: string;
-}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,14 +17,12 @@ const useStyles = makeStyles((theme: Theme) =>
     enrolledClass: {
       height: 300, // Subject to change
       minWidth: 250,
-      
     },
     classList: {
       overflow: "auto",
       display: "flex",
       width: "100%", 
-
-      maxWidth: `calc(100vw - ${100}px)`,
+      maxWidth: `calc(100vw - ${100}px)`
     },
     heading: {
       textAlign: "center",
@@ -45,11 +39,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 
 /* Render a single announcement button. Haha any go brr */
-function renderAnnouncement(announcementObj: any, classes: any) {
+function renderAnnouncement(announcementObj: any, classes: any, key: number) {
+  // Trim to 250 words and add at the end ... for the funny
   let trimmedesc = announcementObj.description.substring(0, 250) + "...";
-
   return ( 
     <ListItem button className={classes.enrolledClass} 
+      key={key}
       style={{
         "borderLeft":`3px solid ${announcementObj.colour}`,
         "fontWeight": "bolder",
@@ -58,12 +53,12 @@ function renderAnnouncement(announcementObj: any, classes: any) {
       <ListItemText 
         // Forbidden br tag, I'm going to web dev jail
         primary={
-          <Typography variant="body1">
-            <h3 className={classes.date}>{announcementObj.date}</h3>
+          <Typography variant="inherit">
+            <div className={classes.date}>{announcementObj.date}</div>
             <br/> 
             {announcementObj.title}
           </Typography>}
-        // disableTypography={true} // for later maybe
+        // disableTypography={true} // for later maybe idk
         secondary={
           <React.Fragment>
             <Typography component="span" variant="body1"/>
@@ -71,27 +66,19 @@ function renderAnnouncement(announcementObj: any, classes: any) {
           </React.Fragment>
         }
       />
-       
     </ListItem>
   )
 }
 
-/* Render all the announcement buttons */
-function renderAnnouncements(classes: any) {  
-  const renderedAnnouncements: any[] = [];
-  for (let announcementObj of Object.values(announcements)) {
-    renderedAnnouncements.push(renderAnnouncement(announcementObj, classes));
-  }
-  return renderedAnnouncements;
-}
-
-export default function ContactList() {
+export default function Announcements() {
   const classes = useStyles();
   return (
     <div className={classes.root}>
       <h2 className={classes.heading}>Announcements</h2>
       <List className={classes.classList}>
-          {renderAnnouncements(classes)}
+        {Object.values(announcements).map((item, index) => (
+          renderAnnouncement(item, classes, index)
+        ))}
       </List>
     </div>
   );
