@@ -1,5 +1,5 @@
 import Faker from "faker";
-import { define } from "typeorm-seeding";
+import { define, factory } from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import { User } from "../../models/User";
 
 define(User, (faker: typeof Faker) => {
@@ -11,8 +11,6 @@ define(User, (faker: typeof Faker) => {
   user.id = faker.random.uuid();
   user.name = `${firstName} ${lastName}`;
   user.email = `${firstName}@decodoof.net`;
-
-  console.log(user);
 
   return user;
 });
