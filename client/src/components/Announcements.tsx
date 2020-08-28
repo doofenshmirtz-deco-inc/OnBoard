@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
       border: "1px solid black",
       marginLeft: "5px",
       marginRight: "5px",
+      overflow: "hidden"
     },
     classList: {
       overflow: "auto",
@@ -43,11 +44,29 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const CHARACTER_LIMIT: number = 225;
+
+function getDescription(announcementObj: any) {
+
+  if (announcementObj.link && (announcementObj["before-link"].length + announcementObj["link"].length) <= CHARACTER_LIMIT) {
+    let afterTrimSize: number = announcementObj["before-link"].length + announcementObj["link"].length;
+    return (
+      <span>
+        {announcementObj["before-link"]}
+        <a style={{"color": `${announcementObj.colour}`}} href={announcementObj["link"]}>{announcementObj["link"]}</a>
+        {announcementObj["after-link"].substring(0, afterTrimSize) + "..."}
+      </span>
+        
+    )
+  } 
+  // Trim to 225 chars and add... at the end for the funny
+  return announcementObj["before-link"].substring(0, CHARACTER_LIMIT) + "...";
+}
 
 /* Render a single announcement button. Haha any go brr */
 function renderAnnouncement(announcementObj: any, classes: any, key: number) {
-  // Trim to 250 words and add at the end ... for the funny
-  let trimmedesc = announcementObj.description.substring(0, 250) + "...";
+
+  let trimmedesc = getDescription(announcementObj);
   return ( 
     <ListItem button className={classes.enrolledClass} 
       key={key}
