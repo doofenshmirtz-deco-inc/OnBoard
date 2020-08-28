@@ -28,7 +28,7 @@
     "description": "Morbi augue ligula, posuere eu fringilla eget, aliquet id dolor. Cras dictum porta metus vel pellentesque. Cras tortor risus, semper sed augue ut, <<LINK>> varius pellentesque turpis. Proin sit amet fringilla velit, et euismod lectus. In sollicitudin magna vehicula quam tempor, nec commodo justo lacinia. Donec pretium dictum eros in commodo. Mauris tincidunt dignissim ligula ac cursus. Mauris pulvinar mi non nibh accumsan, ut auctor purus mollis."
   },
   {
-    "title":"this sentence is 50 char long hahahahahaha 123456 45465465465456",
+    "title":"this sentence is 50 char long hahahahahaha 123456 45465495465456",
     "link": null, 
     "colour": "#FF5A5F",
     "date": "Wed 19 Aug 2020",

@@ -20,13 +20,13 @@ const useStyles = makeStyles((theme: Theme) =>
       minWidth: 250,
       border: "1px solid black",
       marginLeft: "5px",
-      marginRight: "5px"
+      marginRight: "5px",
     },
     classList: {
       overflow: "auto",
       display: "flex",
       width: "100%", 
-      maxWidth: `calc(100vw - ${100}px)`
+      maxWidth: `calc(100vw - ${100}px)`,
     },
     heading: {
       textAlign: "center",
@@ -35,9 +35,11 @@ const useStyles = makeStyles((theme: Theme) =>
       position: "absolute",
       top: 0,
       right: 10,
-      fontSize: "0.7rem",
+      fontSize: "0.75rem",
       color: "grey",
-    }
+      padding: 0,
+      margin: 0
+    },
   })
 );
 
@@ -52,14 +54,14 @@ function renderAnnouncement(announcementObj: any, classes: any, key: number) {
       style={{
         "borderLeft":`5px solid ${announcementObj.colour}`,
         "fontWeight": "bolder",
-        "fontSize": "1.2rem",
+        "fontSize": "1.1rem",
       }}>
       <ListItemText 
         // Forbidden br tag, I'm going to web dev jail
         primary={
           <Typography variant="inherit">
             <div className={classes.date}>{announcementObj.date}</div>
-            <br/> 
+            <br/>
             {announcementObj.title}
           </Typography>}
         // disableTypography={true} // for later maybe idk
