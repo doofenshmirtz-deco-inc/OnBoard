@@ -46,8 +46,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const CHARACTER_LIMIT: number = 225;
 
+/* It looks really dumb but it adds coloured links in between before and after link areas. I'm sorry someone plz refactor */
 function getDescription(announcementObj: any) {
-
   if (announcementObj.link && (announcementObj["before-link"].length + announcementObj["link"].length) <= CHARACTER_LIMIT) {
     let afterTrimSize: number = announcementObj["before-link"].length + announcementObj["link"].length;
     return (
@@ -63,12 +63,18 @@ function getDescription(announcementObj: any) {
   return announcementObj["before-link"].substring(0, CHARACTER_LIMIT) + "...";
 }
 
+// TODO: Change for full query or something idk what you want here hahaha
+function onClickHandler(link: string) {
+  console.log(link)
+}
+
 /* Render a single announcement button. Haha any go brr */
 function renderAnnouncement(announcementObj: any, classes: any, key: number) {
 
   let trimmedesc = getDescription(announcementObj);
   return ( 
     <ListItem button className={classes.enrolledClass} 
+      onClick={() => onClickHandler(announcementObj.link)}
       key={key}
       style={{
         "borderLeft":`5px solid ${announcementObj.colour}`,
