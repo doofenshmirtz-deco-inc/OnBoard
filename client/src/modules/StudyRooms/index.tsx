@@ -1,13 +1,13 @@
 import React from "react";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 
-const MeetingRooms = () => <h1>Meeting Rooms</h1>;
+const StudyRooms = () => <h1>Study Rooms</h1>;
 
 export default {
   routeProps: {
-    path: "/meeting-rooms",
-    component: MeetingRooms,
+    path: "/study-rooms",
+    component: StudyRooms,
   },
-  name: "Meeting Rooms",
+  name: "Study Rooms",
   icon: MeetingRoomIcon,
 };
