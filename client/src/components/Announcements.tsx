@@ -5,6 +5,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 import announcements from "./announcements.json";
+import { TextToLinks } from "../utils/string";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,28 +49,15 @@ const CHARACTER_LIMIT: number = 225;
 
 /* It looks really dumb but it adds coloured links in between before and after link areas. I'm sorry someone plz refactor */
 function getDescription(announcementObj: any) {
-  if (
-    announcementObj.link &&
-    announcementObj["before-link"].length + announcementObj["link"].length <=
-      CHARACTER_LIMIT
-  ) {
-    let afterTrimSize: number =
-      announcementObj["before-link"].length + announcementObj["link"].length;
-    return (
-      <span>
-        {announcementObj["before-link"]}
-        <a
-          style={{ color: `${announcementObj.colour}` }}
-          href={announcementObj["link"]}
-        >
-          {announcementObj["link"]}
-        </a>
-        {announcementObj["after-link"].substring(0, afterTrimSize) + "..."}
-      </span>
-    );
+  let text;
+  if (announcementObj.text <= CHARACTER_LIMIT) {
+    text = announcementObj.text;
+  } else {
+    // Trim to 225 chars and add... at the end for the funny
+    text = announcementObj["text"].substring(0, CHARACTER_LIMIT) + "...";
   }
-  // Trim to 225 chars and add... at the end for the funny
-  return announcementObj["before-link"].substring(0, CHARACTER_LIMIT) + "...";
+
+  return <span>{TextToLinks(text, announcementObj.colour)}</span>;
 }
 
 // TODO: Change for full query or something idk what you want here hahaha
