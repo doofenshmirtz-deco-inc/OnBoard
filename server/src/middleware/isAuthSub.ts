@@ -6,7 +6,6 @@ export const isAuthSub: MiddlewareFn<Context> = async (
   data: ResolverData<Context>,
   next
 ) => {
-  console.log(data.context);
   const authorization = data.context.connection.context.authorization;
 
   data.context.payload = { uid: (await checkAuthToken(authorization)).uid }; //payload as any;

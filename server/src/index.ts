@@ -55,19 +55,6 @@ async function main() {
   apolloServer.installSubscriptionHandlers(server);
 
   server.listen(port, () => {
-    // TODO setup subscriptions
-    /*
-	new SubscriptionServer({
-		execute,
-		subscribe,
-		schema
-	  }, {
-		  path: '/sub',
-		  server,
-	  });
-
-	*/
-
     console.log(`Server running on ${port}...`);
     console.log(
       `🚀 Subscriptions ready at ws://localhost:${port}${apolloServer.subscriptionsPath}`
