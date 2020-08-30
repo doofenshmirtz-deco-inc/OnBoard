@@ -8,7 +8,7 @@ import {
   JoinTable,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { ObjectType, ID, Field, Int } from "type-graphql";
+import { ObjectType, ID, Field, Int, InputType } from "type-graphql";
 import { User } from "./User";
 
 @Entity()

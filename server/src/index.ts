@@ -8,6 +8,11 @@ import { AuthResolver } from "./resolvers/AuthResolver";
 import firebase from "firebase/app";
 import { CourseResolver } from "./resolvers/CourseResolver";
 import { UserGroupResolver } from "./resolvers/UserGroupResolver";
+import { MessageResolver } from "./resolvers/MessageResolver";
+import { SubscriptionServer } from "subscriptions-transport-ws";
+import { execute, subscribe } from "graphql";
+import { createServer } from "http";
+import { AppPubSub } from "./resolvers/AppPubSub";
 
 async function main() {
   const port = 5000;
@@ -29,18 +34,44 @@ async function main() {
   });
 
   const schema = await buildSchema({
-    resolvers: [UserResolver, AuthResolver, CourseResolver, UserGroupResolver],
+    resolvers: [
+      UserResolver,
+      AuthResolver,
+      CourseResolver,
+      UserGroupResolver,
+      MessageResolver,
+    ],
+    pubSub: AppPubSub,
   });
 
   const app = express();
-  const server = new ApolloServer({
+  const apolloServer = new ApolloServer({
     schema,
-    context: ({ req, res }) => ({ req, res }),
+    context: ({ req, res, connection }) => ({ req, res, connection }),
   });
 
-  server.applyMiddleware({ app });
-  app.listen(port, () => {
+  apolloServer.applyMiddleware({ app });
+  const server = createServer(app);
+  apolloServer.installSubscriptionHandlers(server);
+
+  server.listen(port, () => {
+    // TODO setup subscriptions
+    /*
+	new SubscriptionServer({
+		execute,
+		subscribe,
+		schema
+	  }, {
+		  path: '/sub',
+		  server,
+	  });
+
+	*/
+
     console.log(`Server running on ${port}...`);
+    console.log(
+      `🚀 Subscriptions ready at ws://localhost:${port}${apolloServer.subscriptionsPath}`
+    );
   });
 }
 

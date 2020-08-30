@@ -1,15 +1,14 @@
 import { MiddlewareFn, ResolverData } from "type-graphql";
 import { Context, Payload } from "./Context";
-import admin from "firebase-admin";
-import { checkAuthToken } from "./checkAuthToken";
+import {checkAuthToken} from "./checkAuthToken";
 
-export const isAuth: MiddlewareFn<Context> = async (
+export const isAuthSub: MiddlewareFn<Context> = async (
   data: ResolverData<Context>,
   next
 ) => {
-  const authorization = data.context.req.headers["authorization"];
+  console.log(data.context);
+  const authorization = data.context.connection.context.authorization;
 
   data.context.payload = { uid: (await checkAuthToken(authorization)).uid }; //payload as any;
-
   return next();
 };

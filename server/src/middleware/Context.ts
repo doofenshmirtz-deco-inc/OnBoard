@@ -7,5 +7,6 @@ export interface Payload {
 export interface Context {
   req: Request;
   res: Response;
+  connection: any;
   payload?: Payload;
 }
