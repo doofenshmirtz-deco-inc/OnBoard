@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: "flex",
-      overflowX: "hidden"
+      overflowX: "hidden",
     },
     appBar: {
       [theme.breakpoints.up("sm")]: {
@@ -63,7 +63,7 @@ export default function App() {
       body1: {
         fontWeight: "inherit", // omg don't change this took me FOREVER TO FIND - nat
         fontSize: "inherit",
-      }
+      },
     },
   });
 
