@@ -47,7 +47,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const CHARACTER_LIMIT: number = 225;
 
-/* It looks really dumb but it adds coloured links in between before and after link areas. I'm sorry someone plz refactor */
 function getDescription(announcementObj: any) {
   let text;
   if (announcementObj.text <= CHARACTER_LIMIT) {
