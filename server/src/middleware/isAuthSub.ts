@@ -1,6 +1,6 @@
 import { MiddlewareFn, ResolverData } from "type-graphql";
 import { Context, Payload } from "./Context";
-import {checkAuthToken} from "./checkAuthToken";
+import { checkAuthToken } from "./checkAuthToken";
 
 export const isAuthSub: MiddlewareFn<Context> = async (
   data: ResolverData<Context>,
