@@ -124,7 +124,7 @@ export default function App() {
     if (!user) return <Login />;
 
     return (
-      <div>
+      <>
         <Sidebar />
         <main className={classes.content}>
           <div className={classes.toolbar} />
@@ -132,7 +132,7 @@ export default function App() {
             <Route {...module.routeProps} key={module.name} />
           ))}
         </main>
-      </div>
+      </>
     );
   };
 
