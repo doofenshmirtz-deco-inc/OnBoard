@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useContext} from "react";
 import AppBar from "@material-ui/core/AppBar";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -16,6 +16,12 @@ import {
 
 import modules from "./modules";
 import Sidebar from "./components/Sidebar";
+
+import * as firebase from "firebase/app";
+import "firebase/auth";
+import {CircularProgress} from "@material-ui/core";
+import {AppContext} from "./utils/AppContextProvider";
+
 
 const drawerWidth = 240;
 
@@ -72,6 +78,32 @@ export default function App() {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+	const [loaded, setLoaded] = React.useState(false);
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAwD46JJ62Y_Jn-2JFV3j6-la7djOZLa1c",
+    authDomain: "onboard-8f0f9.firebaseapp.com",
+    databaseURL: "https://onboard-8f0f9.firebaseio.com",
+    projectId: "onboard-8f0f9",
+    storageBucket: "onboard-8f0f9.appspot.com",
+    messagingSenderId: "1083512866922",
+    appId: "1:1083512866922:web:efe355acf6404782c22213"
+  };
+
+	useEffect(() => {
+		if (!loaded) {
+			firebase.initializeApp(firebaseConfig);
+			setLoaded(true);
+			console.log("done");
+		}
+	}, [])
+
+	const appContext = useContext(AppContext);
+
+
+	if (!loaded) return <CircularProgress />
+	if (!appContext.user) return <div>Not signed in</div>
 
   return (
     <Router>
