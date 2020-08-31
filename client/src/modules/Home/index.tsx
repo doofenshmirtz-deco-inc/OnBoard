@@ -1,7 +1,17 @@
 import React from "react";
 import HomeIcon from "@material-ui/icons/Home";
 
-const Home = () => <h1>Home</h1>;
+import ContactList from "../../components/ContactList";
+import Announcements from "../../components/Announcements";
+const Home = () => {
+  return (
+    <div>
+      <h1>Home</h1>
+      <ContactList />
+      <Announcements />
+    </div>
+  );
+};
 
 export default {
   routeProps: {
