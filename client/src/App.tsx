@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -19,7 +19,8 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 import { CircularProgress } from "@material-ui/core";
 import { AppContext } from "./utils/AppContextProvider";
-import {Login} from "./modules/Login";
+import { Login } from "./modules/Login";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
 const drawerWidth = 240;
 
@@ -111,33 +112,45 @@ export default function App() {
     }
   }, []);
 
+  const [user, setUser] = useState(null);
+
   const appContext = useContext(AppContext);
+  appContext.user = user;
+  appContext.setUser = setUser;
+
+  const client = new ApolloClient({
+    uri: "http://localhost:5000/graphql",
+    cache: new InMemoryCache(),
+  });
 
   if (!loaded) return <CircularProgress />;
 
-	const screen = () => {
-		if (!appContext.user) return <Login />
-			return (
-		<div>
-          <Sidebar />
-          <main className={classes.content}>
-            <div className={classes.toolbar} />
-            {modules.map((module) => (
-              <Route {...module.routeProps} key={module.name} />
-            ))}
-				  </main>
-		</div>
-		);
-	}
+  const screen = () => {
+    if (!user) return <Login />;
+
+    return (
+      <div>
+        <Sidebar />
+        <main className={classes.content}>
+          <div className={classes.toolbar} />
+          {modules.map((module) => (
+            <Route {...module.routeProps} key={module.name} />
+          ))}
+        </main>
+      </div>
+    );
+  };
 
   return (
     <Router>
-      <ThemeProvider theme={theme}>
-        <div className={classes.root}>
-			<CssBaseline />
-			{screen()}
-        </div>
-      </ThemeProvider>
+      <ApolloProvider client={client}>
+        <ThemeProvider theme={theme}>
+          <div className={classes.root}>
+            <CssBaseline />
+            {screen()}
+          </div>
+        </ThemeProvider>
+      </ApolloProvider>
     </Router>
   );
 }
