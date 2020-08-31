@@ -8,7 +8,7 @@ import {
   ThemeProvider,
   createMuiTheme,
 } from "@material-ui/core/styles";
-import { Shadows } from "@material-ui/core/styles/shadows"
+import { Shadows } from "@material-ui/core/styles/shadows";
 
 import modules from "./modules";
 import Sidebar from "./components/Sidebar";
@@ -73,9 +73,9 @@ export default function App() {
     palette: {
       primary: {
         main: "#0B3954",
-        contrastText: "#BFD7EA"
+        contrastText: "#BFD7EA",
       },
-    }
+    },
   });
 
   return (
