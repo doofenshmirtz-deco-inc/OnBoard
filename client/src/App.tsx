@@ -1,5 +1,4 @@
-import React, { useEffect, useContext, useState } from "react";
-import AppBar from "@material-ui/core/AppBar";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {
@@ -13,14 +12,12 @@ import { Shadows } from "@material-ui/core/styles/shadows";
 
 import modules from "./modules";
 import Sidebar from "./components/Sidebar";
-import Cal from "./components/Cal";
 
 import * as firebase from "firebase/app";
 import "firebase/auth";
-import { CircularProgress } from "@material-ui/core";
-import { AppContext } from "./utils/AppContextProvider";
 import { Login } from "./modules/Login";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { LoadingPage } from "./components/LoadingPage";
 
 const drawerWidth = 240;
 
@@ -104,26 +101,24 @@ export default function App() {
     appId: "1:1083512866922:web:efe355acf6404782c22213",
   };
 
+  const [user, setUser] = useState(null as firebase.User | null);
+
   useEffect(() => {
     if (!loaded) {
       firebase.initializeApp(firebaseConfig);
-      setLoaded(true);
-      console.log("done");
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) setUser(user);
+        setLoaded(true);
+      });
     }
   }, []);
-
-  const [user, setUser] = useState(null);
-
-  const appContext = useContext(AppContext);
-  appContext.user = user;
-  appContext.setUser = setUser;
 
   const client = new ApolloClient({
     uri: "http://localhost:5000/graphql",
     cache: new InMemoryCache(),
   });
 
-  if (!loaded) return <CircularProgress />;
+  if (!loaded) return <LoadingPage />;
 
   const screen = () => {
     if (!user) return <Login />;

@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { useQuery, gql, useApolloClient } from "@apollo/client";
 import * as firebase from "firebase";
-import { AppContext } from "../../utils/AppContextProvider";
+import { LoadingPage } from "../../components/LoadingPage";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,7 +35,6 @@ const GET_CUSTOM_TOKEN = gql`
 export const Login = () => {
   const classes = useStyles();
   const client = useApolloClient();
-  const appContext = useContext(AppContext);
 
   const [uid, setUID] = React.useState("");
   const [pass, setPass] = React.useState("");
@@ -50,21 +49,9 @@ export const Login = () => {
     const user = await firebase
       .auth()
       .signInWithCustomToken(data.getCustomToken.token);
-    appContext.setUser(user.user);
   };
 
-  if (loading)
-    return (
-      <Grid
-        container
-        direction="column"
-        justify="center"
-        alignItems="center"
-        className={classes.spinnerGrid}
-      >
-        <CircularProgress />
-      </Grid>
-    );
+  if (loading) return <LoadingPage />;
 
   return (
     <Grid container direction="column" justify="center" alignItems="center">
