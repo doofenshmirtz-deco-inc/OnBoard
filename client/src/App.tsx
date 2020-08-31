@@ -108,6 +108,7 @@ export default function App() {
       firebase.initializeApp(firebaseConfig);
       firebase.auth().onAuthStateChanged((user) => {
         if (user) setUser(user);
+        else setUser(null);
         setLoaded(true);
       });
     }
