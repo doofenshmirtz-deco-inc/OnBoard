@@ -70,6 +70,12 @@ export default function App() {
         '"Segoe UI Symbol"',
       ].join(","),
     },
+    palette: {
+      primary: {
+        main: "#0B3954",
+        contrastText: "#BFD7EA"
+      },
+    }
   });
 
   return (

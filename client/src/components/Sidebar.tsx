@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       }),
-      background: "#0B3954"
+      background: theme.palette.primary.main,
     },
     appBarShift: {
       marginLeft: drawerWidth,
@@ -53,6 +53,8 @@ const useStyles = makeStyles((theme: Theme) =>
       width: drawerWidth,
       flexShrink: 0,
       whiteSpace: 'nowrap',
+      color: theme.palette.primary.contrastText,
+      backgroundColor: theme.palette.primary.main,
     },
     drawerOpen: {
       width: drawerWidth,
@@ -73,7 +75,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     paper: {
-      backgroundColor: "#0B3954",
+      background: theme.palette.primary.main,
       color: "#BFD7EA",
     },
     toolbar: {
@@ -89,7 +91,7 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(3),
     },
     icon: {
-      color: "#0B3954",
+      color: theme.palette.primary.contrastText
     },
   }),
 );
@@ -140,7 +142,7 @@ export default function MiniDrawer() {
           [classes.drawerClose]: !open,
         })}
         classes={{
-          paper: clsx({
+          paper: clsx(classes.drawer, {
             [classes.drawerOpen]: open,
             [classes.drawerClose]: !open,
           }),
