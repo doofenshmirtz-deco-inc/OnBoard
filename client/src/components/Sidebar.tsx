@@ -29,6 +29,7 @@ const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    gutters: theme.mixins.gutters(),
     root: {
       display: "flex",
     },
@@ -49,7 +50,8 @@ const useStyles = makeStyles((theme: Theme) =>
       }),
     },
     menuButton: {
-      marginRight: 36,
+      marginRight: 24,
+      color: theme.palette.primary.contrastText,
     },
     hide: {
       display: "none",
@@ -81,7 +83,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paper: {
       background: theme.palette.primary.main,
-      color: "#BFD7EA",
+      // color: "#BFD7EA",
     },
     toolbar: {
       display: "flex",
@@ -154,7 +156,10 @@ export default function MiniDrawer() {
         }}
       >
         <div className={classes.toolbar}>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton
+            onClick={handleDrawerClose}
+            className={classes.menuButton}
+          >
             {theme.direction === "rtl" ? (
               <ChevronRightIcon />
             ) : (
@@ -168,6 +173,7 @@ export default function MiniDrawer() {
               button
               key={item.name}
               {...{ component: NavLink, to: item.routeProps.path }}
+              classes={{ gutters: clsx(classes.gutters) }}
             >
               <ListItemIcon className={classes.icon}>
                 {<item.icon />}

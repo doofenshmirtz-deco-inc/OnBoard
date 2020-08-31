@@ -55,7 +55,7 @@ export default function App() {
   const classes = useStyles();
   const theme = createMuiTheme({
     // Disable shadows
-    shadows: Array(25).fill("none") as Shadows,
+    // shadows: Array(25).fill("none") as Shadows,
     typography: {
       fontFamily: [
         "Myriad",
