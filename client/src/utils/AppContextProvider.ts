@@ -1,8 +1,8 @@
-import React from 'react'
-import {User} from 'firebase';
+import React from "react";
+import { User } from "firebase";
 
 export interface IAppContext {
-	user?: User
+  user?: User;
 }
 
 export const AppContext = React.createContext({} as IAppContext);

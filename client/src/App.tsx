@@ -1,11 +1,7 @@
-import React, {useEffect, useContext} from "react";
+import React, { useEffect, useContext } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import {
   makeStyles,
   Theme,
@@ -13,15 +9,17 @@ import {
   ThemeProvider,
   createMuiTheme,
 } from "@material-ui/core/styles";
+import { Shadows } from "@material-ui/core/styles/shadows";
 
 import modules from "./modules";
 import Sidebar from "./components/Sidebar";
+import Cal from "./components/Cal";
 
 import * as firebase from "firebase/app";
 import "firebase/auth";
-import {CircularProgress} from "@material-ui/core";
-import {AppContext} from "./utils/AppContextProvider";
-
+import { CircularProgress } from "@material-ui/core";
+import { AppContext } from "./utils/AppContextProvider";
+import {Login} from "./modules/Login";
 
 const drawerWidth = 240;
 
@@ -29,6 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: "flex",
+      overflowX: "hidden",
     },
     appBar: {
       [theme.breakpoints.up("sm")]: {
@@ -57,8 +56,11 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function App() {
   const classes = useStyles();
   const theme = createMuiTheme({
+    // Disable shadows
+    shadows: Array(25).fill("none") as Shadows,
     typography: {
       fontFamily: [
+        "Myriad",
         "-apple-system",
         "BlinkMacSystemFont",
         '"Segoe UI"',
@@ -70,6 +72,16 @@ export default function App() {
         '"Segoe UI Emoji"',
         '"Segoe UI Symbol"',
       ].join(","),
+      body1: {
+        fontWeight: "inherit", // omg don't change this took me FOREVER TO FIND - nat
+        fontSize: "inherit",
+      },
+    },
+    palette: {
+      primary: {
+        main: "#0B3954",
+        contrastText: "#BFD7EA",
+      },
     },
   });
 
@@ -79,7 +91,7 @@ export default function App() {
     setMobileOpen(!mobileOpen);
   };
 
-	const [loaded, setLoaded] = React.useState(false);
+  const [loaded, setLoaded] = React.useState(false);
 
   const firebaseConfig = {
     apiKey: "AIzaSyAwD46JJ62Y_Jn-2JFV3j6-la7djOZLa1c",
@@ -88,54 +100,42 @@ export default function App() {
     projectId: "onboard-8f0f9",
     storageBucket: "onboard-8f0f9.appspot.com",
     messagingSenderId: "1083512866922",
-    appId: "1:1083512866922:web:efe355acf6404782c22213"
+    appId: "1:1083512866922:web:efe355acf6404782c22213",
   };
 
-	useEffect(() => {
-		if (!loaded) {
-			firebase.initializeApp(firebaseConfig);
-			setLoaded(true);
-			console.log("done");
-		}
-	}, [])
+  useEffect(() => {
+    if (!loaded) {
+      firebase.initializeApp(firebaseConfig);
+      setLoaded(true);
+      console.log("done");
+    }
+  }, []);
 
-	const appContext = useContext(AppContext);
+  const appContext = useContext(AppContext);
 
+  if (!loaded) return <CircularProgress />;
 
-	if (!loaded) return <CircularProgress />
-	if (!appContext.user) return <div>Not signed in</div>
-
-  return (
-    <Router>
-      <ThemeProvider theme={theme}>
-        <div className={classes.root}>
-          <CssBaseline />
-          <Sidebar
-            mobileOpen={mobileOpen}
-            handleDrawerToggle={handleDrawerToggle}
-          />
-          <AppBar position="fixed" className={classes.appBar}>
-            <Toolbar>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={handleDrawerToggle}
-                className={classes.menuButton}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" noWrap>
-                OnBoard
-              </Typography>
-            </Toolbar>
-          </AppBar>
+	const screen = () => {
+		if (!appContext.user) return <Login />
+			return (
+		<div>
+          <Sidebar />
           <main className={classes.content}>
             <div className={classes.toolbar} />
             {modules.map((module) => (
               <Route {...module.routeProps} key={module.name} />
             ))}
-          </main>
+				  </main>
+		</div>
+		);
+	}
+
+  return (
+    <Router>
+      <ThemeProvider theme={theme}>
+        <div className={classes.root}>
+			<CssBaseline />
+			{screen()}
         </div>
       </ThemeProvider>
     </Router>
