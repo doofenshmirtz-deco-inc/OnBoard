@@ -9,7 +9,7 @@ define(Announcement, async (
   faker: typeof Faker,
   ctx?: { course: Course; authors: User[] }
 ) => {
-  if (ctx == null)
+  if (ctx == null || ctx.authors == null || ctx.authors.length == 0)
     throw new Error(
       "Announcement factory must be given context with course and users"
     );
