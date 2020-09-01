@@ -6,18 +6,20 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 import announcements from "./announcements.json";
 import { TextToLinks } from "../utils/string";
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      backgroundColor: theme.palette.background.paper,
       maxHeight: 400,
       overflow: "hidden",
+      border: "1px solid black",
     },
     enrolledClass: {
       height: 300, // Subject to change
       minWidth: 250,
+      border: "1px solid black",
+      marginLeft: "5px",
       marginRight: "5px",
       overflow: "hidden",
     },
@@ -65,7 +67,6 @@ function onClickHandler(link: string) {
 function renderAnnouncement(announcementObj: any, classes: any, key: number) {
   let trimmedesc = getDescription(announcementObj);
   return (
-    <Card className={classes.enrolledClass}>
     <ListItem
       button
       className={classes.enrolledClass}
@@ -77,7 +78,6 @@ function renderAnnouncement(announcementObj: any, classes: any, key: number) {
         fontSize: "1.1rem",
       }}
     >
-      
       <ListItemText
         // Forbidden br tag, I'm going to web dev jail
         primary={
@@ -96,22 +96,19 @@ function renderAnnouncement(announcementObj: any, classes: any, key: number) {
         }
       />
     </ListItem>
-    </Card>
   );
 }
 
 export default function Announcements() {
   const classes = useStyles();
   return (
-    <Card className={classes.root}>
-      <CardContent>
-      <h2>Announcements</h2>
+    <div className={classes.root}>
+      <h2 className={classes.heading}>Announcements</h2>
       <List className={classes.classList}>
         {Object.values(announcements).map((item, index) =>
           renderAnnouncement(item, classes, index)
         )}
       </List>
-      </CardContent>
-    </Card>
+    </div>
   );
 }

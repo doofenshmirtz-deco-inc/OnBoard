@@ -4,6 +4,9 @@ import React from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import classes from "*.module.css";
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import Box from '@material-ui/core/Box';
 
 const localizer = momentLocalizer(moment);
 
@@ -17,10 +20,17 @@ const myEventsList = {
   ],
 };
 
-const MyCalendar = () => (
-  <Card>
+const defaultProps = {
+  bgcolor: 'background.paper',
+  m: 1,
+  borderColor: 'text.primary',
+};
+
+
+export default function MyCalendar() {
+  return (
+  <Box border={1}>
     <CardContent>
-    <h2>Calendar</h2>
     <Calendar
       localizer={localizer}
       events={myEventsList.events}
@@ -31,7 +41,6 @@ const MyCalendar = () => (
       style={{ height: 300 }}
     />
     </CardContent>
-  </Card>
+  </Box>
 );
-
-export default MyCalendar;
+}
