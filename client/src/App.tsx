@@ -8,9 +8,11 @@ import {
   ThemeProvider,
   createMuiTheme,
 } from "@material-ui/core/styles";
+import { Shadows } from "@material-ui/core/styles/shadows";
 
 import modules from "./modules";
 import Sidebar from "./components/Sidebar";
+import Cal from "./components/Cal";
 
 const drawerWidth = 240;
 
@@ -47,8 +49,11 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function App() {
   const classes = useStyles();
   const theme = createMuiTheme({
+    // Disable shadows
+    // shadows: Array(25).fill("none") as Shadows,
     typography: {
       fontFamily: [
+        "myriad-pro",
         "-apple-system",
         "BlinkMacSystemFont",
         '"Segoe UI"',
@@ -65,23 +70,20 @@ export default function App() {
         fontSize: "inherit",
       },
     },
+    palette: {
+      primary: {
+        main: "#0B3954",
+        contrastText: "#BFD7EA",
+      },
+    },
   });
-
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
 
   return (
     <Router>
       <ThemeProvider theme={theme}>
         <div className={classes.root}>
           <CssBaseline />
-          <Sidebar
-            mobileOpen={mobileOpen}
-            handleDrawerToggle={handleDrawerToggle}
-          />
+          <Sidebar />
           {/* <AppBar position="fixed" className={classes.appBar}>
             <Toolbar>
               <IconButton
