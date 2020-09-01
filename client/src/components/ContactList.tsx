@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction"
 import ListItemText from "@material-ui/core/ListItemText";
 import TextField from "@material-ui/core/TextField";
-import IconButton from "@material-ui/core/IconButton";
-import MessageIcon from "@material-ui/icons/Message";
-import CallIcon from '@material-ui/icons/Call';
+import Typography from "@material-ui/core/Typography";
+import ContactCard from "./ContactCard";
+
+import Popover from "@material-ui/core/Popover";
 
 let contacts: string[] = [
   "Phineas Flynn",
@@ -27,9 +27,14 @@ const useStyles = makeStyles((theme: Theme) =>
       maxWidth: 360,
       backgroundColor: theme.palette.background.paper,
     },
-    searchbar: {
-      
-    }
+    title: {
+      textAlign: "center",
+    },
+    searchBar: {},
+    contactList: {
+      overflowY: "auto",
+      maxHeight: 300,
+    },
   })
 );
 
@@ -38,25 +43,54 @@ export default function ContactList() {
 
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
   return (
     <div className={classes.root}>
-      <h2>Contacts</h2>
-      <TextField className={classes.searchbar} id="contacts-search" label="Search" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}/>
-      <List>
-        {contacts.map((item) => (item.toLowerCase().includes(searchTerm.toLowerCase()) ? 
-          <ListItem button>
-            <ListItemText primary={item} />
-            <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="call">
-                <CallIcon />
-              </IconButton>
-              <IconButton edge="end" aria-label="message">
-                <MessageIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem> : null
-        ))}
+      <h2 className={classes.title}>Contacts</h2>
+      <TextField
+        className={classes.searchBar}
+        id="contacts-search"
+        label="Search"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <List className={classes.contactList}>
+        {contacts.map((item) =>
+          item.toLowerCase().includes(searchTerm.toLowerCase()) ? (
+            <ListItem button onClick={handleClick}>
+              <ListItemText primary={item} />
+            </ListItem>
+          ) : null
+        )}
       </List>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+      >
+        <ContactCard />
+      </Popover>
     </div>
   );
 }
