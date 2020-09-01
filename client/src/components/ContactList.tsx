@@ -4,42 +4,28 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
 import ContactCard from "./ContactCard";
-
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import CardHeader from "@material-ui/core/CardHeader";
-
 import Popover from "@material-ui/core/Popover";
 
-let contacts: string[] = [
-  "Phineas Flynn",
-  "Ferb Fletcher",
-  "Candace Flynn",
-  "Perry the Platypus",
-  "Heinz Doofenshmirtz",
-  "Isabella Garcia-Shapiro",
-  "Baljeet Tjinder",
-  "Buford van Stomm",
-];
+import contacts from "./Contacts.json";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: "100%",
       maxWidth: 400,
+      marginBottom: "2rem",
     },
-    title: {
-      
-    },
+    title: {},
     searchBar: {
       width: "200",
       margin: "auto",
     },
     contactList: {
       overflowY: "auto",
-      maxHeight: 300,
+      height: 300,
     },
   })
 );
@@ -50,9 +36,14 @@ export default function ContactList() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
+  const [selectedContact, setSelectedContact] = useState(null);
 
-  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleClick = (
+    event: React.MouseEvent<HTMLDivElement>,
+    contactObj: any
+  ) => {
     setAnchorEl(event.currentTarget);
+    setSelectedContact(contactObj);
   };
 
   const handleClose = () => {
@@ -65,41 +56,40 @@ export default function ContactList() {
   return (
     <Card className={classes.root}>
       <CardContent>
-
         <h2 className={classes.title}>Contacts</h2>
-      <TextField
-        className={classes.searchBar}
-        id="contacts-search"
-        label="Search"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        <TextField
+          className={classes.searchBar}
+          id="contacts-search"
+          label="Search"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
-      <List className={classes.contactList}>
-        {contacts.map((item) =>
-          item.toLowerCase().includes(searchTerm.toLowerCase()) ? (
-            <ListItem button onClick={handleClick}>
-              <ListItemText primary={item} />
-            </ListItem>
-          ) : null
+        <List className={classes.contactList}>
+          {Object.values(contacts).map((item) =>
+            item.name.toLowerCase().includes(searchTerm.toLowerCase()) ? (
+              <ListItem button onClick={(e) => handleClick(e, item)}>
+                <ListItemText primary={item.name} />
+              </ListItem>
+            ) : null
           )}
-      </List>
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
+        </List>
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
         >
-        <ContactCard />
-      </Popover>
-        </CardContent>
+          <ContactCard contact={selectedContact} />
+        </Popover>
+      </CardContent>
     </Card>
   );
 }

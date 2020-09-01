@@ -2,15 +2,13 @@ import React from "react";
 import HomeIcon from "@material-ui/icons/Home";
 
 import ContactList from "../../components/ContactList";
-import CourseList from "../../components/CourseList";
-
 import Announcements from "../../components/Announcements";
+
 const Home = () => {
   return (
     <div>
       <h1>Home</h1>
       <ContactList />
-      <CourseList />
       <Announcements />
     </div>
   );

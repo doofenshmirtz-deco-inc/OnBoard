@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function ContactCard() {
+export default function ContactCard(props: any) {
   const classes = useStyles();
 
   return (
@@ -34,7 +34,7 @@ export default function ContactCard() {
       <CardHeader
         avatar={
           <Avatar aria-label="contact" className={classes.avatar}>
-            PF
+            {props.contact.name[0]}
           </Avatar>
         }
         action={
@@ -42,8 +42,8 @@ export default function ContactCard() {
             <MoreVertIcon />
           </IconButton>
         }
-        title="Phineas Flynn"
-        subheader="Student"
+        title={props.contact.name}
+        subheader={props.contact.role}
       />
       <CardActions>
         <IconButton aria-label="call">
