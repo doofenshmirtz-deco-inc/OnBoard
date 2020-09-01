@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import classes from "*.module.css";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Box from '@material-ui/core/Box';
+import Container from '@material-ui/core/Container'
 
 const localizer = momentLocalizer(moment);
 
