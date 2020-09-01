@@ -17,7 +17,7 @@ define(UserGroup, (
   let userGroup = new UserGroup();
   userGroup.name = faker.lorem.words();
   userGroup.users = factory(User)().createMany(10);
-  userGroup.timetables = factory(Timetable)().createMany(10);
+  userGroup.timetable = factory(Timetable)().create();
 
   return userGroup;
 });

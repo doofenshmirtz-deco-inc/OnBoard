@@ -7,6 +7,7 @@ import {
     ManyToMany,
     JoinTable,
     PrimaryGeneratedColumn,
+    ManyToOne,
   } from "typeorm";
   import { ObjectType, ID, Field, Int } from "type-graphql";
   import { User } from "./User";
@@ -23,15 +24,18 @@ export class Timetable extends BaseEntity {
   id: number;
 
   @Column()
+  @Field()
   name: string;
 
   @Column("timestamp", {array: true})
+  @Field(() => [Date])
   times: Date[];
 
   @Column()
+  @Field()
   duration: number;
 
-  @ManyToMany(() => UserGroup, group => group.timetables)
+  @OneToMany(() => UserGroup, group => group.timetable)
   groups: Promise<UserGroup[]>
 }
   

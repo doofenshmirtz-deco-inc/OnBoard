@@ -7,6 +7,7 @@ import {
   ManyToMany,
   JoinTable,
   PrimaryGeneratedColumn,
+  ManyToOne,
 } from "typeorm";
 import { ObjectType, ID, Field, Int } from "type-graphql";
 import { User } from "./User";
@@ -20,13 +21,14 @@ export class UserGroup extends BaseEntity {
   id: number;
 
   @Column({nullable: true})
+  @Field()
   name?: string;
 
   @ManyToMany(() => User, (user) => user.groups, { cascade: true })
   @JoinTable()
   users: Promise<User[]>;
 
-  @ManyToMany(() => Timetable, t => t.groups)
-  @JoinTable()
-  timetables: Promise<Timetable[]>;
+  @ManyToOne(() => Timetable, t => t.groups, {nullable: true})
+  @Field(() => Timetable, {nullable: true})
+  timetable?: Promise<Timetable>;
 }
