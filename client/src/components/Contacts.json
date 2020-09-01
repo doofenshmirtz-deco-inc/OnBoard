@@ -1,0 +1,34 @@
+[
+    {
+        "name": "Phineas Flynn",
+        "role": "Student"
+    },
+    {
+        "name": "Ferb Fletcher",
+        "role": "Head Tutor"
+    },
+    {
+        "name": "Candace Flynn",
+        "role": "Student"
+    },
+    {
+        "name": "Perry the Platypus",
+        "role": "Tutor"
+    },
+    {
+        "name": "Heinz Doofenshmirtz",
+        "role": "Lecturer"
+    },
+    {
+        "name": "Isabella Garcia-Shapiro",
+        "role": "Student"
+    },
+    {
+        "name": "Baljeet Tjinder",
+        "role": "Student"
+    },
+    {
+        "name": "Buford van Stomm",
+        "role": "Student"
+    }
+]

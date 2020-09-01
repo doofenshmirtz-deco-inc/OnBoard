@@ -3,6 +3,7 @@ import HomeIcon from "@material-ui/icons/Home";
 
 import ContactList from "../../components/ContactList";
 import Announcements from "../../components/Announcements";
+
 const Home = () => {
   return (
     <div>
