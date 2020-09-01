@@ -6,7 +6,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 import announcements from "./announcements.json";
 import { TextToLinks } from "../utils/string";
-import Container from '@material-ui/core/Container';
+import Container from "@material-ui/core/Container";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -105,12 +105,12 @@ export default function Announcements() {
   return (
     <div className={classes.root}>
       <Container>
-      <h2 className={classes.heading}>Announcements</h2>
-      <List className={classes.classList}>
-        {Object.values(announcements).map((item, index) =>
-          renderAnnouncement(item, classes, index)
-        )}
-      </List>
+        <h2 className={classes.heading}>Announcements</h2>
+        <List className={classes.classList}>
+          {Object.values(announcements).map((item, index) =>
+            renderAnnouncement(item, classes, index)
+          )}
+        </List>
       </Container>
     </div>
   );

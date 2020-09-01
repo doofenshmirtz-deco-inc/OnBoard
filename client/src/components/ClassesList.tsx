@@ -8,8 +8,8 @@ import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import MessageIcon from "@material-ui/icons/Message";
 import CallIcon from "@material-ui/icons/Call";
-import Box from '@material-ui/core/Box';
-import Container from '@material-ui/core/Container'
+import Box from "@material-ui/core/Box";
+import Container from "@material-ui/core/Container";
 
 let classList: string[] = [
   "Phineas Flynn",
@@ -41,31 +41,31 @@ export default function ContactList() {
   return (
     <Box border={1} className={classes.root}>
       <Container>
-      <h2>Classes</h2>
-      <TextField
-        className={classes.searchbar}
-        id="contacts-search"
-        label="Search"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <List>
-        {classList.map((item, index) =>
-          item.toLowerCase().includes(searchTerm.toLowerCase()) ? (
-            <ListItem button key={index}>
-              <ListItemText primary={item} key={item} />
-              <ListItemSecondaryAction>
-                <IconButton edge="end" aria-label="call">
-                  <CallIcon />
-                </IconButton>
-                <IconButton edge="end" aria-label="message">
-                  <MessageIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-          ) : null
-        )}
-      </List>
+        <h2>Classes</h2>
+        <TextField
+          className={classes.searchbar}
+          id="contacts-search"
+          label="Search"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <List>
+          {classList.map((item, index) =>
+            item.toLowerCase().includes(searchTerm.toLowerCase()) ? (
+              <ListItem button key={index}>
+                <ListItemText primary={item} key={item} />
+                <ListItemSecondaryAction>
+                  <IconButton edge="end" aria-label="call">
+                    <CallIcon />
+                  </IconButton>
+                  <IconButton edge="end" aria-label="message">
+                    <MessageIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            ) : null
+          )}
+        </List>
       </Container>
     </Box>
   );

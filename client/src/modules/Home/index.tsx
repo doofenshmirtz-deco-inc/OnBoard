@@ -1,11 +1,11 @@
 import React from "react";
 import HomeIcon from "@material-ui/icons/Home";
-import Grid, { GridSpacing } from '@material-ui/core/Grid';
+import Grid, { GridSpacing } from "@material-ui/core/Grid";
 import ContactList from "../../components/ContactList";
 import ClassesList from "../../components/ClassesList";
 import Announcements from "../../components/Announcements";
 import Cal from "../../components/Cal";
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
     control: {
       padding: theme.spacing(2),
     },
-  }),
+  })
 );
 
 const Home = () => {
@@ -27,16 +27,16 @@ const Home = () => {
   return (
     <Grid container className={classes.root} spacing={2}>
       <Grid item xs={8}>
-      <Cal />
+        <Cal />
       </Grid>
       <Grid item xs={3}>
-      <ClassesList />
+        <ClassesList />
       </Grid>
       <Grid item xs={8}>
-      <Announcements />
+        <Announcements />
       </Grid>
       <Grid item xs={3}>
-      <ContactList />
+        <ContactList />
       </Grid>
     </Grid>
   );

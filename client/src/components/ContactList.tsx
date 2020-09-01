@@ -8,8 +8,8 @@ import ContactCard from "./ContactCard";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Popover from "@material-ui/core/Popover";
-import Box from "@material-ui/core/Box"
-import Container from "@material-ui/core/Container"
+import Box from "@material-ui/core/Box";
+import Container from "@material-ui/core/Container";
 
 import contacts from "./Contacts.json";
 
