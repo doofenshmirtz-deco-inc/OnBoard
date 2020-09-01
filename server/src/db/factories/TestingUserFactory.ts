@@ -32,7 +32,6 @@ export const generateTestingUser = async (
 	}).save();
 	*/
   let group = new UserGroup();
-  group.name = user.name;
   group.users = Promise.resolve([user]);
   group = await group.save();
 

@@ -19,8 +19,8 @@ export class UserGroup extends BaseEntity {
   @Field(() => ID)
   id: number;
 
-  @Column()
-  name: string;
+  @Column({nullable: true})
+  name?: string;
 
   @ManyToMany(() => User, (user) => user.groups, { cascade: true })
   @JoinTable()
