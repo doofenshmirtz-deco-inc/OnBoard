@@ -28,7 +28,7 @@ export class User extends BaseEntity {
   @Field()
   email: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   calendarUrl?: string;
 
   @ManyToMany(() => UserGroup, (group) => group.users)

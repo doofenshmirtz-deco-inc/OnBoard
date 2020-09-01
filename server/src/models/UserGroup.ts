@@ -20,7 +20,7 @@ export class UserGroup extends BaseEntity {
   @Field(() => ID)
   id: number;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   @Field()
   name?: string;
 
@@ -28,7 +28,7 @@ export class UserGroup extends BaseEntity {
   @JoinTable()
   users: Promise<User[]>;
 
-  @ManyToOne(() => Timetable, t => t.groups, {nullable: true})
-  @Field(() => Timetable, {nullable: true})
+  @ManyToOne(() => Timetable, (t) => t.groups, { nullable: true })
+  @Field(() => Timetable, { nullable: true })
   timetable?: Promise<Timetable>;
 }

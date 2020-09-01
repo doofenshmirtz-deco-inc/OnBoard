@@ -1,18 +1,18 @@
 import {
-    Column,
-    PrimaryColumn,
-    BaseEntity,
-    Entity,
-    OneToMany,
-    ManyToMany,
-    JoinTable,
-    PrimaryGeneratedColumn,
-    ManyToOne,
-  } from "typeorm";
-  import { ObjectType, ID, Field, Int } from "type-graphql";
-  import { User } from "./User";
+  Column,
+  PrimaryColumn,
+  BaseEntity,
+  Entity,
+  OneToMany,
+  ManyToMany,
+  JoinTable,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+} from "typeorm";
+import { ObjectType, ID, Field, Int } from "type-graphql";
+import { User } from "./User";
 import { UserGroup } from "./UserGroup";
-  
+
 /**
  * This is a timetable containing dates and times. It can be attached to one or more groups.
  */
@@ -27,7 +27,7 @@ export class Timetable extends BaseEntity {
   @Field()
   name: string;
 
-  @Column("timestamp", {array: true})
+  @Column("timestamp", { array: true })
   @Field(() => [Date])
   times: Date[];
 
@@ -35,7 +35,6 @@ export class Timetable extends BaseEntity {
   @Field()
   duration: number;
 
-  @OneToMany(() => UserGroup, group => group.timetable)
-  groups: Promise<UserGroup[]>
+  @OneToMany(() => UserGroup, (group) => group.timetable)
+  groups: Promise<UserGroup[]>;
 }
-  
