@@ -74,6 +74,7 @@ export default function App() {
       primary: {
         main: "#0B3954",
         contrastText: "#BFD7EA",
+        light: "#FAFAFA"
       },
     },
   });
