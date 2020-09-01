@@ -39,7 +39,7 @@ export default function MyCalendar() {
       defaultView={'week'}
       views={['month', 'week']}
       endAccessor="end"
-      style={{ height: 300 }}
+      style={{height: 446}}
     />
     </CardContent>
   </Box>

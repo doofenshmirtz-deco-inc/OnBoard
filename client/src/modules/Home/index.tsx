@@ -4,7 +4,6 @@ import Grid, { GridSpacing } from '@material-ui/core/Grid';
 import ContactList from "../../components/ContactList";
 import ClassesList from "../../components/ClassesList";
 import Announcements from "../../components/Announcements";
-<<<<<<< HEAD
 import Cal from "../../components/Cal";
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
@@ -22,8 +21,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
-=======
->>>>>>> james
 
 const Home = () => {
   const classes = useStyles();

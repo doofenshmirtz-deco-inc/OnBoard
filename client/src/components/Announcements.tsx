@@ -6,17 +6,18 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 import announcements from "./announcements.json";
 import { TextToLinks } from "../utils/string";
+import Container from '@material-ui/core/Container';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       backgroundColor: theme.palette.background.paper,
-      maxHeight: 400,
+      // maxHeight: 400,
       overflow: "hidden",
       border: "1px solid black",
     },
     enrolledClass: {
-      height: 300, // Subject to change
+      // height: 300, // Subject to change
       minWidth: 250,
       border: "1px solid black",
       marginLeft: "5px",
@@ -103,12 +104,14 @@ export default function Announcements() {
   const classes = useStyles();
   return (
     <div className={classes.root}>
+      <Container>
       <h2 className={classes.heading}>Announcements</h2>
       <List className={classes.classList}>
         {Object.values(announcements).map((item, index) =>
           renderAnnouncement(item, classes, index)
         )}
       </List>
+      </Container>
     </div>
   );
 }
