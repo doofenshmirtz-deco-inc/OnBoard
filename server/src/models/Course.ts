@@ -6,6 +6,7 @@ import {
   OneToMany,
   OneToOne,
   JoinColumn,
+  JoinTable,
 } from "typeorm";
 import {
   ObjectType,
@@ -17,6 +18,7 @@ import {
   registerEnumType,
 } from "type-graphql";
 import { UserGroup } from "./UserGroup";
+import { Announcement } from "./Announcement";
 
 export enum Semesters {
   One = "Semester One",
@@ -81,6 +83,11 @@ export class Course extends BaseEntity {
   students: UserGroup;
 
   // TODO validation that user groups are disjoint
+
+  @OneToMany(() => Announcement, (a) => a.course)
+  @JoinColumn()
+  @Field(() => [Announcement])
+  announcements: Promise<Announcement[]>;
 }
 
 @ArgsType()
