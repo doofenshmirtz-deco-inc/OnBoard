@@ -7,6 +7,10 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import ContactCard from "./ContactCard";
 
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardHeader from "@material-ui/core/CardHeader";
+
 import Popover from "@material-ui/core/Popover";
 
 let contacts: string[] = [
@@ -24,13 +28,15 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: "100%",
-      maxWidth: 360,
-      backgroundColor: theme.palette.background.paper,
+      maxWidth: 400,
     },
     title: {
-      textAlign: "center",
+      
     },
-    searchBar: {},
+    searchBar: {
+      width: "200",
+      margin: "auto",
+    },
     contactList: {
       overflowY: "auto",
       maxHeight: 300,
@@ -57,15 +63,17 @@ export default function ContactList() {
   const id = open ? "simple-popover" : undefined;
 
   return (
-    <div className={classes.root}>
-      <h2 className={classes.title}>Contacts</h2>
+    <Card className={classes.root}>
+      <CardContent>
+
+        <h2 className={classes.title}>Contacts</h2>
       <TextField
         className={classes.searchBar}
         id="contacts-search"
         label="Search"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-      />
+        />
       <List className={classes.contactList}>
         {contacts.map((item) =>
           item.toLowerCase().includes(searchTerm.toLowerCase()) ? (
@@ -73,7 +81,7 @@ export default function ContactList() {
               <ListItemText primary={item} />
             </ListItem>
           ) : null
-        )}
+          )}
       </List>
       <Popover
         id={id}
@@ -88,9 +96,10 @@ export default function ContactList() {
           vertical: "top",
           horizontal: "center",
         }}
-      >
+        >
         <ContactCard />
       </Popover>
-    </div>
+        </CardContent>
+    </Card>
   );
 }
