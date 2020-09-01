@@ -58,7 +58,7 @@ export default function App() {
     // shadows: Array(25).fill("none") as Shadows,
     typography: {
       fontFamily: [
-        "Myriad",
+        "myriad-pro",
         "-apple-system",
         "BlinkMacSystemFont",
         '"Segoe UI"',
