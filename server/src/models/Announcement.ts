@@ -26,7 +26,7 @@ export class Announcement extends BaseEntity {
   @Field(() => ID)
   id: number;
 
-  @ManyToOne(() => Course, (c) => c.announcements)
+  @ManyToOne(() => Course, (c) => c.announcements, { cascade: true })
   course: Promise<Course>;
 
   @OneToOne(() => User)

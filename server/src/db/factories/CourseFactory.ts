@@ -25,11 +25,10 @@ define(Course, async (faker: typeof Faker) => {
     num: faker.random.number({ min: 10, max: 30, precision: 1 }),
   }).create();
 
-  /*
   const authors = await course.coordinators.users;
-  course.announcements = factory(Announcement)({ course, authors }).createMany(
+  course.announcements = await factory(Announcement)({ course, authors }).createMany(
     faker.random.number(10)
-  );*/
+  );
 
   return course;
 });

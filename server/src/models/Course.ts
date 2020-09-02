@@ -92,7 +92,7 @@ export class Course extends BaseEntity {
   @OneToMany(() => Announcement, (a) => a.course)
   @JoinColumn()
   @Field(() => [Announcement])
-  announcements: Promise<Announcement[]>;
+  announcements: Announcement[];
 }
 
 @ArgsType()
