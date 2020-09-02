@@ -26,7 +26,7 @@ define(Course, async (faker: typeof Faker) => {
   }).create();
 
   const authors = await course.coordinators.users;
-  course.announcements = await factory(Announcement)({ course, authors }).createMany(
+  course.announcements = factory(Announcement)({ course, authors }).createMany(
     faker.random.number(10)
   );
 

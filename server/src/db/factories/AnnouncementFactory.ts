@@ -17,7 +17,6 @@ define(Announcement, async (
   const announcement = new Announcement();
   announcement.html = faker.lorem.paragraph();
   announcement.title = faker.lorem.words();
-  announcement.course = Promise.resolve(ctx.course);
   announcement.author = Promise.resolve(faker.random.arrayElement(ctx.authors));
 
   return announcement;
