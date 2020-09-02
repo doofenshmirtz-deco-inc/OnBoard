@@ -7,6 +7,7 @@ import {
   OneToOne,
   JoinColumn,
   JoinTable,
+  PrimaryGeneratedColumn,
 } from "typeorm";
 import {
   ObjectType,
@@ -41,15 +42,19 @@ registerEnumType(CourseLevel, {
 @Entity()
 @ObjectType()
 export class Course extends BaseEntity {
-  @PrimaryColumn()
-  @Field(() => String)
-  id: string;
+  @PrimaryGeneratedColumn()
+  @Field(() => ID)
+  id: number;
 
-  @PrimaryColumn()
+  @Column()
+  @Field()
+  code: string;
+
+  @Column()
   @Field(() => Int)
   year: number;
 
-  @PrimaryColumn({
+  @Column({
     type: "enum",
     enum: Semesters,
   })
