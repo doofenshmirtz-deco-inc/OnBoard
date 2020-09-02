@@ -8,6 +8,8 @@ import ContactCard from "./ContactCard";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Popover from "@material-ui/core/Popover";
+import Box from "@material-ui/core/Box";
+import Container from "@material-ui/core/Container";
 
 import contacts from "./Contacts.json";
 
@@ -25,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     contactList: {
       overflowY: "auto",
-      height: 300,
+      height: 262,
     },
   })
 );
@@ -54,8 +56,8 @@ export default function ContactList() {
   const id = open ? "simple-popover" : undefined;
 
   return (
-    <Card className={classes.root}>
-      <CardContent>
+    <Box border={1} className={classes.root}>
+      <Container>
         <h2 className={classes.title}>Contacts</h2>
         <TextField
           className={classes.searchBar}
@@ -89,7 +91,7 @@ export default function ContactList() {
         >
           <ContactCard contact={selectedContact} />
         </Popover>
-      </CardContent>
-    </Card>
+      </Container>
+    </Box>
   );
 }
