@@ -15,6 +15,7 @@ import { PaginationArgs, getOrder } from "./Types";
 import { isAuth } from "../middleware/isAuth";
 import { Context } from "../middleware/Context";
 import { UserGroup } from "../models/UserGroup";
+import { Timetable } from "../models/Timetable";
 
 @Resolver((of) => UserGroup)
 export class UserGroupResolver {

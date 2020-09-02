@@ -1,6 +1,7 @@
 import { User } from "../../models/User";
 import { Course, Semesters, CourseLevel } from "../../models/Course";
 import { UserGroup } from "../../models/UserGroup";
+import { Timetable } from "../../models/Timetable";
 
 /**
  * Generates a user for test (e.g. the user is enrolled in a course)
