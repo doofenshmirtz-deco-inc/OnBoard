@@ -10,7 +10,8 @@ import TestingUserSeeder from "../src/db/seeds/TestingUserSeeder";
 const userResolver = new UserResolver();
 const emptyReqRes = { 
 	req: {} as any,
-	res: {} as any
+	res: {} as any,
+	connection: {} as any
 };
 
 let connection: Connection;

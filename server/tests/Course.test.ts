@@ -11,7 +11,8 @@ import {Semesters} from "../src/models/Course";
 const courseResolver = new CourseResolver();
 const emptyReqRes = { 
 	req: {} as any,
-	res: {} as any
+	res: {} as any,
+	connection: {} as any
 };
 
 let connection: Connection;
