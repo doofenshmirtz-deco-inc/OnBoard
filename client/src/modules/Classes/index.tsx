@@ -4,10 +4,10 @@ import { Container } from "@material-ui/core";
 import ClassesTabs from "../../components/ClassesTabs";
 
 const Classes = () => (
-  <Container>
+  <>
     <h1>My Classes</h1>
     <ClassesTabs />
-  </Container>
+  </>
 );
 
 export default {

@@ -16,7 +16,13 @@ import Sidebar from "./components/Sidebar";
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import { Login } from "./modules/Login";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  createHttpLink,
+} from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 import { LoadingPage } from "./components/LoadingPage";
 
 const drawerWidth = 240;
@@ -109,14 +115,31 @@ export default function App() {
       firebase.initializeApp(firebaseConfig);
       firebase.auth().onAuthStateChanged((user) => {
         if (user) setUser(user);
-        else setUser(null);
+        else {
+          setUser(null);
+          client.resetStore();
+        }
         setLoaded(true);
       });
     }
   }, []);
 
-  const client = new ApolloClient({
+  const httpLink = createHttpLink({
     uri: "http://localhost:5000/graphql",
+  });
+
+  const authLink = setContext((_, { headers }) => {
+    const token = firebase.auth().currentUser?.getIdToken();
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? token : "",
+      },
+    };
+  });
+
+  const client = new ApolloClient({
+    link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
   });
 
