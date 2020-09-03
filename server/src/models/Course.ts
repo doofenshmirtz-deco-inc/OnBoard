@@ -8,6 +8,7 @@ import {
   JoinColumn,
   JoinTable,
   PrimaryGeneratedColumn,
+  ManyToOne,
 } from "typeorm";
 import {
   ObjectType,
@@ -20,6 +21,7 @@ import {
 } from "type-graphql";
 import { UserGroup } from "./UserGroup";
 import { Announcement } from "./Announcement";
+import { User } from "./User";
 
 export enum Semesters {
   One = "Semester One",
@@ -38,6 +40,13 @@ export enum CourseLevel {
 registerEnumType(CourseLevel, {
   name: "CourseLevel",
 });
+
+export enum CourseRole {
+  Coordinator = 'Coordinators',
+  Tutor = 'Tutors',
+  Student = 'Students'
+};
+
 
 @Entity()
 @ObjectType()
@@ -72,19 +81,19 @@ export class Course extends BaseEntity {
   @Field()
   courseLevel: CourseLevel;
 
-  @OneToOne(() => UserGroup, { eager: true })
-  @JoinColumn()
-  @Field()
+  @ManyToOne(() => UserGroup, g => g.course, { eager: true })
+  @JoinTable()
+  @Field(() => UserGroup)
   coordinators: UserGroup;
 
-  @OneToOne(() => UserGroup, { eager: true })
-  @JoinColumn()
-  @Field()
+  @ManyToOne(() => UserGroup, g => g.course, { eager: true }) 
+  @JoinTable()
+  @Field(() => UserGroup)
   tutors: UserGroup;
 
-  @OneToOne(() => UserGroup, { eager: true })
-  @JoinColumn()
-  @Field()
+  @ManyToOne(() => UserGroup, g => g.course, { eager: true })
+  @JoinTable()
+  @Field(() => UserGroup)
   students: UserGroup;
 
   // TODO validation that user groups are disjoint

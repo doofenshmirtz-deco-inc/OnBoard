@@ -8,10 +8,12 @@ import {
   JoinTable,
   PrimaryGeneratedColumn,
   ManyToOne,
+  OneToOne,
 } from "typeorm";
 import { ObjectType, ID, Field, Int, registerEnumType } from "type-graphql";
 import { User } from "./User";
 import { Timetable } from "./Timetable";
+import { Course } from "./Course";
 
 export enum GroupType {
   CourseStudents = "CourseStudents",
@@ -46,4 +48,8 @@ export class UserGroup extends BaseEntity {
   @ManyToOne(() => Timetable, (t) => t.groups, { nullable: true })
   @Field(() => Timetable, { nullable: true })
   timetable?: Promise<Timetable>;
+
+  @ManyToMany(() => Course)
+  @Field(() => [Course])
+  course: Promise<Course[]>;
 }
