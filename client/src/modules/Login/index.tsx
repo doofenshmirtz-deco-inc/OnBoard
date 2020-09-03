@@ -63,8 +63,8 @@ export const Login = () => {
         />
         <TextField
           id="standard-input-password"
-			label="password"
-			type="password"
+          label="password"
+          type="password"
           onChange={(e) => setPass(e.currentTarget.value)}
         />
         <Button color="primary" onClick={submit}>
