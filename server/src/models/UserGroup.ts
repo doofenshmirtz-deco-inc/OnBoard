@@ -9,9 +9,20 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
 } from "typeorm";
-import { ObjectType, ID, Field, Int } from "type-graphql";
+import { ObjectType, ID, Field, Int, registerEnumType } from "type-graphql";
 import { User } from "./User";
 import { Timetable } from "./Timetable";
+
+export enum GroupType {
+  CourseStudents = 'CourseStudents',
+  CourseStaff = 'CourseStaff',
+  Class = 'Class',
+  StudyRoom = 'StudyRoom',
+  DirectMessage = 'DirectMessage',
+}
+registerEnumType(GroupType, {
+  name: "GroupType"
+});
 
 @Entity()
 @ObjectType()
@@ -23,6 +34,10 @@ export class UserGroup extends BaseEntity {
   @Column({ nullable: true })
   @Field()
   name?: string;
+
+  @Column({enum: GroupType, nullable: true})
+  @Field()
+  type?: GroupType;
 
   @ManyToMany(() => User, (user) => user.groups, { cascade: true })
   @JoinTable()
