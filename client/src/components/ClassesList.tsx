@@ -11,11 +11,11 @@ class Course {
   name: string;
   colour: string;
 
-  constructor (name: string, colour: string) {
+  constructor(name: string, colour: string) {
     this.name = name;
     this.colour = colour;
   }
-} 
+}
 
 let classList: Course[] = [
   new Course("COSC3500", "#FF5A5F"),
@@ -43,16 +43,16 @@ export default function ContactList() {
       <Container>
         <h2>Classes</h2>
         <List>
-          {classList.map((item, index) =>
-              <ListItem button key={index}>
-                <ListItemIcon> 
-                  <svg width={20} height={20}>
-                    <circle cx={10} cy={10} r={10} fill={item.colour}></circle>
-                  </svg>
-                </ListItemIcon>
-                <ListItemText primary={item.name} />
-              </ListItem>
-          )}
+          {classList.map((item, index) => (
+            <ListItem button key={index}>
+              <ListItemIcon>
+                <svg width={20} height={20}>
+                  <circle cx={10} cy={10} r={10} fill={item.colour}></circle>
+                </svg>
+              </ListItemIcon>
+              <ListItemText primary={item.name} />
+            </ListItem>
+          ))}
         </List>
       </Container>
     </Box>
