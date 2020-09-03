@@ -13,6 +13,7 @@ interface TabPanelProps {
 }
 
 function TabPanel(props: TabPanelProps) {
+  const classes = useStyles();
   const { children, value, index, ...other } = props;
 
   return (
@@ -32,8 +33,7 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-function a11yProps(index : any) {
-  console.log(index);
+function a11yProps(index : number) {
   return {
     id: `scrollable-auto-tab-${index}`,
     'aria-controls': `scrollable-auto-tabpanel-${index}`,
@@ -43,11 +43,14 @@ function a11yProps(index : any) {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
-    width: '100%',
+    width: "100%",
     backgroundColor: theme.palette.background.paper,
   },
   tabs: {
     textTransform: "none"
+  },
+  bold: {
+    fontWeight: "bold"
   }
 }));
 
@@ -76,10 +79,9 @@ export default function MenuBar() {
         <Tabs 
           value={value}
           onChange={handleChange}
-          indicatorColor="primary"
+          indicatorColor="secondary"
           variant="scrollable"
-          scrollButtons="auto"
-          aria-label="scrollable auto tabs example"
+          aria-label="scrollable tabs example"
         >
           {/* <Tab label="Item One" {...a11yProps(0)} />
           <Tab label="Item Two" {...a11yProps(1)} />
@@ -89,9 +91,8 @@ export default function MenuBar() {
           <Tab label="Item Six" {...a11yProps(5)} />
           <Tab label="Item Seven" {...a11yProps(6)} /> */}
           {menuBarComponents.map((item, index) => {
-            console.log("hello" + index);
             return (
-              <Tab key={index} className={classes.tabs} label={item} {...a11yProps({index})} />
+              <Tab key={index} className={classes.tabs} label={item} {...a11yProps(index)} />
             );
           })
           }
