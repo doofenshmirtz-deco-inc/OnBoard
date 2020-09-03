@@ -2,11 +2,11 @@ import { Seeder, Factory } from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import { Connection } from "typeorm";
 import { User } from "../../models/User";
 import { Semesters, CourseLevel, Course } from "../../models/Course";
-import { UserGroup } from "../../models/UserGroup";
+import { UserGroup, GroupType } from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
 
-const generateEmptyGroup = () =>
-  UserGroup.create({ users: Promise.resolve([]) }).save();
+const generateEmptyGroup = (context?: {type: GroupType}) =>
+  UserGroup.create({ users: Promise.resolve([]), type: context?.type ?? GroupType.CourseStudents }).save();
 
 /**
  * Generates a user for test (e.g. the user is enrolled in a course)
