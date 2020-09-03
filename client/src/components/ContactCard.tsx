@@ -17,9 +17,6 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      maxWidth: 345,
-    },
     avatar: {
       backgroundColor: red[500],
     },
@@ -33,7 +30,11 @@ export default function ContactCard(props: any) {
     <Card>
       <CardHeader
         avatar={
-          <Avatar aria-label="contact" className={classes.avatar}>
+          <Avatar
+            aria-label="contact"
+            className={classes.avatar}
+            src={props.contact.avatar}
+          >
             {props.contact.name[0]}
           </Avatar>
         }

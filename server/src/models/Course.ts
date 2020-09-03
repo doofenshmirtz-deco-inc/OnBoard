@@ -6,6 +6,8 @@ import {
   OneToMany,
   OneToOne,
   JoinColumn,
+  JoinTable,
+  PrimaryGeneratedColumn,
 } from "typeorm";
 import {
   ObjectType,
@@ -17,6 +19,7 @@ import {
   registerEnumType,
 } from "type-graphql";
 import { UserGroup } from "./UserGroup";
+import { Announcement } from "./Announcement";
 
 export enum Semesters {
   One = "Semester One",
@@ -39,15 +42,19 @@ registerEnumType(CourseLevel, {
 @Entity()
 @ObjectType()
 export class Course extends BaseEntity {
-  @PrimaryColumn()
-  @Field(() => String)
-  id: string;
+  @PrimaryGeneratedColumn()
+  @Field(() => ID)
+  id: number;
 
-  @PrimaryColumn()
+  @Column()
+  @Field()
+  code: string;
+
+  @Column()
   @Field(() => Int)
   year: number;
 
-  @PrimaryColumn({
+  @Column({
     type: "enum",
     enum: Semesters,
   })
@@ -81,6 +88,10 @@ export class Course extends BaseEntity {
   students: UserGroup;
 
   // TODO validation that user groups are disjoint
+
+  @OneToMany(() => Announcement, (a) => a.course, { cascade: true })
+  @Field(() => [Announcement], { defaultValue: [] })
+  announcements: Promise<Announcement[]>;
 }
 
 @ArgsType()
