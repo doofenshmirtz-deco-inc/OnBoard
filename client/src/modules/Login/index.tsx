@@ -41,7 +41,6 @@ export const Login = () => {
   const [loading, setLoading] = React.useState(false);
 
   const submit = async () => {
-    // TODO display loading wheel
     setLoading(true);
     const { data } = await client
       .watchQuery({ query: GET_CUSTOM_TOKEN, variables: { uid: uid } })
@@ -64,7 +63,8 @@ export const Login = () => {
         />
         <TextField
           id="standard-input-password"
-          label="password"
+			label="password"
+			type="password"
           onChange={(e) => setPass(e.currentTarget.value)}
         />
         <Button color="primary" onClick={submit}>
