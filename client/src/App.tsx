@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: "flex",
-      overflowX: "hidden",
     },
     appBar: {
       [theme.breakpoints.up("sm")]: {
@@ -47,6 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
     content: {
       flexGrow: 1,
       padding: theme.spacing(3),
+      minWidth: "70%", // TODO: kenton pls fix but this makes it work on small screens
     },
   })
 );
