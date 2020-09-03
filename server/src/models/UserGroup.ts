@@ -14,14 +14,14 @@ import { User } from "./User";
 import { Timetable } from "./Timetable";
 
 export enum GroupType {
-  CourseStudents = 'CourseStudents',
-  CourseStaff = 'CourseStaff',
-  Class = 'Class',
-  StudyRoom = 'StudyRoom',
-  DirectMessage = 'DirectMessage',
+  CourseStudents = "CourseStudents",
+  CourseStaff = "CourseStaff",
+  Class = "Class",
+  StudyRoom = "StudyRoom",
+  DirectMessage = "DirectMessage",
 }
 registerEnumType(GroupType, {
-  name: "GroupType"
+  name: "GroupType",
 });
 
 @Entity()
@@ -35,7 +35,7 @@ export class UserGroup extends BaseEntity {
   @Field()
   name?: string;
 
-  @Column({enum: GroupType, nullable: true})
+  @Column({ enum: GroupType, nullable: true })
   @Field()
   type?: GroupType;
 
