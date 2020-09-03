@@ -29,13 +29,13 @@ const Home = () => {
       <Grid item xs={8}>
         <Cal />
       </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={4}>
         <ClassesList />
       </Grid>
       <Grid item xs={8}>
         <Announcements />
       </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={4}>
         <ContactList />
       </Grid>
     </Grid>

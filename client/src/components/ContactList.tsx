@@ -13,11 +13,6 @@ import contacts from "./Contacts.json";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      width: "100%",
-      maxWidth: 400,
-      marginBottom: "2rem",
-    },
     title: {},
     searchBar: {
       width: "100%",
@@ -54,7 +49,7 @@ export default function ContactList() {
   const id = open ? "simple-popover" : undefined;
 
   return (
-    <Box border={1} className={classes.root}>
+    <Box border={1}>
       <Container>
         <h2 className={classes.title}>Contacts</h2>
         <TextField

@@ -20,7 +20,8 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: "flex",
-      overflowX: "hidden",
+		//overflowX: "hidden",
+		//width: `calc(100% - ${drawerWidth}px)`,
     },
     appBar: {
       [theme.breakpoints.up("sm")]: {
@@ -41,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     content: {
       flexGrow: 1,
-      padding: theme.spacing(3),
+		padding: theme.spacing(3),
     },
   })
 );
