@@ -14,7 +14,7 @@ import { User } from "../models/User";
 import { PaginationArgs, getOrder } from "./Types";
 import { isAuth } from "../middleware/isAuth";
 import { Context } from "../middleware/Context";
-import { UserGroup } from "../models/UserGroup";
+import { UserGroup, GroupType } from "../models/UserGroup";
 
 @Resolver((of) => User)
 export class UserResolver {
@@ -40,13 +40,14 @@ export class UserResolver {
   @Query(() => User, { nullable: true })
   @UseMiddleware(isAuth)
   async me(@Ctx() ctx: Context) {
+    console.log(ctx);
     return User.findOne({
       where: { id: ctx.payload?.uid },
     });
   }
 
   @FieldResolver((type) => [UserGroup])
-  async groups(@Root() user: User) {
-    return await user.groups;
+  async groups(@Root() user: User, @Arg("type", () => GroupType, {nullable: true}) type: GroupType | null) {
+    return (await user.groups).filter(x => type == null || x.type == type);
   }
 }

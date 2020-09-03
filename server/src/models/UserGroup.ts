@@ -32,11 +32,11 @@ export class UserGroup extends BaseEntity {
   id: number;
 
   @Column({ nullable: true })
-  @Field()
+  @Field({nullable: true})
   name?: string;
 
   @Column({ enum: GroupType, nullable: true })
-  @Field()
+  @Field({nullable: true})
   type?: GroupType;
 
   @ManyToMany(() => User, (user) => user.groups, { cascade: true })
