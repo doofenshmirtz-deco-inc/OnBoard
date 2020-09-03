@@ -76,6 +76,9 @@ export default function App() {
         contrastText: "#BFD7EA",
         light: "#FAFAFA",
       },
+      secondary: {
+        main: "#BFD7EA"
+      }
     },
   });
 

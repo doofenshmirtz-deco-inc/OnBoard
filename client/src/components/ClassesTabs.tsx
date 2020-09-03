@@ -46,10 +46,23 @@ function a11yProps(index: any) {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
-    width: "100%",
-    backgroundColor: theme.palette.background.paper,
+    width: "100%"
   },
+  tabs: {
+    textTransform: "none"
+  }
 }));
+
+let menuBarComponents : string[] = [
+  "Announcements",
+  "Learning Resources",
+  "Assessment",
+  "My Grades",
+  "Course Staff",
+  "Course Profile (ECP)",
+  "Library Links",
+  "Discussion Board"
+];
 
 export default function ClassesTabs() {
   const classes = useStyles();
@@ -61,23 +74,21 @@ export default function ClassesTabs() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" color="default">
+      <AppBar position="static">
         <Tabs
           value={value}
           onChange={handleChange}
-          indicatorColor="primary"
-          textColor="primary"
+          indicatorColor="secondary"
           variant="scrollable"
           scrollButtons="auto"
           aria-label="scrollable auto tabs example"
         >
-          <Tab label="Item One" {...a11yProps(0)} />
-          <Tab label="Item Two" {...a11yProps(1)} />
-          <Tab label="Item Three" {...a11yProps(2)} />
-          <Tab label="Item Four" {...a11yProps(3)} />
-          <Tab label="Item Five" {...a11yProps(4)} />
-          <Tab label="Item Six" {...a11yProps(5)} />
-          <Tab label="Item Seven" {...a11yProps(6)} />
+        {menuBarComponents.map((item, index) => {
+            return (
+              <Tab key={index} className={classes.tabs} label={item} {...a11yProps(index)} />
+            );
+          })
+        }
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
