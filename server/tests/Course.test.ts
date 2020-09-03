@@ -42,8 +42,8 @@ describe("Course Resolver", () => {
 		});
 
 		expect(course.length).toBeGreaterThan(0);
-		expect(course.map(course => course.id)).toContain("MATH1071");
-		expect((await course[course.map(course => course.id).indexOf("MATH1071")].students.users).map(student => student.id)).toContain("doof-uid");
+		expect(course.map(course => course.code)).toContain("MATH1071");
+		expect((await course[course.map(course => course.code).indexOf("MATH1071")].students.users).map(student => student.id)).toContain("doof-uid");
 	});
 
 	it("students query", async () => {

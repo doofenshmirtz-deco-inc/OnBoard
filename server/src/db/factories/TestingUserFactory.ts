@@ -1,6 +1,7 @@
 import { User } from "../../models/User";
 import { Course, Semesters, CourseLevel } from "../../models/Course";
 import { UserGroup } from "../../models/UserGroup";
+import { Timetable } from "../../models/Timetable";
 
 /**
  * Generates a user for test (e.g. the user is enrolled in a course)
@@ -11,7 +12,7 @@ export const generateTestingUser = async (
         uid: string;
         name: string;
         email: string;
-        courseID: string;
+        courseCode: string;
         courseSemester: Semesters;
         courseYear: number;
         courseEnrolment: "coordinator" | "tutor" | "student";
@@ -36,8 +37,8 @@ export const generateTestingUser = async (
   group = await group.save();
 
   await Course.create({
-    id: context.courseID,
-    name: context.courseID,
+    code: context.courseCode,
+    name: context.courseCode,
     year: context.courseYear,
     semester: Semesters.One,
     courseLevel: CourseLevel.Undergrad,
