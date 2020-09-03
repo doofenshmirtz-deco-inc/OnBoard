@@ -14,7 +14,7 @@ import { User } from "../models/User";
 import { PaginationArgs, getOrder } from "./Types";
 import { isAuth } from "../middleware/isAuth";
 import { Context } from "../middleware/Context";
-import { UserGroup, GroupType } from "../models/UserGroup";
+import { BaseGroup, GroupType } from "../models/UserGroup";
 import { Course, CourseRole } from "../models/Course";
 
 @Resolver((of) => User)
@@ -46,7 +46,7 @@ export class UserResolver {
     });
   }
 
-  @FieldResolver((type) => [UserGroup])
+  @FieldResolver((type) => [BaseGroup])
   async groups(@Root() user: User, @Arg("type", () => GroupType, {nullable: true}) type: GroupType | null) {
     return (await user.groups).filter(x => type == null || x.type == type);
   }

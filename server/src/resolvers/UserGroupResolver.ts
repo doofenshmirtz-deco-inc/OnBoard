@@ -14,16 +14,16 @@ import { User } from "../models/User";
 import { PaginationArgs, getOrder } from "./Types";
 import { isAuth } from "../middleware/isAuth";
 import { Context } from "../middleware/Context";
-import { UserGroup } from "../models/UserGroup";
+import { BaseGroup } from "../models/UserGroup";
 import { Timetable } from "../models/Timetable";
 
-@Resolver((of) => UserGroup)
+@Resolver((of) => BaseGroup)
 export class UserGroupResolver {
-  @Query(() => [UserGroup])
+  @Query(() => [BaseGroup])
   @UseMiddleware(isAuth)
   async userGroups(@Args() pag: PaginationArgs) {
     return (
-      await UserGroup.findAndCount({
+      await BaseGroup.findAndCount({
         order: getOrder(pag),
         take: pag.limit,
         skip: pag.skip,
@@ -31,17 +31,17 @@ export class UserGroupResolver {
     )[0];
   }
 
-  @Query(() => UserGroup, { nullable: true })
+  @Query(() => BaseGroup, { nullable: true })
   @UseMiddleware(isAuth)
   async userGroup(@Arg("id", () => String) id: String) {
-    return UserGroup.findOne({
+    return BaseGroup.findOne({
       where: { id },
     });
   }
 
   @FieldResolver((type) => [User])
   @UseMiddleware(isAuth)
-  async users(@Root() group: UserGroup, @Ctx() ctx: Context) {
+  async users(@Root() group: BaseGroup, @Ctx() ctx: Context) {
     /* TODO need to decide how to handle permissions
     const user = await User.findOne({ where: { id: ctx.payload?.uid } });
     if (!user) throw new Error("User is invalid");

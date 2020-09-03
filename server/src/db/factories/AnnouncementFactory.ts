@@ -1,7 +1,7 @@
 import Faker from "faker";
 import { define, factory } from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import { Course, Semesters, CourseLevel } from "../../models/Course";
-import { UserGroup } from "../../models/UserGroup";
+import { BaseGroup } from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
 import { User } from "../../models/User";
 

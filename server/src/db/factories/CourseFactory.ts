@@ -1,7 +1,7 @@
 import Faker from "faker";
 import { define, factory } from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import { Course, Semesters, CourseLevel } from "../../models/Course";
-import { UserGroup } from "../../models/UserGroup";
+import { BaseGroup } from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
 
 define(Course, async (faker: typeof Faker) => {
@@ -15,13 +15,13 @@ define(Course, async (faker: typeof Faker) => {
   course.semester = faker.random.number() % 2 ? Semesters.One : Semesters.Two;
   course.courseLevel =
     faker.random.number() % 3 ? CourseLevel.Postgrad : CourseLevel.Undergrad;
-  course.coordinators = await factory(UserGroup)({
+  course.coordinators = await factory(BaseGroup)({
     num: faker.random.number({ min: 1, max: 3, precision: 1 }),
   }).create();
-  course.tutors = await factory(UserGroup)({
+  course.tutors = await factory(BaseGroup)({
     num: faker.random.number({ min: 2, max: 8, precision: 1 }),
   }).create();
-  course.students = await factory(UserGroup)({
+  course.students = await factory(BaseGroup)({
     num: faker.random.number({ min: 10, max: 30, precision: 1 }),
   }).create();
 

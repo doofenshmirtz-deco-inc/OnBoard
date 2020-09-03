@@ -19,7 +19,7 @@ import {
   ArgsType,
   registerEnumType,
 } from "type-graphql";
-import { UserGroup } from "./UserGroup";
+import { BaseGroup } from "./UserGroup";
 import { Announcement } from "./Announcement";
 import { User } from "./User";
 
@@ -81,20 +81,20 @@ export class Course extends BaseEntity {
   @Field()
   courseLevel: CourseLevel;
 
-  @ManyToOne(() => UserGroup, g => g.course, { eager: true })
+  @ManyToOne(() => BaseGroup, g => g.course, { eager: true })
   @JoinTable()
-  @Field(() => UserGroup)
-  coordinators: UserGroup;
+  @Field(() => BaseGroup)
+  coordinators: BaseGroup;
 
-  @ManyToOne(() => UserGroup, g => g.course, { eager: true }) 
+  @ManyToOne(() => BaseGroup, g => g.course, { eager: true }) 
   @JoinTable()
-  @Field(() => UserGroup)
-  tutors: UserGroup;
+  @Field(() => BaseGroup)
+  tutors: BaseGroup;
 
-  @ManyToOne(() => UserGroup, g => g.course, { eager: true })
+  @ManyToOne(() => BaseGroup, g => g.course, { eager: true })
   @JoinTable()
-  @Field(() => UserGroup)
-  students: UserGroup;
+  @Field(() => BaseGroup)
+  students: BaseGroup;
 
   // TODO validation that user groups are disjoint
 

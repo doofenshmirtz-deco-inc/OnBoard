@@ -10,7 +10,7 @@ import {
 } from "typeorm";
 import { IsEmail } from "class-validator";
 import { ObjectType, ID, Field } from "type-graphql";
-import { UserGroup } from "./UserGroup";
+import { BaseGroup } from "./UserGroup";
 
 @Entity()
 @ObjectType()
@@ -28,6 +28,6 @@ export class User extends BaseEntity {
   @Field()
   email: string;
 
-  @ManyToMany(() => UserGroup, (group) => group.users)
-  groups: Promise<UserGroup[]>;
+  @ManyToMany(() => BaseGroup, (group) => group.users)
+  groups: Promise<BaseGroup[]>;
 }

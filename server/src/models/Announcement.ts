@@ -14,7 +14,7 @@ import {
 } from "typeorm";
 import { ObjectType, ID, Field, Int } from "type-graphql";
 import { User } from "./User";
-import { UserGroup } from "./UserGroup";
+import { BaseGroup } from "./UserGroup";
 import { Course } from "./Course";
 
 /**

@@ -1,10 +1,10 @@
 import Faker from "faker";
 import { define, factory } from "@doofenshmirtz-deco-inc/typeorm-seeding";
-import { UserGroup, GroupType } from "../../models/UserGroup";
+import { BaseGroup, GroupType } from "../../models/UserGroup";
 import { User } from "../../models/User";
 import { Timetable } from "../../models/Timetable";
 
-define(UserGroup, (
+define(BaseGroup, (
   faker: typeof Faker,
   context:
     | {
@@ -14,7 +14,7 @@ define(UserGroup, (
 ) => {
   if (!context) throw new Error("Invalid Context");
 
-  let userGroup = new UserGroup();
+  let userGroup = new BaseGroup();
   userGroup.name = faker.lorem.words();
   userGroup.users = factory(User)().createMany(10);
   userGroup.timetable = factory(Timetable)().create();

@@ -9,6 +9,8 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   OneToOne,
+  TableInheritance,
+  ChildEntity,
 } from "typeorm";
 import { ObjectType, ID, Field, Int, registerEnumType } from "type-graphql";
 import { User } from "./User";
@@ -27,8 +29,8 @@ registerEnumType(GroupType, {
 });
 
 @Entity()
-@ObjectType()
-export class UserGroup extends BaseEntity {
+@TableInheritance({ column: { type: "varchar", name: "groupType" } })
+export abstract class BaseGroup extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Field(() => ID)
   id: number;
@@ -37,19 +39,33 @@ export class UserGroup extends BaseEntity {
   @Field({nullable: true})
   name?: string;
 
-  @Column({ enum: GroupType, nullable: true })
-  @Field({nullable: true})
-  type?: GroupType;
-
   @ManyToMany(() => User, (user) => user.groups, { cascade: true })
   @JoinTable()
   users: Promise<User[]>;
+}
 
+@ChildEntity()
+@ObjectType()
+export class CourseGroup extends BaseGroup {
+
+}
+
+@ChildEntity()
+@ObjectType() 
+export class ClassGroup extends BaseGroup {
   @ManyToOne(() => Timetable, (t) => t.groups, { nullable: true })
   @Field(() => Timetable, { nullable: true })
   timetable?: Promise<Timetable>;
+}
 
-  @ManyToMany(() => Course)
-  @Field(() => [Course])
-  course: Promise<Course[]>;
+@ChildEntity()
+@ObjectType()
+export class StudyGroup extends BaseGroup {
+
+}
+
+@ChildEntity()
+@ObjectType()
+export class DMGroup extends BaseGroup {
+
 }

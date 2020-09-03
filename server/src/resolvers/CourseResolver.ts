@@ -15,11 +15,11 @@ import { PaginationArgs, getOrder } from "./Types";
 import { isAuth } from "../middleware/isAuth";
 import { Context } from "../middleware/Context";
 import { Course, CoursePK } from "../models/Course";
-import { UserGroup } from "../models/UserGroup";
+import { BaseGroup } from "../models/UserGroup";
 
 @Resolver((of) => Course)
 export class CourseResolver {
-  @Query(() => UserGroup)
+  @Query(() => BaseGroup)
   @UseMiddleware(isAuth)
   async courseStudents(
     @Args() pag: PaginationArgs,
@@ -43,14 +43,14 @@ export class CourseResolver {
     return course?.students;
   }
 
-  @Query(() => UserGroup)
+  @Query(() => BaseGroup)
   @UseMiddleware(isAuth)
   async courseCoordinators(@Args() coursePK: CoursePK) {
     const course = await Course.findOne({ where: { ...coursePK } });
     return course?.coordinators;
   }
 
-  @Query(() => UserGroup)
+  @Query(() => BaseGroup)
   @UseMiddleware(isAuth)
   async courseTutors(@Args() coursePK: CoursePK) {
     const course = await Course.findOne({ where: { ...coursePK } });

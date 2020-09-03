@@ -2,11 +2,11 @@ import { Seeder, Factory } from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import { Connection } from "typeorm";
 import { User } from "../../models/User";
 import { Semesters, CourseLevel, Course, CourseRole } from "../../models/Course";
-import { UserGroup, GroupType } from "../../models/UserGroup";
+import { BaseGroup, GroupType } from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
 
 const generateEmptyGroup = (context?: {type: GroupType}) =>
-  UserGroup.create({ users: Promise.resolve([]), type: context?.type ?? GroupType.CourseStudents }).save();
+  BaseGroup.create({ users: Promise.resolve([]), type: context?.type ?? GroupType.CourseStudents }).save();
 
 /**
  * Generates a user for test (e.g. the user is enrolled in a course)
@@ -54,7 +54,7 @@ const generateTestCourse = async (
 
   for (const role of Object.values(CourseRole)) {
     if (userContext && userRole === role) {
-      const group = new UserGroup();
+      const group = new BaseGroup();
       group.users = Promise.resolve([userContext.user]);
       course[courseRoleToProperty(role)] = await group.save();
     } else {
