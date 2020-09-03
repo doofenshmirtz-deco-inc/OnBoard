@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
     content: {
       flexGrow: 1,
       padding: theme.spacing(3),
-      minWidth: "70%",
+      minWidth: "70%", // TODO: kenton pls fix but this makes it work on small screens
     },
   })
 );
