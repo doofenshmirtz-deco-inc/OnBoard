@@ -26,16 +26,16 @@ const Home = () => {
   const classes = useStyles();
   return (
     <Grid container className={classes.root} spacing={2}>
-      <Grid item xs={8}>
+      <Grid item xs={12} md={8}>
         <Cal />
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={12} md={4}>
         <ClassesList />
       </Grid>
-      <Grid item xs={8}>
+      <Grid item xs={12} md={8}>
         <Announcements />
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={12} md={4}>
         <ContactList />
       </Grid>
     </Grid>

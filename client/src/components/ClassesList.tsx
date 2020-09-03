@@ -27,9 +27,8 @@ let classList: Course[] = [
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      backgroundColor: theme.palette.background.paper,
+      height: "100%",
     },
-    searchbar: {},
   })
 );
 
