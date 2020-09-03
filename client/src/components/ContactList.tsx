@@ -5,8 +5,6 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import TextField from "@material-ui/core/TextField";
 import ContactCard from "./ContactCard";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
 import Popover from "@material-ui/core/Popover";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
@@ -22,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {},
     searchBar: {
-      width: "200",
+      width: "100%",
       margin: "auto",
     },
     contactList: {

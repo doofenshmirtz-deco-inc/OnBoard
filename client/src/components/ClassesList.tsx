@@ -2,24 +2,26 @@ import React, { useState } from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import TextField from "@material-ui/core/TextField";
-import IconButton from "@material-ui/core/IconButton";
-import MessageIcon from "@material-ui/icons/Message";
-import CallIcon from "@material-ui/icons/Call";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 
-let classList: string[] = [
-  "Phineas Flynn",
-  "Ferb Fletcher",
-  "Candace Flynn",
-  "Perry the Platypus",
-  "Heinz Doofenshmirtz",
-  "Isabella Garcia-Shapiro",
-  "Baljeet Tjinder",
-  "Buford van Stomm",
+class Course {
+  name: string;
+  colour: string;
+
+  constructor(name: string, colour: string) {
+    this.name = name;
+    this.colour = colour;
+  }
+}
+
+let classList: Course[] = [
+  new Course("COSC3500", "#FF5A5F"),
+  new Course("COMP4500", "#DBAD6A "),
+  new Course("DECO3801", "#087E8B"),
+  new Course("STAT2203", "#751CCE"),
 ];
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -36,35 +38,21 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function ContactList() {
   const classes = useStyles();
 
-  const [searchTerm, setSearchTerm] = useState("");
-
   return (
     <Box border={1} className={classes.root}>
       <Container>
         <h2>Classes</h2>
-        <TextField
-          className={classes.searchbar}
-          id="contacts-search"
-          label="Search"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
         <List>
-          {classList.map((item, index) =>
-            item.toLowerCase().includes(searchTerm.toLowerCase()) ? (
-              <ListItem button key={index}>
-                <ListItemText primary={item} key={item} />
-                <ListItemSecondaryAction>
-                  <IconButton edge="end" aria-label="call">
-                    <CallIcon />
-                  </IconButton>
-                  <IconButton edge="end" aria-label="message">
-                    <MessageIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ) : null
-          )}
+          {classList.map((item, index) => (
+            <ListItem button key={index}>
+              <ListItemIcon>
+                <svg width={20} height={20}>
+                  <circle cx={10} cy={10} r={10} fill={item.colour}></circle>
+                </svg>
+              </ListItemIcon>
+              <ListItemText primary={item.name} />
+            </ListItem>
+          ))}
         </List>
       </Container>
     </Box>
