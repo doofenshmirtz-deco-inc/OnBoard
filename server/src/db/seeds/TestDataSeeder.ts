@@ -1,12 +1,12 @@
 import { Seeder, Factory } from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import { Connection } from "typeorm";
 import { User } from "../../models/User";
-import { Semesters, CourseLevel, Course, CourseRole } from "../../models/Course";
+import { Semesters, CourseLevel, Course } from "../../models/Course";
 import { BaseGroup, GroupType } from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
 
-const generateEmptyGroup = (context?: {type: GroupType}) =>
-  BaseGroup.create({ users: Promise.resolve([]), type: context?.type ?? GroupType.CourseStudents }).save();
+// const generateEmptyGroup = (context?: {type: GroupType}) =>
+//   BaseGroup.create({ users: Promise.resolve([]), type: context?.type ?? GroupType.CourseStudents }).save();
 
 /**
  * Generates a user for test (e.g. the user is enrolled in a course)
@@ -30,37 +30,17 @@ const generateTestUser = async (
 };
 
 
-const courseRoleToProperty = (role: CourseRole) => {
-  switch (role) {
-    case CourseRole.Coordinator:
-      return 'coordinators';
-    case CourseRole.Student:
-      return 'students';
-    case CourseRole.Tutor:
-      return 'tutors';
-  }
-}
-
 const generateTestCourse = async (
   context: { code: string; name: string; semester: Semesters; year: number },
-  userContext?: { user: User; role: CourseRole }
+  userContext?: { user: User, role: string }
 ) => {
-  const userRole = userContext?.role ?? CourseRole.Coordinator;
 
   const course = Course.create({
     ...context,
     courseLevel: CourseLevel.Undergrad,
   });
 
-  for (const role of Object.values(CourseRole)) {
-    if (userContext && userRole === role) {
-      const group = new BaseGroup();
-      group.users = Promise.resolve([userContext.user]);
-      course[courseRoleToProperty(role)] = await group.save();
-    } else {
-      course[courseRoleToProperty(role)] = await generateEmptyGroup();
-    }
-  }
+  course.groupPairs = Promise.resolve([]);
 
   return course.save();
 };

@@ -11,7 +11,8 @@ import {
 } from "typeorm";
 import { ObjectType, ID, Field, Int } from "type-graphql";
 import { User } from "./User";
-import { BaseGroup } from "./UserGroup";
+import { BaseGroup, CourseGroup, ClassGroup } from "./UserGroup";
+import { CourseGroupPair } from "./CourseGroupPair";
 
 /**
  * This is a timetable containing dates and times. It can be attached to one or more groups.
@@ -35,6 +36,6 @@ export class Timetable extends BaseEntity {
   @Field()
   duration: number;
 
-  @OneToMany(() => BaseGroup, (group) => group.timetable)
-  groups: Promise<BaseGroup[]>;
+  @OneToMany(() => ClassGroup, c => c.timetable)
+  classes: Promise<ClassGroup[]>;
 }

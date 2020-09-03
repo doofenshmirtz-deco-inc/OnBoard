@@ -16,55 +16,72 @@ import { ObjectType, ID, Field, Int, registerEnumType } from "type-graphql";
 import { User } from "./User";
 import { Timetable } from "./Timetable";
 import { Course } from "./Course";
+import { CourseGroupPair } from "./CourseGroupPair";
 
-export enum GroupType {
-  CourseStudents = "CourseStudents",
-  CourseStaff = "CourseStaff",
-  Class = "Class",
-  StudyRoom = "StudyRoom",
-  DirectMessage = "DirectMessage",
+export enum ClassType {
+  Lecture = 'Lecture',
+  Tutorial = 'Tutorial',
+  Practical = 'Practical',
 }
-registerEnumType(GroupType, {
-  name: "GroupType",
+registerEnumType(ClassType, {
+  name: "ClassType",
 });
 
+export enum GroupType {
+  Course = 'course',
+  Class = 'class',
+  Study = 'study',
+  DirectMessage = 'direct_message',
+}
+
 @Entity()
-@TableInheritance({ column: { type: "varchar", name: "groupType" } })
+@TableInheritance({ column: { type: "enum", enum: GroupType, name: 'groupType' } })
+@ObjectType()
 export abstract class BaseGroup extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Field(() => ID)
   id: number;
 
-  @Column({ nullable: true })
-  @Field({nullable: true})
-  name?: string;
-
   @ManyToMany(() => User, (user) => user.groups, { cascade: true })
   @JoinTable()
   users: Promise<User[]>;
+
+  @Column({type: 'enum', enum: GroupType})
+  groupType: GroupType;
 }
 
-@ChildEntity()
+@ChildEntity(GroupType.Course)
 @ObjectType()
 export class CourseGroup extends BaseGroup {
-
+  @OneToMany(() => CourseGroupPair, p => p.group)
+  coursePairs: CourseGroupPair[]
 }
 
-@ChildEntity()
+@ChildEntity(GroupType.Class)
 @ObjectType() 
 export class ClassGroup extends BaseGroup {
-  @ManyToOne(() => Timetable, (t) => t.groups, { nullable: true })
+  @Column()
+  @Field()
+  name: string;
+
+  @Column()
+  @Field()
+  type: ClassType;
+
+  @ManyToOne(() => Timetable, (t) => t.classes, { nullable: true })
   @Field(() => Timetable, { nullable: true })
   timetable?: Promise<Timetable>;
 }
 
-@ChildEntity()
+@ChildEntity(GroupType.Study)
 @ObjectType()
 export class StudyGroup extends BaseGroup {
-
+  @Column()
+  @Field()
+  name: string;
 }
 
-@ChildEntity()
+@ChildEntity(GroupType.DirectMessage)
 @ObjectType()
 export class DMGroup extends BaseGroup {
 

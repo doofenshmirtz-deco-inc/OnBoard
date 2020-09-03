@@ -9,6 +9,7 @@ import {
   JoinTable,
   PrimaryGeneratedColumn,
   ManyToOne,
+  ManyToMany,
 } from "typeorm";
 import {
   ObjectType,
@@ -19,9 +20,10 @@ import {
   ArgsType,
   registerEnumType,
 } from "type-graphql";
-import { BaseGroup } from "./UserGroup";
+import { CourseGroup } from "./UserGroup";
 import { Announcement } from "./Announcement";
 import { User } from "./User";
+import { CourseGroupPair } from "./CourseGroupPair";
 
 export enum Semesters {
   One = "Semester One",
@@ -40,12 +42,6 @@ export enum CourseLevel {
 registerEnumType(CourseLevel, {
   name: "CourseLevel",
 });
-
-export enum CourseRole {
-  Coordinator = 'Coordinators',
-  Tutor = 'Tutors',
-  Student = 'Students'
-};
 
 
 @Entity()
@@ -81,20 +77,23 @@ export class Course extends BaseEntity {
   @Field()
   courseLevel: CourseLevel;
 
-  @ManyToOne(() => BaseGroup, g => g.course, { eager: true })
-  @JoinTable()
-  @Field(() => BaseGroup)
-  coordinators: BaseGroup;
+  @OneToMany(() => CourseGroupPair, p => p.course)
+  groupPairs: Promise<CourseGroupPair[]>
 
-  @ManyToOne(() => BaseGroup, g => g.course, { eager: true }) 
+  @ManyToOne(() => CourseGroup, { eager: true })
   @JoinTable()
-  @Field(() => BaseGroup)
-  tutors: BaseGroup;
+  @Field(() => CourseGroup)
+  coordinators: CourseGroup;
 
-  @ManyToOne(() => BaseGroup, g => g.course, { eager: true })
+  @ManyToOne(() => CourseGroup, { eager: true })
   @JoinTable()
-  @Field(() => BaseGroup)
-  students: BaseGroup;
+  @Field(() => CourseGroup)
+  tutors: CourseGroup;
+
+  @ManyToOne(() => CourseGroup, { eager: true })
+  @JoinTable()
+  @Field(() => CourseGroup)
+  students: CourseGroup;
 
   // TODO validation that user groups are disjoint
 
