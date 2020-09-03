@@ -14,9 +14,7 @@ import contacts from "./Contacts.json";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: "100%",
-      maxWidth: 400,
-      marginBottom: "2rem",
+      height: "100%",
     },
     title: {},
     searchBar: {
