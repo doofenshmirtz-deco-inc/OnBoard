@@ -44,14 +44,21 @@ export abstract class BaseGroup extends BaseEntity {
   @Field(() => ID)
   id: number;
 
-  @ManyToMany(() => User, (user) => user.groups, { cascade: true })
+  @ManyToMany(() => User, (user) => user.groups)
   @JoinTable()
   users: Promise<User[]>;
 
   @Column({ type: "enum", enum: GroupType })
   groupType: GroupType;
 
-  setUsers(users?: User[]) {
+  async setUsers(users?: User[]) {
+    if (!users) {
+      this.users = Promise.resolve([]);
+      return;
+    }
+    for (const user of users) {
+      await user.save();
+    }
     this.users = Promise.resolve(users ?? []);
   }
 }

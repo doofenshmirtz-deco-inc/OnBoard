@@ -32,7 +32,7 @@ export class Announcement extends BaseEntity {
   @Field(() => Course)
   course: Course;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, {nullable: false})
   @JoinColumn()
   @Field(() => User)
   author: User;

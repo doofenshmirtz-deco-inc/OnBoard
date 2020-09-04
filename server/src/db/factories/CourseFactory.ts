@@ -33,7 +33,7 @@ define(Course, async (faker: typeof Faker, context?: CourseFactoryContext) => {
   if (authors) {
     course.announcements = factory(Announcement)({
       course,
-      authors,
+      authors: await authors.users,
     }).createMany(faker.random.number(10));
   }
 
