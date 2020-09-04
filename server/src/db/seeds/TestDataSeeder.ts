@@ -60,9 +60,9 @@ const generateTestAnnouncements = async (
 
   for (const text of texts) {
     await Announcement.create({
-      course: Promise.resolve(context.course),
+      course: context.course,
       title: context.course.code + " Announcement " + i,
-      author: Promise.resolve(context.author),
+      author: context.author,
       html: text,
     }).save();
     i++;
@@ -76,7 +76,7 @@ export default class TestDataSeeder implements Seeder {
       name: "Heinz Doofenshmirtz",
       email: "heinz@evilinc.com",
     });
-
+    console.log("yeet1");
     const math1071 = await generateTestCourse(
       {
         code: "MATH1071",
@@ -90,12 +90,14 @@ export default class TestDataSeeder implements Seeder {
       }
     );
 
+    console.log("yeet2");
     const bad = await generateTestUser({
       uid: "bad-uid",
       name: "Bad User",
       email: "bad@bad.bad",
     });
 
+    console.log("yeet3");
     const badCourse = await generateTestCourse(
       {
         code: "Bad Course",
@@ -109,6 +111,7 @@ export default class TestDataSeeder implements Seeder {
       }
     );
 
+    console.log("yeet4");
     await generateTestAnnouncements(
       {
         course: math1071,

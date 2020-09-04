@@ -28,13 +28,14 @@ export class Announcement extends BaseEntity {
   id: number;
 
   @ManyToOne(() => Course, (c) => c.announcements)
+  @JoinColumn()
   @Field(() => Course)
-  course: Promise<Course>;
+  course: Course;
 
   @ManyToOne(() => User)
   @JoinColumn()
   @Field(() => User)
-  author: Promise<User>;
+  author: User;
 
   @CreateDateColumn()
   @Field()

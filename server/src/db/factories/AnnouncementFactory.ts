@@ -14,7 +14,7 @@ define(Announcement, async (faker: typeof Faker, ctx?: { authors: User[] }) => {
   const announcement = new Announcement();
   announcement.html = faker.lorem.paragraph();
   announcement.title = faker.lorem.words();
-  announcement.author = Promise.resolve(faker.random.arrayElement(ctx.authors));
+  announcement.author = faker.random.arrayElement(ctx.authors);
 
   return announcement;
 });
