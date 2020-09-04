@@ -5,13 +5,10 @@ import { BaseGroup } from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
 import { User } from "../../models/User";
 
-define(Announcement, async (
-  faker: typeof Faker,
-  ctx?: { course: Course; authors: User[] }
-) => {
+define(Announcement, async (faker: typeof Faker, ctx?: { authors: User[] }) => {
   if (ctx == null || ctx.authors == null || ctx.authors.length == 0)
     throw new Error(
-      "Announcement factory must be given context with course and users"
+      "Announcement factory must be given context with author users"
     );
 
   const announcement = new Announcement();

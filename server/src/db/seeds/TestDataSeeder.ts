@@ -1,9 +1,14 @@
-import { Seeder, Factory } from "@doofenshmirtz-deco-inc/typeorm-seeding";
+import {
+  Seeder,
+  Factory,
+  factory,
+} from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import { Connection } from "typeorm";
 import { User } from "../../models/User";
 import { Semesters, CourseLevel, Course } from "../../models/Course";
-import { BaseGroup, GroupType } from "../../models/UserGroup";
+import { BaseGroup, GroupType, CourseGroup } from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
+import { CourseRole } from "../../models/CourseGroupPair";
 
 // const generateEmptyGroup = (context?: {type: GroupType}) =>
 //   BaseGroup.create({ users: Promise.resolve([]), type: context?.type ?? GroupType.CourseStudents }).save();
@@ -29,18 +34,20 @@ const generateTestUser = async (
   }).save();
 };
 
-
 const generateTestCourse = async (
   context: { code: string; name: string; semester: Semesters; year: number },
-  userContext?: { user: User, role: string }
+  userContext?: { user: User; role: CourseRole }
 ) => {
-
   const course = Course.create({
     ...context,
     courseLevel: CourseLevel.Undergrad,
   });
 
-  course.groupPairs = Promise.resolve([]);
+  if (userContext?.role)
+    await course.addGroup(
+      userContext?.role,
+      await factory(CourseGroup)({ users: [userContext.user] }).create()
+    );
 
   return course.save();
 };
@@ -49,18 +56,17 @@ const generateTestAnnouncements = async (
   context: { course: Course; author: User },
   texts: string[]
 ) => {
-  const author = Promise.resolve(context.author);
+  let i = 0;
 
-  const announcements = texts.map((a, i) => {
-    return Announcement.create({
+  for (const text of texts) {
+    await Announcement.create({
+      course: Promise.resolve(context.course),
       title: context.course.code + " Announcement " + i,
-      author: author,
-      html: a,
+      author: Promise.resolve(context.author),
+      html: text,
     }).save();
-  });
-
-  context.course.announcements = Promise.all(announcements);
-  return context.course.save();
+    i++;
+  }
 };
 
 export default class TestDataSeeder implements Seeder {
@@ -80,7 +86,7 @@ export default class TestDataSeeder implements Seeder {
       },
       {
         user: heinz,
-        role: "students",
+        role: CourseRole.Coordinator,
       }
     );
 
@@ -99,7 +105,7 @@ export default class TestDataSeeder implements Seeder {
       },
       {
         user: bad,
-        role: "students",
+        role: CourseRole.Student,
       }
     );
 

@@ -19,23 +19,25 @@ import { Course } from "./Course";
 import { CourseGroupPair } from "./CourseGroupPair";
 
 export enum ClassType {
-  Lecture = 'Lecture',
-  Tutorial = 'Tutorial',
-  Practical = 'Practical',
+  Lecture = "Lecture",
+  Tutorial = "Tutorial",
+  Practical = "Practical",
 }
 registerEnumType(ClassType, {
   name: "ClassType",
 });
 
 export enum GroupType {
-  Course = 'course',
-  Class = 'class',
-  Study = 'study',
-  DirectMessage = 'direct_message',
+  Course = "course",
+  Class = "class",
+  Study = "study",
+  DirectMessage = "direct_message",
 }
 
 @Entity()
-@TableInheritance({ column: { type: "enum", enum: GroupType, name: 'groupType' } })
+@TableInheritance({
+  column: { type: "enum", enum: GroupType, name: "groupType" },
+})
 @ObjectType()
 export abstract class BaseGroup extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -46,19 +48,23 @@ export abstract class BaseGroup extends BaseEntity {
   @JoinTable()
   users: Promise<User[]>;
 
-  @Column({type: 'enum', enum: GroupType})
+  @Column({ type: "enum", enum: GroupType })
   groupType: GroupType;
+
+  setUsers(users?: User[]) {
+    this.users = Promise.resolve(users ?? []);
+  }
 }
 
 @ChildEntity(GroupType.Course)
 @ObjectType()
 export class CourseGroup extends BaseGroup {
-  @OneToMany(() => CourseGroupPair, p => p.group)
-  coursePairs: CourseGroupPair[]
+  @OneToMany(() => CourseGroupPair, (p) => p.group)
+  coursePairs: CourseGroupPair[];
 }
 
 @ChildEntity(GroupType.Class)
-@ObjectType() 
+@ObjectType()
 export class ClassGroup extends BaseGroup {
   @Column()
   @Field()
@@ -83,6 +89,4 @@ export class StudyGroup extends BaseGroup {
 
 @ChildEntity(GroupType.DirectMessage)
 @ObjectType()
-export class DMGroup extends BaseGroup {
-
-}
+export class DMGroup extends BaseGroup {}

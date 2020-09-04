@@ -36,6 +36,6 @@ export class Timetable extends BaseEntity {
   @Field()
   duration: number;
 
-  @OneToMany(() => ClassGroup, c => c.timetable)
+  @OneToMany(() => ClassGroup, (c) => c.timetable)
   classes: Promise<ClassGroup[]>;
 }

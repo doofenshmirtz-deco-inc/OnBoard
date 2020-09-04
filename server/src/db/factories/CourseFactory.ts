@@ -1,10 +1,17 @@
 import Faker from "faker";
 import { define, factory } from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import { Course, Semesters, CourseLevel } from "../../models/Course";
-import { BaseGroup } from "../../models/UserGroup";
+import { BaseGroup, CourseGroup } from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
+import { CourseGroupPair, CourseRole } from "../../models/CourseGroupPair";
 
-define(Course, async (faker: typeof Faker) => {
+export type CourseFactoryContext = {
+  groups?: {
+    [role: string]: CourseGroup;
+  };
+};
+
+define(Course, async (faker: typeof Faker, context?: CourseFactoryContext) => {
   const subject = faker.random.arrayElement(["MATH", "CSSE", "COMP", "STAT"]);
   const code = faker.random.number({ min: 1000, max: 4999, precision: 1 });
 
@@ -15,11 +22,20 @@ define(Course, async (faker: typeof Faker) => {
   course.semester = faker.random.number() % 2 ? Semesters.One : Semesters.Two;
   course.courseLevel =
     faker.random.number() % 3 ? CourseLevel.Postgrad : CourseLevel.Undergrad;
-  
-  const authors = await course.coordinators.users;
-  course.announcements = factory(Announcement)({ course, authors }).createMany(
-    faker.random.number(10)
-  );
+
+  if (context?.groups) {
+    for (const [role, group] of Object.entries(context.groups)) {
+      course.addGroup(role as CourseRole, group);
+    }
+  }
+
+  const authors = context?.groups?.[CourseRole.Coordinator];
+  if (authors) {
+    course.announcements = factory(Announcement)({
+      course,
+      authors,
+    }).createMany(faker.random.number(10));
+  }
 
   return course;
 });

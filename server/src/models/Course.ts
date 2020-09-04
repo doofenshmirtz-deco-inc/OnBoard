@@ -23,7 +23,7 @@ import {
 import { CourseGroup } from "./UserGroup";
 import { Announcement } from "./Announcement";
 import { User } from "./User";
-import { CourseGroupPair } from "./CourseGroupPair";
+import { CourseGroupPair, CourseRole } from "./CourseGroupPair";
 
 export enum Semesters {
   One = "Semester One",
@@ -42,7 +42,6 @@ export enum CourseLevel {
 registerEnumType(CourseLevel, {
   name: "CourseLevel",
 });
-
 
 @Entity()
 @ObjectType()
@@ -77,29 +76,27 @@ export class Course extends BaseEntity {
   @Field()
   courseLevel: CourseLevel;
 
-  @OneToMany(() => CourseGroupPair, p => p.course)
-  groupPairs: Promise<CourseGroupPair[]>
-
-  @ManyToOne(() => CourseGroup, { eager: true })
-  @JoinTable()
-  @Field(() => CourseGroup)
-  coordinators: CourseGroup;
-
-  @ManyToOne(() => CourseGroup, { eager: true })
-  @JoinTable()
-  @Field(() => CourseGroup)
-  tutors: CourseGroup;
-
-  @ManyToOne(() => CourseGroup, { eager: true })
-  @JoinTable()
-  @Field(() => CourseGroup)
-  students: CourseGroup;
+  @OneToMany(() => CourseGroupPair, (p) => p.course)
+  groupPairs: Promise<CourseGroupPair[]>;
 
   // TODO validation that user groups are disjoint
 
   @OneToMany(() => Announcement, (a) => a.course, { cascade: true })
   @Field(() => [Announcement], { defaultValue: [] })
   announcements: Promise<Announcement[]>;
+
+  async getGroups(role: CourseRole) {
+    return (await this.groupPairs).filter((p) => p.role == role);
+  }
+
+  async addGroup(role: CourseRole, group: CourseGroup) {
+    const pair = CourseGroupPair.create({
+      group,
+      role,
+    });
+    pair.course = this;
+    return pair.save();
+  }
 }
 
 @ArgsType()
