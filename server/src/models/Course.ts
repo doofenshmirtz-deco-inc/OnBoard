@@ -91,10 +91,10 @@ export class Course extends BaseEntity {
 
   async addGroup(role: CourseRole, group: CourseGroup) {
     const pair = CourseGroupPair.create({
+      course: this,
       group,
       role,
     });
-    pair.course = this;
     return pair.save();
   }
 }
