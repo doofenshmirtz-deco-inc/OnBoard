@@ -128,8 +128,8 @@ export default function App() {
     uri: "http://localhost:5000/graphql",
   });
 
-  const authLink = setContext((_, { headers }) => {
-    const token = firebase.auth().currentUser?.getIdToken();
+  const authLink = setContext(async (_, { headers }) => {
+    const token = await firebase.auth().currentUser?.getIdToken();
     return {
       headers: {
         ...headers,
