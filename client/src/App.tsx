@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {
@@ -12,7 +12,12 @@ import { Shadows } from "@material-ui/core/styles/shadows";
 
 import modules from "./modules";
 import Sidebar from "./components/Sidebar";
-import Cal from "./components/Cal";
+
+import * as firebase from "firebase/app";
+import "firebase/auth";
+import { Login } from "./modules/Login";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { LoadingPage } from "./components/LoadingPage";
 
 const drawerWidth = 240;
 
@@ -82,36 +87,70 @@ export default function App() {
     },
   });
 
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const [loaded, setLoaded] = React.useState(false);
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAwD46JJ62Y_Jn-2JFV3j6-la7djOZLa1c",
+    authDomain: "onboard-8f0f9.firebaseapp.com",
+    databaseURL: "https://onboard-8f0f9.firebaseio.com",
+    projectId: "onboard-8f0f9",
+    storageBucket: "onboard-8f0f9.appspot.com",
+    messagingSenderId: "1083512866922",
+    appId: "1:1083512866922:web:efe355acf6404782c22213",
+  };
+
+  const [user, setUser] = useState(null as firebase.User | null);
+
+  useEffect(() => {
+    if (!loaded) {
+      firebase.initializeApp(firebaseConfig);
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) setUser(user);
+        else setUser(null);
+        setLoaded(true);
+      });
+    }
+  }, []);
+
+  const client = new ApolloClient({
+    uri: "http://localhost:5000/graphql",
+    cache: new InMemoryCache(),
+  });
+
+  if (!loaded) return <LoadingPage />;
+
+  const screen = () => {
+    if (!user) return <Login />;
+
+    return (
+      <>
+        <Sidebar />
+        <main className={classes.content}>
+          <div className={classes.toolbar} />
+          {modules.map((module) => (
+            <Route {...module.routeProps} key={module.name} />
+          ))}
+        </main>
+      </>
+    );
+  };
+
   return (
     <Router>
-      <ThemeProvider theme={theme}>
-        <div className={classes.root}>
-          <CssBaseline />
-          <Sidebar />
-          {/* <AppBar position="fixed" className={classes.appBar}>
-            <Toolbar>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={handleDrawerToggle}
-                className={classes.menuButton}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" noWrap>
-                OnBoard
-              </Typography>
-            </Toolbar>
-          </AppBar> */}
-          <main className={classes.content}>
-            <div className={classes.toolbar} />
-            {modules.map((module) => (
-              <Route {...module.routeProps} key={module.name} />
-            ))}
-          </main>
-        </div>
-      </ThemeProvider>
+      <ApolloProvider client={client}>
+        <ThemeProvider theme={theme}>
+          <div className={classes.root}>
+            <CssBaseline />
+            {screen()}
+          </div>
+        </ThemeProvider>
+      </ApolloProvider>
     </Router>
   );
 }

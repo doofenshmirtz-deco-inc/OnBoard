@@ -23,4 +23,15 @@ export class AuthResolver {
       token,
     };
   }
+
+  @Query(() => AuthToken)
+  async getCustomToken(
+    @Arg("testUID", { defaultValue: "test-uid" }) testUID: string
+  ): Promise<AuthToken> {
+    let token = await admin.auth().createCustomToken(testUID);
+
+    return {
+      token,
+    };
+  }
 }

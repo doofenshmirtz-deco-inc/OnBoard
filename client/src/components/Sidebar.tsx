@@ -24,6 +24,9 @@ import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
 import modules from "../modules";
 import { NavLink } from "react-router-dom";
+import * as firebase from "firebase";
+import { Icon } from "@material-ui/core";
+import { Lock } from "@material-ui/icons";
 
 const drawerWidth = 240;
 
@@ -99,6 +102,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     icon: {
       color: theme.palette.primary.contrastText,
+    },
+    footer: {
+      display: "flex",
+      marginTop: "auto",
     },
   })
 );
@@ -181,6 +188,19 @@ export default function MiniDrawer() {
               <ListItemText primary={item.name} />
             </ListItem>
           ))}
+        </List>
+        <List className={classes.footer}>
+          <ListItem
+            button
+            key="logout"
+            classes={{ gutters: clsx(classes.gutters) }}
+            onClick={() => firebase.auth().signOut()}
+          >
+            <ListItemIcon className={classes.icon}>
+              <Lock />
+            </ListItemIcon>
+            <ListItemText primary="Logout" />
+          </ListItem>
         </List>
       </Drawer>
     </div>
