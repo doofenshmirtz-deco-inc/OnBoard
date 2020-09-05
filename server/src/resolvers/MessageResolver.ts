@@ -14,7 +14,7 @@ import { User } from "../models/User";
 import { isAuth } from "../middleware/isAuth";
 import { Context } from "../middleware/Context";
 import { Message, MessageInput } from "../models/Message";
-import { UserGroup } from "../models/UserGroup";
+import { BaseGroup } from "../models/UserGroup";
 import { Subscriptions } from "./Subscriptions";
 import { isAuthSub } from "../middleware/isAuthSub";
 
@@ -23,7 +23,7 @@ export class MessageResolver {
   @Mutation((type) => Message)
   @UseMiddleware(isAuth)
   async addMessage(@Arg("message") message: MessageInput, @Ctx() ctx: Context) {
-    let group = await UserGroup.findOne({ id: message.groupID });
+    let group = await BaseGroup.findOne({ id: message.groupID });
 
     if (!ctx.payload) throw new Error("Invalid user");
     if (!group) throw new Error("Invalid group");
@@ -47,7 +47,7 @@ export class MessageResolver {
     @Arg("groupID") groupID: number,
     @Ctx() ctx: Context
   ): Promise<Message[]> {
-    let group = await UserGroup.findOne({ id: groupID });
+    let group = await BaseGroup.findOne({ id: groupID });
     if (!ctx.payload) throw new Error("Invalid user");
     if (!group) throw new Error("Invalid group");
     if (!(await group.users).map((user) => user.id).includes(ctx.payload?.uid))

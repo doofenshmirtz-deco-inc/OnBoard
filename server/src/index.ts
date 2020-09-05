@@ -41,6 +41,7 @@ async function main() {
       UserGroupResolver,
       MessageResolver,
     ],
+    emitSchemaFile: true,
     pubSub: AppPubSub,
   });
 

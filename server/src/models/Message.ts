@@ -19,7 +19,7 @@ import {
   Publisher,
 } from "type-graphql";
 import { User } from "./User";
-import { UserGroup } from "./UserGroup";
+import { BaseGroup } from "./UserGroup";
 import { Subscriptions } from "../resolvers/Subscriptions";
 import { AppPubSub } from "../resolvers/AppPubSub";
 
@@ -30,9 +30,9 @@ export class Message extends BaseEntity {
   @Field(() => ID)
   id: number;
 
-  @ManyToOne((type) => UserGroup, { eager: true })
+  @ManyToOne((type) => BaseGroup, { eager: true })
   @Field()
-  group: UserGroup;
+  group: BaseGroup;
 
   @ManyToOne((type) => User, { eager: true })
   @Field()

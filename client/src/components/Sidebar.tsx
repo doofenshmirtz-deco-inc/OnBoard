@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const meQuery = gql`
-  query {
+  query Me {
     me {
       name
     }
