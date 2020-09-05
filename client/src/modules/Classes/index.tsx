@@ -3,10 +3,10 @@ import ClassIcon from "@material-ui/icons/Class";
 import ClassesTabs from "../../components/ClassesTabs";
 
 const Classes = () => (
-  <div>
+  <>
     <h1>My Classes</h1>
     <ClassesTabs />
-  </div>
+  </>
 );
 
 export default {

@@ -27,6 +27,7 @@ import { NavLink } from "react-router-dom";
 import * as firebase from "firebase";
 import { Icon } from "@material-ui/core";
 import { Lock } from "@material-ui/icons";
+import { useQuery, gql } from "@apollo/client";
 
 const drawerWidth = 240;
 
@@ -107,8 +108,19 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       marginTop: "auto",
     },
+    title: {
+      flexGrow: 1,
+    },
   })
 );
+
+const meQuery = gql`
+  query {
+    me {
+      name
+    }
+  }
+`;
 
 export default function MiniDrawer() {
   const classes = useStyles();
@@ -122,6 +134,8 @@ export default function MiniDrawer() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const { loading, error, data } = useQuery(meQuery);
 
   return (
     <div className={classes.root}>
@@ -144,9 +158,12 @@ export default function MiniDrawer() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
+          <Typography variant="h6" noWrap className={classes.title}>
             OnBoard
           </Typography>
+          <div>
+            <Typography>{loading || error ? "" : data.me.name}</Typography>
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer
