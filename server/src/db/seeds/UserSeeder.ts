@@ -1,7 +1,6 @@
 import { Seeder, Factory } from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import { Connection } from "typeorm";
 import { User } from "../../models/User";
-import { generateTestingUser } from "../factories/TestingUserFactory";
 import { Semesters } from "../../models/Course";
 
 export default class UserSeeder implements Seeder {

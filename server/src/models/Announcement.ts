@@ -10,10 +10,11 @@ import {
   ManyToOne,
   CreateDateColumn,
   OneToOne,
+  JoinColumn,
 } from "typeorm";
 import { ObjectType, ID, Field, Int } from "type-graphql";
 import { User } from "./User";
-import { UserGroup } from "./UserGroup";
+import { BaseGroup } from "./UserGroup";
 import { Course } from "./Course";
 
 /**
@@ -26,11 +27,15 @@ export class Announcement extends BaseEntity {
   @Field(() => ID)
   id: number;
 
-  @ManyToOne(() => Course, (c) => c.announcements, { cascade: true })
-  course: Promise<Course>;
+  @ManyToOne(() => Course, (c) => c.announcements)
+  @JoinColumn()
+  @Field(() => Course)
+  course: Course;
 
-  @OneToOne(() => User)
-  author: Promise<User>;
+  @ManyToOne(() => User, {nullable: false})
+  @JoinColumn()
+  @Field(() => User)
+  author: User;
 
   @CreateDateColumn()
   @Field()

@@ -8,6 +8,8 @@ import {
   JoinColumn,
   JoinTable,
   PrimaryGeneratedColumn,
+  ManyToOne,
+  ManyToMany,
 } from "typeorm";
 import {
   ObjectType,
@@ -18,8 +20,10 @@ import {
   ArgsType,
   registerEnumType,
 } from "type-graphql";
-import { UserGroup } from "./UserGroup";
+import { CourseGroup } from "./UserGroup";
 import { Announcement } from "./Announcement";
+import { User } from "./User";
+import { CourseGroupPair, CourseRole } from "./CourseGroupPair";
 
 export enum Semesters {
   One = "Semester One",
@@ -72,27 +76,27 @@ export class Course extends BaseEntity {
   @Field()
   courseLevel: CourseLevel;
 
-  @OneToOne(() => UserGroup, { eager: true })
-  @JoinColumn()
-  @Field()
-  coordinators: UserGroup;
-
-  @OneToOne(() => UserGroup, { eager: true })
-  @JoinColumn()
-  @Field()
-  tutors: UserGroup;
-
-  @OneToOne(() => UserGroup, { eager: true })
-  @JoinColumn()
-  @Field()
-  students: UserGroup;
+  @OneToMany(() => CourseGroupPair, (p) => p.course)
+  groupPairs: Promise<CourseGroupPair[]>;
 
   // TODO validation that user groups are disjoint
 
-  @OneToMany(() => Announcement, (a) => a.course)
-  @JoinColumn()
-  @Field(() => [Announcement])
-  announcements: Announcement[];
+  @OneToMany(() => Announcement, (a) => a.course, { cascade: true })
+  @Field(() => [Announcement], { defaultValue: [] })
+  announcements: Promise<Announcement[]>;
+
+  async getGroups(role: CourseRole) {
+    return (await this.groupPairs).filter((p) => p.role == role);
+  }
+
+  async addGroup(role: CourseRole, group: CourseGroup) {
+    const pair = CourseGroupPair.create({
+      course: this,
+      group,
+      role,
+    });
+    return pair.save();
+  }
 }
 
 @ArgsType()
