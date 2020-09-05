@@ -6,10 +6,6 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 
-/**
- * TODO: leaving this for sanni, but it mostly works!!!!
- */
-
 interface TabPanelProps {
   children?: React.ReactNode;
   index: any;
@@ -46,14 +42,14 @@ function a11yProps(index: any) {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
-    width: "100%"
+    width: "100%",
   },
   tabs: {
-    textTransform: "none"
-  }
+    textTransform: "none",
+  },
 }));
 
-let menuBarComponents : string[] = [
+let menuBarComponents: string[] = [
   "Announcements",
   "Learning Resources",
   "Assessment",
@@ -61,7 +57,7 @@ let menuBarComponents : string[] = [
   "Course Staff",
   "Course Profile (ECP)",
   "Library Links",
-  "Discussion Board"
+  "Discussion Board",
 ];
 
 export default function ClassesTabs() {
@@ -83,12 +79,16 @@ export default function ClassesTabs() {
           scrollButtons="auto"
           aria-label="scrollable auto tabs example"
         >
-        {menuBarComponents.map((item, index) => {
+          {menuBarComponents.map((item, index) => {
             return (
-              <Tab key={index} className={classes.tabs} label={item} {...a11yProps(index)} />
+              <Tab
+                key={index}
+                className={classes.tabs}
+                label={item}
+                {...a11yProps(index)}
+              />
             );
-          })
-        }
+          })}
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>

@@ -82,8 +82,8 @@ export default function App() {
         light: "#FAFAFA",
       },
       secondary: {
-        main: "#BFD7EA"
-      }
+        main: "#BFD7EA",
+      },
     },
   });
 
