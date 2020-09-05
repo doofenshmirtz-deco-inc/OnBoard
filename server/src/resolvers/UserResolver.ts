@@ -42,6 +42,7 @@ export class UserResolver {
   @Query(() => User, { nullable: true })
   @UseMiddleware(isAuth)
   async me(@Ctx() ctx: Context) {
+    // TODO sort groups by most recent message
     return User.findOne({
       where: { id: ctx.payload?.uid },
     });
