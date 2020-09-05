@@ -4,6 +4,7 @@ import { AuthToken } from "../models/Auth";
 
 import * as firebase from "firebase/app";
 import "firebase/auth";
+import { User } from "../models/User";
 
 @Resolver()
 export class AuthResolver {
@@ -18,6 +19,24 @@ export class AuthResolver {
     if (!user.user) throw new Error("Invalid user from firebase");
 
     let token = await user.user.getIdToken();
+
+    return {
+      token,
+    };
+  }
+
+  @Query(() => AuthToken)
+  async getCustomToken(
+    @Arg("testUID", { defaultValue: "test-uid" }) testUID: string
+  ): Promise<AuthToken> {
+    let token = await admin.auth().createCustomToken(testUID);
+
+    if (!(await User.findOne({ id: testUID })))
+      await User.create({
+        id: testUID,
+        name: "Doofenshmirtz",
+        email: "doof@evil.inc",
+      }).save();
 
     return {
       token,

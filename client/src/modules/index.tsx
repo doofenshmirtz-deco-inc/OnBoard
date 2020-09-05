@@ -1,6 +1,6 @@
 import Home from "./Home";
 import Calendar from "./Calendar";
 import Classes from "./Classes";
-import MeetingRooms from "./MeetingRooms";
+import StudyRooms from "./StudyRooms";
 
-export default [Home, Calendar, Classes, MeetingRooms];
+export default [Home, Calendar, Classes, StudyRooms];
