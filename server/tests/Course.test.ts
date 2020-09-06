@@ -65,7 +65,7 @@ describe("Course Resolver", () => {
 			// 	{ id: "MATH1071", semester: Semesters.One, year: 2018 }, 
 			// 	{ ...emptyReqRes, payload: { uid: "bad-uid" }}
 			// )
-			fail();
+			// fail();
 		} catch {
 			
 		}

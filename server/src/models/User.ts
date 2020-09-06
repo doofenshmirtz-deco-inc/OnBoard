@@ -29,6 +29,6 @@ export class User extends BaseEntity {
   @Field()
   email: string;
 
-  @ManyToMany(() => BaseGroup, (group) => group.users, {cascade: true})
+  @ManyToMany(() => BaseGroup, (group) => group.users, { cascade: true })
   groups: Promise<BaseGroup[]>;
 }
