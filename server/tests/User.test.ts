@@ -4,7 +4,7 @@ import {useSeeding, runSeeder} from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import UserSeeder from "../src/db/seeds/UserSeeder";
 import {UserResolver} from "../src/resolvers/UserResolver";
 import CourseSeeder from "../src/db/seeds/CourseSeeder";
-import TestingUserSeeder from "../src/db/seeds/TestingUserSeeder";
+import TestingUserSeeder from "../src/db/seeds/TestDataSeeder";
 
 
 const userResolver = new UserResolver();

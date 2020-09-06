@@ -14,7 +14,7 @@ import {
 } from "typeorm";
 import { ObjectType, ID, Field, Int } from "type-graphql";
 import { User } from "./User";
-import { UserGroup } from "./UserGroup";
+import { BaseGroup } from "./UserGroup";
 import { Course } from "./Course";
 
 /**
@@ -28,13 +28,14 @@ export class Announcement extends BaseEntity {
   id: number;
 
   @ManyToOne(() => Course, (c) => c.announcements)
+  @JoinColumn()
   @Field(() => Course)
-  course: Promise<Course>;
+  course: Course;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { nullable: false })
   @JoinColumn()
   @Field(() => User)
-  author: Promise<User>;
+  author: User;
 
   @CreateDateColumn()
   @Field()
