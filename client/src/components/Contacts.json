@@ -1,0 +1,47 @@
+[
+    {
+        "name": "Phineas Flynn",
+        "role": "Student",
+        "avatar": "https://vignette.wikia.nocookie.net/phineasandferb/images/e/ea/Profile_-_Phineas_Flynn.PNG"
+    },
+    {
+        "name": "Ferb Fletcher",
+        "role": "Head Tutor",
+        "avatar": "https://vignette.wikia.nocookie.net/phineasandferb/images/c/ca/Profile_-_Ferb_Fletcher.PNG"
+    },
+    {
+        "name": "Candace Flynn",
+        "role": "Student",
+        "avatar": "https://vignette.wikia.nocookie.net/phineasandferb/images/1/18/Profile_-_Candace_Flynn.png"
+    },
+    {
+        "name": "Perry the Platypus",
+        "role": "Tutor",
+        "avatar": "https://vignette.wikia.nocookie.net/phineasandferb/images/6/66/Profile_-_Perry_the_Platypus.PNG"
+    },
+    {
+        "name": "Heinz Doofenshmirtz",
+        "role": "Lecturer",
+        "avatar": "https://vignette.wikia.nocookie.net/phineasandferb/images/5/5d/Doofenshmirtz_Portrait.jpg"
+    },
+    {
+        "name": "Isabella Garcia-Shapiro",
+        "role": "Student",
+        "avatar": "https://vignette.wikia.nocookie.net/disney/images/9/98/IsabellaFull.JPG"
+    },
+    {
+        "name": "Baljeet Tjinder",
+        "role": "Student",
+        "avatar": "https://vignette.wikia.nocookie.net/disney/images/4/41/BaljeetFull.JPG"
+    },
+    {
+        "name": "Buford van Stomm",
+        "role": "Student",
+        "avatar": "https://vignette.wikia.nocookie.net/phineasandferb/images/b/bd/Profile_-_Buford_Van_Stomm.PNG"
+    },
+    {
+        "name": "Vanessa Doofenshmirtz",
+        "role": "Tutor",
+        "avatar": "https://vignette.wikia.nocookie.net/phineasandferb/images/a/ab/Profile_-_Vanessa_Doofenshmirtz.PNG"
+    }
+]
