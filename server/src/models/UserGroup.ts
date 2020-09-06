@@ -77,7 +77,7 @@ export class ClassGroup extends BaseGroup {
   @Field()
   name: string;
 
-  @Column({ type: 'enum', enum: ClassType })
+  @Column({ type: "enum", enum: ClassType })
   @Field()
   type: ClassType;
 
