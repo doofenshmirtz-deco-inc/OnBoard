@@ -163,7 +163,7 @@ export default function MiniDrawer() {
             OnBoard
           </Typography>
           <div>
-            <Typography>{loading || error ? "" : data.me.name}</Typography>
+            <Typography>{loading || error ? "" : data!.me?.name}</Typography>
           </div>
         </Toolbar>
       </AppBar>
