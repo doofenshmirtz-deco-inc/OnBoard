@@ -28,7 +28,7 @@ import * as firebase from "firebase";
 import { Icon } from "@material-ui/core";
 import { Lock } from "@material-ui/icons";
 import { useQuery, gql } from "@apollo/client";
-import { Me } from '../graphql/Me';
+import { Me } from "../graphql/Me";
 
 const drawerWidth = 240;
 
