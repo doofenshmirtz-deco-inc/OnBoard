@@ -17,17 +17,18 @@ const emptyReqRes = {
 
 let connection: Connection;
 
-beforeAll(async () => {
+beforeAll(() => {
+	return (async () => {
 	connection = await createTestConnection();
 	await useSeeding();
 	await runSeeder(UserSeeder);
 	await runSeeder(CourseSeeder);
 	await runSeeder(TestDataSeeder);
+	})();
 });
 
-
-afterAll(async () => {
-	await connection.close();
+afterAll(() => {
+	return connection.close();
 });
 
 describe("Course Resolver", () => {

@@ -81,7 +81,7 @@ export class Course extends BaseEntity {
 
   // TODO validation that user groups are disjoint
 
-  @OneToMany(() => Announcement, (a) => a.course, { cascade: true })
+  @OneToMany(() => Announcement, (a) => a.course)
   @Field(() => [Announcement], { defaultValue: [] })
   announcements: Promise<Announcement[]>;
 

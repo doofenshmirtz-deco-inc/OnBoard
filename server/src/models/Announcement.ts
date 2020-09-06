@@ -28,7 +28,7 @@ export class Announcement extends BaseEntity {
   id: number;
 
   @ManyToOne(() => Course, (c) => c.announcements)
-  @JoinColumn()
+  @JoinTable()
   @Field(() => Course)
   course: Course;
 
