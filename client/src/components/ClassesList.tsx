@@ -6,6 +6,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
+import { useQuery, gql } from "@apollo/client";
 
 class Course {
   name: string;
@@ -32,25 +33,48 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const GET_CLASSES = gql`
+  query {
+    me {
+      courseColors {
+        colour
+        course {
+          name
+        }
+      }
+    }
+  }
+`;
+
 export default function ContactList() {
   const classes = useStyles();
+
+  const { loading, error, data } = useQuery(GET_CLASSES);
+
+  console.log(data ? data.me.courseColors : "");
+
+  const classListElem = !data ? (
+    <div></div>
+  ) : (
+    <List>
+      {data.me.courseColors.map((item: any, index: number) => (
+        <ListItem button key={index}>
+          <ListItemIcon>
+            <svg width={20} height={20}>
+              <circle cx={10} cy={10} r={10} fill={item.colour}></circle>
+            </svg>
+          </ListItemIcon>
+          <ListItemText primary={item.course.name} />
+        </ListItem>
+      ))}
+    </List>
+  );
 
   return (
     <Box border={1} className={classes.root}>
       <Container>
         <h2>Classes</h2>
-        <List>
-          {classList.map((item, index) => (
-            <ListItem button key={index}>
-              <ListItemIcon>
-                <svg width={20} height={20}>
-                  <circle cx={10} cy={10} r={10} fill={item.colour}></circle>
-                </svg>
-              </ListItemIcon>
-              <ListItemText primary={item.name} />
-            </ListItem>
-          ))}
-        </List>
+        {classListElem}
       </Container>
     </Box>
   );

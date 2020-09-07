@@ -66,6 +66,7 @@ const useStyles = makeStyles((theme: Theme) =>
       whiteSpace: "nowrap",
       color: theme.palette.primary.contrastText,
       backgroundColor: theme.palette.primary.main,
+      overflowX: "hidden", // No scroll bar when opening drawer
     },
     drawerOpen: {
       width: drawerWidth,

@@ -15,7 +15,7 @@ import { PaginationArgs, getOrder } from "./Types";
 import { isAuth } from "../middleware/isAuth";
 import { Context } from "../middleware/Context";
 import { BaseGroup, GroupType, CourseGroup } from "../models/UserGroup";
-import { Course, CourseColor } from "../models/Course";
+import { Course, CourseColor, CourseColours } from "../models/Course";
 import { CourseRole, CourseGroupPair } from "../models/CourseGroupPair";
 
 @Resolver((of) => User)
@@ -68,14 +68,8 @@ export class UserResolver {
     ).map((pair, index) => {
       return {
         course: pair.course,
-        colour: "a",
+        colour: CourseColours[index % 4],
       };
     });
   }
-
-  // @FieldResolver(() => [Course])
-  // async courses(@Root() user: User, @Arg("role", () => CourseRole, {nullable: true}) role: CourseRole | null) {
-  //   //return (await user.groups).filter(x => x.)
-
-  // }
 }

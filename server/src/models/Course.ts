@@ -43,6 +43,8 @@ registerEnumType(CourseLevel, {
   name: "CourseLevel",
 });
 
+export const CourseColours = ["#751CCE", "#FF5A5F", "#DBAD6A", "#087E8B"];
+
 @Entity()
 @ObjectType()
 export class Course extends BaseEntity {

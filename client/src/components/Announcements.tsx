@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import announcements from "./announcements.json";
 import { TextToLinks } from "../utils/string";
 import Container from "@material-ui/core/Container";
+import { gql, useQuery } from "@apollo/client";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -65,7 +66,11 @@ function onClickHandler(link: string) {
 }
 
 /* Render a single announcement button. Haha any go brr */
-function renderAnnouncement(announcementObj: any, classes: any, key: number) {
+const renderAnnouncement = (
+  announcementObj: any,
+  classes: any,
+  key: number
+) => {
   let trimmedesc = getDescription(announcementObj);
   return (
     <ListItem
@@ -98,19 +103,51 @@ function renderAnnouncement(announcementObj: any, classes: any, key: number) {
       />
     </ListItem>
   );
-}
+};
+
+const GET_ANNOUCEMENTS = gql`
+  query {
+    me {
+      courseColors {
+        colour
+        course {
+          announcements {
+            id
+            createdAt
+            html
+          }
+        }
+      }
+    }
+  }
+`;
 
 export default function Announcements() {
   const classes = useStyles();
+  const { loading, error, data } = useQuery(GET_ANNOUCEMENTS);
+
+  console.log(error);
+
+	let announcements = [].concat(data.me.courseColors.map(item => {
+		...item.course.announcements,
+		colour: data.me.courseColors.colour
+	}));
+
+  const annoucementsList = !data ? (
+    <div></div>
+  ) : (
+    <List className={classes.classList}>
+      {announcements.map((item, index) =>
+        renderAnnouncement(item, classes, index)
+      )}
+    </List>
+  );
+
   return (
     <div className={classes.root}>
       <Container>
         <h2 className={classes.heading}>Announcements</h2>
-        <List className={classes.classList}>
-          {Object.values(announcements).map((item, index) =>
-            renderAnnouncement(item, classes, index)
-          )}
-        </List>
+        {annoucementsList}
       </Container>
     </div>
   );
