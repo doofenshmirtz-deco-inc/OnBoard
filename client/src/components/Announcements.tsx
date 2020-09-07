@@ -8,14 +8,19 @@ import announcements from "./announcements.json";
 import { TextToLinks } from "../utils/string";
 import Container from "@material-ui/core/Container";
 import { gql, useQuery } from "@apollo/client";
+import { ME_ANNOUCEMENTS } from "../graphql/ME_ANNOUCEMENTS.js";
+import moment from "moment";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       backgroundColor: theme.palette.background.paper,
-      // maxHeight: 400,
       overflow: "hidden",
       border: "1px solid black",
+      height: "100%",
+      display: "flex",
+      flexFlow: "column",
+      padding: theme.spacing(2),
     },
     enrolledClass: {
       // height: 300, // Subject to change
@@ -30,6 +35,11 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       width: "100%",
       maxWidth: `calc(100vw - ${100}px)`,
+      flex: 1,
+      alignItems: "strech",
+    },
+    classBody: {
+      alignSelf: "stretch",
     },
     heading: {
       textAlign: "center",
@@ -48,17 +58,17 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const CHARACTER_LIMIT: number = 225;
 
-function getDescription(announcementObj: any) {
+const getDescription = (announcement: any) => {
   let text;
-  if (announcementObj.text <= CHARACTER_LIMIT) {
-    text = announcementObj.text;
+  if (announcement.announcement.html <= CHARACTER_LIMIT) {
+    text = announcement.announcement.html;
   } else {
     // Trim to 225 chars and add... at the end for the funny
-    text = announcementObj["text"].substring(0, CHARACTER_LIMIT) + "...";
+    text = announcement.announcement.html.substring(0, CHARACTER_LIMIT) + "...";
   }
 
-  return <span>{TextToLinks(text, announcementObj.colour)}</span>;
-}
+  return <span>{TextToLinks(text, announcement.colour)}</span>;
+};
 
 // TODO: Change for full query or something idk what you want here hahaha
 function onClickHandler(link: string) {
@@ -67,30 +77,34 @@ function onClickHandler(link: string) {
 
 /* Render a single announcement button. Haha any go brr */
 const renderAnnouncement = (
-  announcementObj: any,
+  announcement: {
+    announcement: { title: string; createdAt: Date; html: string };
+    colour: string;
+  },
   classes: any,
   key: number
 ) => {
-  let trimmedesc = getDescription(announcementObj);
+  let trimmedesc = getDescription(announcement);
   return (
     <ListItem
       button
       className={classes.enrolledClass}
-      onClick={() => onClickHandler(announcementObj.link)}
       key={key}
       style={{
-        borderLeft: `5px solid ${announcementObj.colour}`,
+        borderLeft: `5px solid ${announcement.colour}`,
         fontWeight: "bolder",
         fontSize: "1.1rem",
       }}
     >
       <ListItemText
-        // Forbidden br tag, I'm going to web dev jail
+        className={classes.classBody}
         primary={
           <Typography variant="inherit">
-            <div className={classes.date}>{announcementObj.date}</div>
+            <div className={classes.date}>
+              {moment(announcement.announcement.createdAt).fromNow()}
+            </div>
             <br />
-            {announcementObj.title}
+            {announcement.announcement.title}
           </Typography>
         }
         // disableTypography={true} // for later maybe idk
@@ -106,15 +120,15 @@ const renderAnnouncement = (
 };
 
 const GET_ANNOUCEMENTS = gql`
-  query {
+  query ME_ANNOUCEMENTS {
     me {
       courseColors {
         colour
         course {
           announcements {
-            id
             createdAt
             html
+            title
           }
         }
       }
@@ -124,14 +138,28 @@ const GET_ANNOUCEMENTS = gql`
 
 export default function Announcements() {
   const classes = useStyles();
-  const { loading, error, data } = useQuery(GET_ANNOUCEMENTS);
+  const { loading, error, data } = useQuery<ME_ANNOUCEMENTS>(GET_ANNOUCEMENTS);
 
-  console.log(error);
+  let announcements =
+    !data || !data.me
+      ? []
+      : data.me.courseColors
+          .map((item) => {
+            return item.course.announcements?.map((announcement) => {
+              return {
+                announcement,
+                colour: item.colour,
+              };
+            });
+          })
+          .flat(1)
+          .sort((a, b) =>
+            a.announcement.createdAt < b.announcement.createdAt ? 1 : -1
+          );
+  // TOOD sort
 
-	let announcements = [].concat(data.me.courseColors.map(item => {
-		...item.course.announcements,
-		colour: data.me.courseColors.colour
-	}));
+  console.log("annoucments");
+  console.log(announcements);
 
   const annoucementsList = !data ? (
     <div></div>
@@ -145,10 +173,8 @@ export default function Announcements() {
 
   return (
     <div className={classes.root}>
-      <Container>
-        <h2 className={classes.heading}>Announcements</h2>
-        {annoucementsList}
-      </Container>
+      <h2 className={classes.heading}>Announcements</h2>
+      {annoucementsList}
     </div>
   );
 }

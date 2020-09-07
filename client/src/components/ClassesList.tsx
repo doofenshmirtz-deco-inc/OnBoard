@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const GET_CLASSES = gql`
-  query {
+  query ME_CLASSES {
     me {
       courseColors {
         colour
