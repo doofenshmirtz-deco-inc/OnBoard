@@ -99,6 +99,15 @@ export class Course extends BaseEntity {
   }
 }
 
+@ObjectType()
+export class CourseColor {
+  @Field()
+  course: Course;
+
+  @Field()
+  colour: string;
+}
+
 @ArgsType()
 export class CoursePK {
   @Field(() => String)
