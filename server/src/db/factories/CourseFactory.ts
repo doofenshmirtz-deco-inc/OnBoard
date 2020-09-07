@@ -23,11 +23,12 @@ define(Course, async (faker: typeof Faker, context?: CourseFactoryContext) => {
   course.courseLevel =
     faker.random.number() % 3 ? CourseLevel.Postgrad : CourseLevel.Undergrad;
 
+  /* TODO: this is now broken
   if (context?.groups) {
     for (const [role, group] of Object.entries(context.groups)) {
       course.addGroup(role as CourseRole, group);
     }
-  }
+  }*/
 
   const authors = context?.groups?.[CourseRole.Coordinator];
   if (authors) {

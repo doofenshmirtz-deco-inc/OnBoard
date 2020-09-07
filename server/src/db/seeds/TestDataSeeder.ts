@@ -36,12 +36,12 @@ const generateTestUser = async (
 
 const generateTestCourse = async (
   context: { code: string; name: string; semester: Semesters; year: number },
-  userContext?: { user: User; role: CourseRole }
+  userContext: { user: User; role: CourseRole }
 ) => {
-  const course = Course.create({
+  const course = await Course.create({
     ...context,
     courseLevel: CourseLevel.Undergrad,
-  });
+  }).save();
 
   if (userContext?.role)
     await course.addGroup(
@@ -49,7 +49,7 @@ const generateTestCourse = async (
       await factory(CourseGroup)({ users: [userContext.user] }).create()
     );
 
-  return course.save();
+  return course;
 };
 
 const generateTestAnnouncements = async (
@@ -114,7 +114,7 @@ export default class TestDataSeeder implements Seeder {
         course: math1071,
         author: heinz,
       },
-      ["test announcement text"]
+      ["test announcement text", "aaaa bbbb"]
     );
   }
 }
