@@ -7,12 +7,16 @@ import { CourseGroup } from "../../models/UserGroup";
 
 export default class CourseSeeder implements Seeder {
   public async run(factory: Factory, connection: Connection): Promise<any> {
+    const users = Promise.all(
+      (await factory(User)().createMany(3)).map(u => u.save())
+    );
+
     const coordinators = await factory(CourseGroup)({
-      users: await factory(User)().createMany(3),
+      users
     }).create();
     coordinators.save();
 
-    await factory(Course)({
+    const courses = await factory(Course)({
       groups: {
         [CourseRole.Coordinator]: coordinators,
       },

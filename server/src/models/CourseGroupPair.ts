@@ -32,7 +32,7 @@ export class CourseGroupPair extends BaseEntity {
   @PrimaryColumn({ type: "enum", enum: CourseRole })
   role: CourseRole;
 
-  @ManyToOne(() => CourseGroup, (g) => g.coursePairs, { cascade: true })
+  @ManyToOne(() => CourseGroup, (g) => g.coursePairs)
   @JoinColumn()
   group: CourseGroup;
 }

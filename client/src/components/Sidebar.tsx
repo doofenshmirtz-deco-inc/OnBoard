@@ -28,6 +28,7 @@ import * as firebase from "firebase";
 import { Icon } from "@material-ui/core";
 import { Lock } from "@material-ui/icons";
 import { useQuery, gql } from "@apollo/client";
+import { Me } from "../graphql/Me";
 
 const drawerWidth = 240;
 
@@ -116,7 +117,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const meQuery = gql`
-  query {
+  query Me {
     me {
       name
     }
@@ -136,7 +137,7 @@ export default function MiniDrawer() {
     setOpen(false);
   };
 
-  const { loading, error, data } = useQuery(meQuery);
+  const { loading, error, data } = useQuery<Me>(meQuery);
 
   return (
     <div className={classes.root}>

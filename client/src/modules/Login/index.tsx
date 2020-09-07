@@ -11,6 +11,7 @@ import {
 import { useQuery, gql, useApolloClient } from "@apollo/client";
 import * as firebase from "firebase";
 import { LoadingPage } from "../../components/LoadingPage";
+import { GetCustomToken } from "../../graphql/GetCustomToken";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,8 +44,13 @@ export const Login = () => {
   const submit = async () => {
     setLoading(true);
     const { data } = await client
-      .watchQuery({ query: GET_CUSTOM_TOKEN, variables: { uid: uid } })
+      .watchQuery<GetCustomToken>({
+        query: GET_CUSTOM_TOKEN,
+        variables: { uid: uid },
+      })
       .result();
+
+    if (!data || !data.getCustomToken.token) return; // TODO actual error handling pls
     const user = await firebase
       .auth()
       .signInWithCustomToken(data.getCustomToken.token);
