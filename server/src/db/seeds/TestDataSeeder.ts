@@ -85,6 +85,19 @@ export default class TestDataSeeder implements Seeder {
       email: "perry@evilinc.com",
     });
 
+    await generateTestCourse(
+      {
+        code: "MATH1071",
+        name: "Protecting Your Schemes from Secret Agents",
+        semester: Semesters.One,
+        year: 2018,
+      },
+      {
+        users: [heinz],
+        role: CourseRole.Coordinator,
+      }
+    );
+
     const math1071 = await generateTestCourse(
       {
         code: "SECR1000",
