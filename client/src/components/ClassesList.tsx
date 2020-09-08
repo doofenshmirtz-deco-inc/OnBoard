@@ -34,6 +34,7 @@ const GET_CLASSES = gql`
         colour
         course {
           name
+          code
         }
       }
     }
@@ -57,7 +58,9 @@ export default function ContactList() {
                 <circle cx={10} cy={10} r={10} fill={item.colour}></circle>
               </svg>
             </ListItemIcon>
-            <ListItemText primary={item.course.name} />
+            <ListItemText
+              primary={`${item.course.code}: ${item.course.name}`}
+            />
           </ListItem>
         ))}
       </List>
