@@ -43,6 +43,8 @@ registerEnumType(CourseLevel, {
   name: "CourseLevel",
 });
 
+export const CourseColours = ["#751CCE", "#FF5A5F", "#DBAD6A", "#087E8B"];
+
 @Entity()
 @ObjectType()
 export class Course extends BaseEntity {
@@ -81,7 +83,7 @@ export class Course extends BaseEntity {
 
   // TODO validation that user groups are disjoint
 
-  @OneToMany(() => Announcement, (a) => a.course, { cascade: true })
+  @OneToMany(() => Announcement, (a) => a.course)
   @Field(() => [Announcement], { defaultValue: [] })
   announcements: Promise<Announcement[]>;
 
@@ -97,6 +99,15 @@ export class Course extends BaseEntity {
     });
     return pair.save();
   }
+}
+
+@ObjectType()
+export class CourseColor {
+  @Field()
+  course: Course;
+
+  @Field()
+  colour: string;
 }
 
 @ArgsType()

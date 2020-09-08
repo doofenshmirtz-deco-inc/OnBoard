@@ -11,6 +11,7 @@ import {
 import { useQuery, gql, useApolloClient } from "@apollo/client";
 import * as firebase from "firebase";
 import { LoadingPage } from "../../components/LoadingPage";
+import { GetCustomToken } from "../../graphql/GetCustomToken";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,8 +44,13 @@ export const Login = () => {
   const submit = async () => {
     setLoading(true);
     const { data } = await client
-      .watchQuery({ query: GET_CUSTOM_TOKEN, variables: { uid: uid } })
+      .watchQuery<GetCustomToken>({
+        query: GET_CUSTOM_TOKEN,
+        variables: { uid: uid },
+      })
       .result();
+
+    if (!data || !data.getCustomToken.token) return; // TODO actual error handling pls
     const user = await firebase
       .auth()
       .signInWithCustomToken(data.getCustomToken.token);
@@ -55,7 +61,7 @@ export const Login = () => {
   return (
     <Grid container direction="column" justify="center" alignItems="center">
       <h1>Login</h1>
-      <form className={classes.root}>
+      <form className={classes.root} onSubmit={submit}>
         <TextField
           id="standard-basic"
           label="uid"
@@ -67,7 +73,7 @@ export const Login = () => {
           type="password"
           onChange={(e) => setPass(e.currentTarget.value)}
         />
-        <Button color="primary" onClick={submit}>
+        <Button color="primary" type="submit">
           Login
         </Button>
       </form>

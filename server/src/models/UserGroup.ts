@@ -56,9 +56,6 @@ export abstract class BaseGroup extends BaseEntity {
       this.users = Promise.resolve([]);
       return;
     }
-    for (const user of users) {
-      await user.save();
-    }
     this.users = Promise.resolve(users ?? []);
   }
 }

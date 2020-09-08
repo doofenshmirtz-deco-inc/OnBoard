@@ -6,6 +6,8 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
+import { useQuery, gql } from "@apollo/client";
+import { MyClasses } from "../graphql/MyClasses";
 
 class Course {
   name: string;
@@ -17,13 +19,6 @@ class Course {
   }
 }
 
-let classList: Course[] = [
-  new Course("COSC3500", "#FF5A5F"),
-  new Course("COMP4500", "#DBAD6A "),
-  new Course("DECO3801", "#087E8B"),
-  new Course("STAT2203", "#751CCE"),
-];
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -32,25 +27,47 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const GET_CLASSES = gql`
+  query MyClasses {
+    me {
+      courseColors {
+        colour
+        course {
+          name
+        }
+      }
+    }
+  }
+`;
+
 export default function ContactList() {
   const classes = useStyles();
+
+  const { loading, error, data } = useQuery<MyClasses>(GET_CLASSES);
+
+  const classListElem =
+    !data || !data.me ? (
+      <div></div>
+    ) : (
+      <List>
+        {data.me.courseColors.map((item: any, index: number) => (
+          <ListItem button key={index}>
+            <ListItemIcon>
+              <svg width={20} height={20}>
+                <circle cx={10} cy={10} r={10} fill={item.colour}></circle>
+              </svg>
+            </ListItemIcon>
+            <ListItemText primary={item.course.name} />
+          </ListItem>
+        ))}
+      </List>
+    );
 
   return (
     <Box border={1} className={classes.root}>
       <Container>
         <h2>Classes</h2>
-        <List>
-          {classList.map((item, index) => (
-            <ListItem button key={index}>
-              <ListItemIcon>
-                <svg width={20} height={20}>
-                  <circle cx={10} cy={10} r={10} fill={item.colour}></circle>
-                </svg>
-              </ListItemIcon>
-              <ListItemText primary={item.name} />
-            </ListItem>
-          ))}
-        </List>
+        {classListElem}
       </Container>
     </Box>
   );

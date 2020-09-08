@@ -9,6 +9,7 @@ import { Semesters, CourseLevel, Course } from "../../models/Course";
 import { BaseGroup, GroupType, CourseGroup } from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
 import { CourseRole } from "../../models/CourseGroupPair";
+import Faker from "faker";
 
 // const generateEmptyGroup = (context?: {type: GroupType}) =>
 //   BaseGroup.create({ users: Promise.resolve([]), type: context?.type ?? GroupType.CourseStudents }).save();
@@ -36,20 +37,20 @@ const generateTestUser = async (
 
 const generateTestCourse = async (
   context: { code: string; name: string; semester: Semesters; year: number },
-  userContext?: { user: User; role: CourseRole }
+  userContext: { users: User[]; role: CourseRole }
 ) => {
-  const course = Course.create({
+  const course = await Course.create({
     ...context,
     courseLevel: CourseLevel.Undergrad,
-  });
+  }).save();
 
   if (userContext?.role)
     await course.addGroup(
       userContext?.role,
-      await factory(CourseGroup)({ users: [userContext.user] }).create()
+      await factory(CourseGroup)({ users: userContext.users }).create()
     );
 
-  return course.save();
+  return course;
 };
 
 const generateTestAnnouncements = async (
@@ -64,6 +65,7 @@ const generateTestAnnouncements = async (
       title: context.course.code + " Announcement " + i,
       author: context.author,
       html: text,
+      createdAt: Faker.date.past(1, new Date(Date.now())),
     }).save();
     i++;
   }
@@ -77,6 +79,12 @@ export default class TestDataSeeder implements Seeder {
       email: "heinz@evilinc.com",
     });
 
+    const perry = await generateTestUser({
+      uid: "perry-uid",
+      name: "Perry The Platypus",
+      email: "perry@evilinc.com",
+    });
+
     const math1071 = await generateTestCourse(
       {
         code: "MATH1071",
@@ -85,8 +93,21 @@ export default class TestDataSeeder implements Seeder {
         year: 2018,
       },
       {
-        user: heinz,
+        users: [heinz],
         role: CourseRole.Coordinator,
+      }
+    );
+
+    const csse2310 = await generateTestCourse(
+      {
+        code: "CSSE2310",
+        name: "Computer Systems Principles and Programming",
+        semester: Semesters.Two,
+        year: 2019,
+      },
+      {
+        users: [heinz, perry],
+        role: CourseRole.Student,
       }
     );
 
@@ -104,7 +125,7 @@ export default class TestDataSeeder implements Seeder {
         year: 2018,
       },
       {
-        user: bad,
+        users: [bad],
         role: CourseRole.Student,
       }
     );
@@ -114,7 +135,19 @@ export default class TestDataSeeder implements Seeder {
         course: math1071,
         author: heinz,
       },
-      ["test announcement text"]
+      [
+        "test announcement text",
+        "aaaa bbbb",
+        "There are no more classes info because I don't feel like turning up info here http://google.com.au",
+      ]
+    );
+
+    await generateTestAnnouncements(
+      {
+        course: csse2310,
+        author: heinz,
+      },
+      ["Good luck hope you don't fail :)", "Bomb goes boom!"]
     );
   }
 }
