@@ -4,12 +4,10 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
-import announcements from "./announcements.json";
 import { TextToLinks } from "../utils/string";
-import Container from "@material-ui/core/Container";
 import { gql, useQuery } from "@apollo/client";
-import { ME_ANNOUCEMENTS } from "../graphql/ME_ANNOUCEMENTS.js";
 import moment from "moment";
+import { MyAnnouncements } from "../graphql/MyAnnouncements";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,7 +58,7 @@ const CHARACTER_LIMIT: number = 225;
 
 const getDescription = (announcement: any) => {
   let text;
-  if (announcement.announcement.html <= CHARACTER_LIMIT) {
+  if (announcement.announcement.html.length <= CHARACTER_LIMIT) {
     text = announcement.announcement.html;
   } else {
     // Trim to 225 chars and add... at the end for the funny
@@ -84,7 +82,7 @@ const renderAnnouncement = (
   classes: any,
   key: number
 ) => {
-  let trimmedesc = getDescription(announcement);
+  let trimmeDesc = getDescription(announcement);
   return (
     <ListItem
       button
@@ -111,7 +109,7 @@ const renderAnnouncement = (
         secondary={
           <React.Fragment>
             <Typography component="span" variant="body1" />
-            {trimmedesc}
+            {trimmeDesc}
           </React.Fragment>
         }
       />
@@ -119,8 +117,8 @@ const renderAnnouncement = (
   );
 };
 
-const GET_ANNOUCEMENTS = gql`
-  query ME_ANNOUCEMENTS {
+const GET_ANNOUNCEMENTS = gql`
+  query MyAnnouncements {
     me {
       courseColors {
         colour
@@ -138,7 +136,7 @@ const GET_ANNOUCEMENTS = gql`
 
 export default function Announcements() {
   const classes = useStyles();
-  const { loading, error, data } = useQuery<ME_ANNOUCEMENTS>(GET_ANNOUCEMENTS);
+  const { loading, error, data } = useQuery<MyAnnouncements>(GET_ANNOUNCEMENTS);
 
   let announcements =
     !data || !data.me

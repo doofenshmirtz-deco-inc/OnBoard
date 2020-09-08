@@ -61,7 +61,7 @@ export const Login = () => {
   return (
     <Grid container direction="column" justify="center" alignItems="center">
       <h1>Login</h1>
-      <form className={classes.root}>
+      <form className={classes.root} onSubmit={submit}>
         <TextField
           id="standard-basic"
           label="uid"
@@ -73,7 +73,7 @@ export const Login = () => {
           type="password"
           onChange={(e) => setPass(e.currentTarget.value)}
         />
-        <Button color="primary" onClick={submit}>
+        <Button color="primary" type="submit">
           Login
         </Button>
       </form>

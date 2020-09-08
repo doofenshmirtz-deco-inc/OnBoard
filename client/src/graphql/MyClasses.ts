@@ -4,25 +4,25 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: ME_CLASSES
+// GraphQL query operation: MyClasses
 // ====================================================
 
-export interface ME_CLASSES_me_courseColors_course {
+export interface MyClasses_me_courseColors_course {
   __typename: "Course";
   name: string;
 }
 
-export interface ME_CLASSES_me_courseColors {
+export interface MyClasses_me_courseColors {
   __typename: "CourseColor";
   colour: string;
-  course: ME_CLASSES_me_courseColors_course;
+  course: MyClasses_me_courseColors_course;
 }
 
-export interface ME_CLASSES_me {
+export interface MyClasses_me {
   __typename: "User";
-  courseColors: ME_CLASSES_me_courseColors[];
+  courseColors: MyClasses_me_courseColors[];
 }
 
-export interface ME_CLASSES {
-  me: ME_CLASSES_me | null;
+export interface MyClasses {
+  me: MyClasses_me | null;
 }
