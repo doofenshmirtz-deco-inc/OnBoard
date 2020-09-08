@@ -57,7 +57,7 @@ const generateTestAnnouncements = async (
   context: { course: Course; author: User },
   texts: string[]
 ) => {
-  let i = 0;
+  let i = 1;
 
   for (const text of texts) {
     await Announcement.create({
@@ -87,8 +87,8 @@ export default class TestDataSeeder implements Seeder {
 
     const math1071 = await generateTestCourse(
       {
-        code: "MATH1071",
-        name: "Advanced Calculus and Linear Algebra I",
+        code: "SECR1000",
+        name: "Protecting Your Schemes from Secret Agents",
         semester: Semesters.One,
         year: 2018,
       },
@@ -100,13 +100,39 @@ export default class TestDataSeeder implements Seeder {
 
     const csse2310 = await generateTestCourse(
       {
-        code: "CSSE2310",
-        name: "Computer Systems Principles and Programming",
+        code: "PHFE2001",
+        name: "Finding Ways to Spend Your Summer Vacation",
         semester: Semesters.Two,
         year: 2019,
       },
       {
         users: [heinz, perry],
+        role: CourseRole.Student,
+      }
+    );
+
+    const jingle = await generateTestCourse(
+      {
+        code: "EVIL3079",
+        name: "Advanced Evil Jingles",
+        semester: Semesters.Two,
+        year: 2019,
+      },
+      {
+        users: [heinz, perry],
+        role: CourseRole.Student,
+      }
+    );
+
+    await generateTestCourse(
+      {
+        code: "EDIS3801",
+        name: "Evil Design Inventing Studio 3 - Build",
+        semester: Semesters.Two,
+        year: 2019,
+      },
+      {
+        users: [heinz],
         role: CourseRole.Student,
       }
     );
@@ -136,9 +162,8 @@ export default class TestDataSeeder implements Seeder {
         author: heinz,
       },
       [
-        "test announcement text",
-        "aaaa bbbb",
-        "There are no more classes info because I don't feel like turning up info here http://google.com.au",
+        "Following the invention of the Combine-inator one may find it necassasary to protect their inventions. This course will investigate how to protect your evil inventions.",
+        "There are no more classes info because I don't feel like turning up info here http://protected.evil.inc",
       ]
     );
 
@@ -147,7 +172,21 @@ export default class TestDataSeeder implements Seeder {
         course: csse2310,
         author: heinz,
       },
-      ["Good luck hope you don't fail :)", "Bomb goes boom!"]
+      [
+        "Good luck hope you don't fail :)",
+        "Summers vacation is a long time, heres how to spend it!!",
+      ]
+    );
+
+    await generateTestAnnouncements(
+      {
+        course: jingle,
+        author: heinz,
+      },
+      [
+        "Doofenshmirtz Evil Incorparated!A place of evil and fighting! With Perry the Platypus too! Doofenshmirtz holding a Bucket!I don't know what it's for! Doofenshmirtz Ex-Wifes House in the Hills somewhere! Stop reminding me of her! Doofenshmirtz Wicked Witch Castle!",
+        "Doofenshmirtz Evil Dirigible It's my awesome blimp! Doofenshmirtz Evil Incorparated! I don't wanna sing anymore! So we're through!",
+      ]
     );
   }
 }

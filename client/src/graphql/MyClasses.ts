@@ -10,6 +10,7 @@
 export interface MyClasses_me_courseColors_course {
   __typename: "Course";
   name: string;
+  code: string;
 }
 
 export interface MyClasses_me_courseColors {
