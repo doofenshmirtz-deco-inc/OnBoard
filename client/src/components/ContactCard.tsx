@@ -25,6 +25,20 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function ContactCard(props: any) {
   const classes = useStyles();
+  let buttons;
+  if (!props.buttonsOff) {
+    buttons = (
+      <CardActions>
+        <IconButton aria-label="call">
+          <CallIcon />
+        </IconButton>
+        <IconButton aria-label="message">
+          <MessageIcon />
+        </IconButton>
+      </CardActions>
+    )
+  }
+
 
   return (
     <Card>
@@ -46,14 +60,7 @@ export default function ContactCard(props: any) {
         title={props.contact.name}
         subheader={props.contact.role}
       />
-      <CardActions>
-        <IconButton aria-label="call">
-          <CallIcon />
-        </IconButton>
-        <IconButton aria-label="message">
-          <MessageIcon />
-        </IconButton>
-      </CardActions>
+      {buttons}
     </Card>
   );
 }

@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function ContactList() {
+export default function ContactList(props: any) {
   const classes = useStyles();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -85,7 +85,7 @@ export default function ContactList() {
             horizontal: "center",
           }}
         >
-          <ContactCard contact={selectedContact} />
+          <ContactCard contact={selectedContact}/>
         </Popover>
       </Container>
     </Box>
