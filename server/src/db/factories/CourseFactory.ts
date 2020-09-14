@@ -4,6 +4,8 @@ import { Course, Semesters, CourseLevel } from "../../models/Course";
 import { BaseGroup, CourseGroup } from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
 import { CourseGroupPair, CourseRole } from "../../models/CourseGroupPair";
+import { FolderNode, TextNode, BaseNode } from "../../models/CoursePageNode";
+import { getManager } from "typeorm";
 
 export type CourseFactoryContext = {
   groups?: {
@@ -29,6 +31,17 @@ define(Course, async (faker: typeof Faker, context?: CourseFactoryContext) => {
       course.addGroup(role as CourseRole, group);
     }
   }*/
+
+  const page = new FolderNode();
+  page.title = `${course.code}: ${course.name}`;
+  await page.save();
+  course.coursePage = page;
+
+  const text = new TextNode();
+  text.title = `Welcome to ${code}`;
+  text.text = "This will be a fun course";
+  text.parent = page;
+  await text.save();
 
   const authors = context?.groups?.[CourseRole.Coordinator];
   if (authors) {

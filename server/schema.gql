@@ -21,10 +21,16 @@ type BaseGroup {
   users: [User!]!
 }
 
+type BaseNode {
+  id: ID!
+  title: String!
+}
+
 type Course {
   announcements: [Announcement!]
   code: String!
   courseLevel: String!
+  coursePage: FolderNode!
   id: ID!
   name: String!
   semester: Semesters!
@@ -46,6 +52,12 @@ enum CourseRole {
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
 scalar DateTime
+
+type FolderNode {
+  children: [BaseNode!]!
+  id: ID!
+  title: String!
+}
 
 type Message {
   createdAt: DateTime!

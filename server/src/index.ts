@@ -13,6 +13,7 @@ import { SubscriptionServer } from "subscriptions-transport-ws";
 import { execute, subscribe } from "graphql";
 import { createServer } from "http";
 import { AppPubSub } from "./resolvers/AppPubSub";
+import { FolderNodeResolver } from "./resolvers/CoursePageResolver";
 
 async function main() {
   const port = 5000;
@@ -40,6 +41,7 @@ async function main() {
       CourseResolver,
       UserGroupResolver,
       MessageResolver,
+      FolderNodeResolver,
     ],
     emitSchemaFile: true,
     pubSub: AppPubSub,

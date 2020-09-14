@@ -10,6 +10,7 @@ import { BaseGroup, GroupType, CourseGroup } from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
 import { CourseRole } from "../../models/CourseGroupPair";
 import Faker from "faker";
+import { FolderNode } from "../../models/CoursePageNode";
 
 // const generateEmptyGroup = (context?: {type: GroupType}) =>
 //   BaseGroup.create({ users: Promise.resolve([]), type: context?.type ?? GroupType.CourseStudents }).save();
@@ -39,9 +40,14 @@ const generateTestCourse = async (
   context: { code: string; name: string; semester: Semesters; year: number },
   userContext: { users: User[]; role: CourseRole }
 ) => {
+  const page = await FolderNode.create({
+    title: context.code,
+  }).save();
+
   const course = await Course.create({
     ...context,
     courseLevel: CourseLevel.Undergrad,
+    coursePage: page,
   }).save();
 
   if (userContext?.role)
