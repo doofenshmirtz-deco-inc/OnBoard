@@ -28,6 +28,7 @@ type BaseNode {
 
 type Course {
   announcements: [Announcement!]
+  assesmentPage: FolderNode!
   code: String!
   courseLevel: String!
   coursePage: FolderNode!
