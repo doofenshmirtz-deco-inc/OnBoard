@@ -18,6 +18,7 @@ type AuthToken {
 
 type BaseGroup {
   id: ID!
+  timetable: Timetable
   users: [User!]!
 }
 
@@ -84,6 +85,13 @@ enum Semesters {
 
 type Subscription {
   newMessages(groupID: Float!): Message!
+}
+
+type Timetable {
+  duration: Float!
+  id: ID!
+  name: String!
+  times: [DateTime!]!
 }
 
 type User {
