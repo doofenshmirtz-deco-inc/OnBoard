@@ -49,7 +49,10 @@ const StudyRooms = () => {
     root: {
       flexGrow: 1,
       backgroundColor: theme.palette.background.paper,
-    }
+    },
+    tabs: {
+      textTransform: "none",
+    },
   }));
   
   
@@ -65,9 +68,9 @@ const StudyRooms = () => {
       <h1>Messaging</h1>
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example" variant="fullWidth">
-          <Tab label="Recents" {...a11yProps(0)} />
-          <Tab label="Explore" {...a11yProps(1)} />
-          <Tab label="Classes" {...a11yProps(2)} />
+          <Tab className={classes.tabs} label="Recents" {...a11yProps(0)} />
+          <Tab className={classes.tabs} label="Explore" {...a11yProps(1)} />
+          <Tab className={classes.tabs} label="Classes" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>

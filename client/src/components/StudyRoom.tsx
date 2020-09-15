@@ -6,7 +6,7 @@ import {Popover, Button, ListItemIcon, ListItemText, ListItem, Typography} from 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: "50%",
+      width: "100%",
       height: "10vh",
     },
     itemText: {
