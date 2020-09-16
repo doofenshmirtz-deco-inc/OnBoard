@@ -4,6 +4,14 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import contacts from "../components/Contacts.json";
 import ContactCard from "./ContactCard";
 import TextField from "@material-ui/core/TextField";
+import Button from '@material-ui/core/Button';
+import MessageBox from "./MessageBox";
+
+const handleClick = (item: any) => {
+  console.log("clicked");
+
+  return <MessageBox name={item.name}/>;
+}
 
 const RecentContacts = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -14,10 +22,16 @@ const RecentContacts = () => {
       flexDirection: "column",
       width: "25%"
     },
+    contact: {
+      display: "initial", 
+      textTransform: "none", 
+      textAlign: "left", 
+      padding: "0"
+    },
     searchBar: {
       width: "75%",
       margin: "auto",
-    }
+    },
   }));
   const classes = useStyles();
 
@@ -30,9 +44,17 @@ const RecentContacts = () => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-      {Object.values(contacts).map((item) =>
+      {Object.values(contacts).map((item, i) =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase()) ? (
-          <ContactCard contact={item} buttonsOff={true}/>
+          <Button 
+            color="primary" 
+            disableElevation
+            style={{}}
+            onClick={() => { handleClick(item) }}
+            className={classes.contact}
+          > 
+            <ContactCard key={i} contact={item} buttonsOff={true}/>
+          </Button>
         ) : null
       )}
     </List>

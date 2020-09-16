@@ -1,11 +1,13 @@
 import React from "react";
 
-const Recents = () => {
+const MessageBox = (props: any) => {
+    console.log(props);
+
     return (
-        <span>
-            idk messages go here I gues
-        </span>
+        <div>
+            hello {props.name}
+        </div>
     );
 };
 
-export default Recents;
+export default MessageBox;

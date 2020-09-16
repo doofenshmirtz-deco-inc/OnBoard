@@ -16,7 +16,6 @@ const Recents = () => {
     return (
       <div className={classes.root}>
         <RecentContacts/>
-        <MessageBox/>
       </div>
     );
 };

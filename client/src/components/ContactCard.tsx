@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function ContactCard(props: any) {
   const classes = useStyles();
-  let buttons;
+  let buttons, action;
   if (!props.buttonsOff) {
     buttons = (
       <CardActions>
@@ -36,6 +36,12 @@ export default function ContactCard(props: any) {
           <MessageIcon />
         </IconButton>
       </CardActions>
+    )
+    
+    action = (
+      <IconButton aria-label="settings">
+        <MoreVertIcon />
+      </IconButton>
     )
   }
 
@@ -52,11 +58,7 @@ export default function ContactCard(props: any) {
             {props.contact.name[0]}
           </Avatar>
         }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
+        action={action}
         title={props.contact.name}
         subheader={props.contact.role}
       />
