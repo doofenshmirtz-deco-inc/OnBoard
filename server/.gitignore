@@ -114,3 +114,6 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+.config/
+!.confg/.jitsi-meet-cfg/web/interface_config.js
