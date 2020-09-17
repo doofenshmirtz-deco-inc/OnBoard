@@ -1,12 +1,9 @@
-import React, { createRef, useContext } from "react";
+import React from "react";
 import {
   TextField,
   makeStyles,
-  Card,
   Grid,
   Button,
-  CircularProgress,
-  createStyles,
 } from "@material-ui/core";
 import { useQuery, gql, useApolloClient } from "@apollo/client";
 import * as firebase from "firebase";

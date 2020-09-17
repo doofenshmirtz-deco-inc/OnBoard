@@ -1,6 +1,6 @@
 import React from "react";
 import HomeIcon from "@material-ui/icons/Home";
-import Grid, { GridSpacing } from "@material-ui/core/Grid";
+import Grid from "@material-ui/core/Grid";
 import ContactList from "../../components/ContactList";
 import ClassesList from "../../components/ClassesList";
 import Announcements from "../../components/Announcements";

@@ -93,6 +93,7 @@ const renderAnnouncement = (
         fontWeight: "bolder",
         fontSize: "1.1rem",
       }}
+      onClick={() => onClickHandler(announcement.announcement.title)}
     >
       <ListItemText
         className={classes.classBody}
@@ -156,7 +157,7 @@ export default function Announcements() {
           );
   // TOOD sort
 
-  console.log("annoucments");
+  console.log("annoucements");
   console.log(announcements);
 
   const annoucementsList = !data ? (

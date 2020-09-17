@@ -8,7 +8,6 @@ import {
   ThemeProvider,
   createMuiTheme,
 } from "@material-ui/core/styles";
-import { Shadows } from "@material-ui/core/styles/shadows";
 
 import modules from "./modules";
 import Sidebar from "./components/Sidebar";

@@ -2,12 +2,8 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import React from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import classes from "*.module.css";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
-import Container from "@material-ui/core/Container";
 
 const localizer = momentLocalizer(moment);
 
@@ -19,12 +15,6 @@ const myEventsList = {
       title: "Some title",
     },
   ],
-};
-
-const defaultProps = {
-  bgcolor: "background.paper",
-  m: 1,
-  borderColor: "text.primary",
 };
 
 export default function MyCalendar() {

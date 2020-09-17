@@ -5,8 +5,6 @@ import contacts from "../components/Contacts.json";
 import ContactCard from "./ContactCard";
 import TextField from "@material-ui/core/TextField";
 import Button from '@material-ui/core/Button';
-import MessageBox from "./MessageBox";
-import ListItem from "@material-ui/core/ListItem";
 import SearchIcon from '@material-ui/icons/Search';
 import InputAdornment from '@material-ui/core/InputAdornment';
 
