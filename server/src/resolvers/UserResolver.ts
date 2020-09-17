@@ -48,12 +48,20 @@ export class UserResolver {
     });
   }
 
-  @FieldResolver((type) => [BaseGroup])
-  async groups(
+  // @FieldResolver((type) => [BaseGroup])
+  // async groupsByType(
+  //   @Root() user: User,
+  //   @Arg("type", () => GroupType, { nullable: true }) type: GroupType | null
+  // ) {
+  //   return (await user.groups).filter((x) => type == null || x.groupType == type);
+  // }
+
+  @FieldResolver(type => [CourseGroup])
+  async courses(
     @Root() user: User,
-    @Arg("role", () => CourseRole, { nullable: true }) role: CourseRole | null
   ) {
-    return (await user.groups).filter((x) => x.groupType == GroupType.Course);
+    const courseGroups = (await user.groups).filter(x => x.groupType == GroupType.Course) as CourseGroup[];
+    return courseGroups.flatMap(c => c.coursePairs);
   }
 
   @FieldResolver(() => [CourseColor])

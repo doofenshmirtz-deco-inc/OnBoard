@@ -36,10 +36,10 @@ type CourseColor {
   course: Course!
 }
 
-enum CourseRole {
-  Coordinator
-  Student
-  Tutor
+type CourseGroup {
+  id: ID!
+  timetable: Timetable
+  users: [User!]!
 }
 
 """
@@ -88,8 +88,9 @@ type Subscription {
 
 type User {
   courseColors: [CourseColor!]!
+  courses: [CourseGroup!]!
   email: String!
-  groups(role: CourseRole): [BaseGroup!]!
+  groups: [BaseGroup!]!
   id: ID!
   name: String!
 }
