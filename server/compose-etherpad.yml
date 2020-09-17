@@ -2,7 +2,7 @@ version: '3.7'
 services:
   etherpad:
     image: docker.pkg.github.com/doofenshmirtz-deco-inc/onboard/etherpad:0.1.2
-    restart: on-failure
+    restart: ${RESTART_POLICY}
     #volumes:
     #  - /opt/etherpad-lite/var:/opt/etherpad-lite/var
     #  - /opt/etherpad-lite/node_modules:/opt/etherpad-lite/node_modules

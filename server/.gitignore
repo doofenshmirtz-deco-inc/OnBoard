@@ -117,3 +117,5 @@ dist
 
 .config/
 !.confg/.jitsi-meet-cfg/web/interface_config.js
+
+.npmrc

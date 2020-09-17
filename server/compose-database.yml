@@ -30,3 +30,4 @@ volumes:
 networks:
   onboard-network:
     driver: bridge
+    name: onboard-network

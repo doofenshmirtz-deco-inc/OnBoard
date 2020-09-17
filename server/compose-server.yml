@@ -1,0 +1,14 @@
+version: '3'
+services:
+  db:
+    image: doof/onboard-server
+    restart: "unless-stopped"
+    ports:
+      - "5000:5000"
+    networks:
+      - onboard-network 
+
+networks:
+  onboard-network:
+    external:
+      name: onboard-network
