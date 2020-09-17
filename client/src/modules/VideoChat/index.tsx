@@ -1,7 +1,11 @@
 import React from "react";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import Jitsi from "react-jitsi";
-import { InterfaceConfigOptions } from "react-jitsi/dist/types";
+import { InterfaceConfigOptions, JitsiMeetAPI } from "react-jitsi/dist/types";
+import { gql, useQuery } from "@apollo/client";
+import { LoadingPage } from "../../components/LoadingPage";
+import { ME_VIDEO } from "../../graphql/ME_VIDEO";
+import { useHistory } from "react-router";
 
 const config = {
   prejoinPageEnabled: false,
@@ -37,18 +41,40 @@ const style = {
   height: "calc(100% - 130px)", // TODO this is hacky (might be able to get rid of this (and the other heigh: 100%) once its in a grid)
 };
 
-const VideoChat = () => (
-  <>
-    <h1>Video Chat</h1>
-    <Jitsi
-      config={config}
-      containerStyle={style}
-      displayName="Username"
-      roomName="Room"
-      domain="localhost:8443"
-    />
-  </>
-);
+const ME = gql`
+  query ME_VIDEO {
+    me {
+      name
+    }
+  }
+`;
+
+const handleAIP = (api: any, history: any) => {
+  api.on("readyToClose", () => history.push("/"));
+};
+
+const VideoChat = () => {
+  const { loading, error, data } = useQuery<ME_VIDEO>(ME);
+
+  const history = useHistory();
+
+  return data && data.me ? (
+    <>
+      <h1>Video Chat</h1>
+      <Jitsi
+        config={config}
+        containerStyle={style}
+        displayName={data.me.name}
+        roomName="Room"
+        domain="localhost:8443"
+        loadingComponent={() => <LoadingPage />}
+        onAPILoad={(api) => handleAIP(api, history)}
+      />
+    </>
+  ) : (
+    <LoadingPage />
+  );
+};
 
 export default {
   routeProps: {
