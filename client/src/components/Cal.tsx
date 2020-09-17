@@ -12,6 +12,20 @@ import { useQuery, gql } from "@apollo/client";
 
 const localizer = momentLocalizer(moment);
 
+const GET_TIMETABLE = gql`
+  query MyClasses {
+    me {
+      courseColors {
+        colour
+        course {
+          name
+          code
+        }
+      }
+    }
+  }
+`;
+
 const myEventsList = {
   events: [
     {
@@ -40,6 +54,21 @@ export default function MyCalendar() {
           views={["month", "week"]}
           endAccessor="end"
           style={{ height: 446 }}
+          eventPropGetter={
+            (event, start, end, isSelected) => {
+              let newStyle = {
+                backgroundColor: "#6B2BC6",
+                color: 'white',
+                borderRadius: "0px",
+                border: "none"
+              };
+        
+              return {
+                className: "",
+                style: newStyle
+              };
+            }
+          }
         />
       </CardContent>
     </Box>

@@ -6,10 +6,11 @@ import {
 import { Connection } from "typeorm";
 import { User } from "../../models/User";
 import { Semesters, CourseLevel, Course } from "../../models/Course";
-import { BaseGroup, GroupType, CourseGroup } from "../../models/UserGroup";
+import { BaseGroup, GroupType, CourseGroup, ClassGroup, ClassType } from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
 import { CourseRole } from "../../models/CourseGroupPair";
 import Faker from "faker";
+import { Timetable } from "../../models/Timetable";
 
 // const generateEmptyGroup = (context?: {type: GroupType}) =>
 //   BaseGroup.create({ users: Promise.resolve([]), type: context?.type ?? GroupType.CourseStudents }).save();
@@ -69,6 +70,35 @@ const generateTestAnnouncements = async (
     }).save();
     i++;
   }
+};
+
+const generateTestClass = async (
+  context: { name: string; type: ClassType },
+  userContext: { users: User[]}
+) => {
+  const classGroup = await ClassGroup.create({
+    name: context.name,
+    type: context.type,
+    users: Promise.resolve(userContext.users)
+  }).save()
+
+  return classGroup;
+};
+
+const generateTestTimetable = async (
+  context: { classGroup: ClassGroup; name: string; times: Date[]; duration: number }
+) => {
+  const timetable = await Timetable.create({
+    name: context.name,
+    times: context.times,
+    duration: context.duration,
+    classes: Promise.resolve(context.classGroup)
+  }).save();
+
+  context.classGroup.timetable = Promise.resolve(timetable);
+  await context.classGroup.save()
+
+  return timetable;
 };
 
 export default class TestDataSeeder implements Seeder {
@@ -200,6 +230,24 @@ export default class TestDataSeeder implements Seeder {
         "Doofenshmirtz Evil Incorparated!A place of evil and fighting! With Perry the Platypus too! Doofenshmirtz holding a Bucket!I don't know what it's for! Doofenshmirtz Ex-Wifes House in the Hills somewhere! Stop reminding me of her! Doofenshmirtz Wicked Witch Castle!",
         "Doofenshmirtz Evil Dirigible It's my awesome blimp! Doofenshmirtz Evil Incorparated! I don't wanna sing anymore! So we're through!",
       ]
+    );
+
+    const classGroup = await generateTestClass(
+      {
+        name: "Bruh",
+        type: ClassType.Lecture,
+      },
+      {
+        users: [heinz]
+      }
+    );
+
+    const timetable = await generateTestTimetable({
+        duration: 60,
+        name: "Bruh",
+        times: [new Date(Date.now())],
+        classGroup: classGroup
+      }
     );
   }
 }
