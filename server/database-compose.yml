@@ -24,6 +24,7 @@ services:
       - onboard-network
     depends_on:
       - db
+
 volumes:
   database-data: 
 networks:

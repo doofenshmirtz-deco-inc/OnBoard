@@ -1,10 +1,36 @@
 import React from "react";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import Jitsi from "react-jitsi";
+import { InterfaceConfigOptions } from "react-jitsi/dist/types";
 
 const config = {
   prejoinPageEnabled: false,
 } as any;
+
+/* 
+const interfaceConfig = {
+  APP_NAME: "Study Rooms",
+  MOBILE_APP_PROMO: false,
+  SHOW_JITSI_WATERMARK: false,
+  SHOW_WATERMARK_FOR_GUESTS: false,
+  TOOLBAR_BUTTONS: [
+    "microphone",
+    "camera",
+    "closedcaptions",
+    "desktop",
+    "fullscreen",
+    "hangup",
+    "etherpad",
+    "settings",
+    "raisehand",
+    "filmstrip",
+    "tileview",
+    "mute-everyone",
+    "stats",
+    //"security",
+  ],
+} as InterfaceConfigOptions;
+ */
 
 const style = {
   width: "100%",
@@ -14,7 +40,13 @@ const style = {
 const VideoChat = () => (
   <>
     <h1>Video Chat</h1>
-    <Jitsi config={config} containerStyle={style} />
+    <Jitsi
+      config={config}
+      containerStyle={style}
+      displayName="Username"
+      roomName="Room"
+      domain="localhost:8443"
+    />
   </>
 );
 
