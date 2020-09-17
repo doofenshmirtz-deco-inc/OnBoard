@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import List from "@material-ui/core/List";
 import TextField from "@material-ui/core/TextField";
-import openRooms from '../../components/openRooms.json'
-import StudyRoom from "../../components/StudyRoom";
-import { Grid } from "@material-ui/core";
+import StudyRoomButton from "../../components/StudyRoomButton";
 import SearchIcon from '@material-ui/icons/Search';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
-const Explore = () => {
+const Explore = (props: any) => {
   const [searchTerm, setSearchTerm] = useState("");
   const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -28,14 +27,21 @@ const Explore = () => {
       <TextField
         id="contacts-search"
         style={{fontSize: "1.2rem", marginBottom: "1em"}}
-        label="Search For Open Meeting Rooms"
+        label={props.label}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className={classes.searchBar}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon/>
+            </InputAdornment>
+          )}}
         />
-      {Object.values(openRooms).map((item) =>
+
+      {(props.openRooms).map((item:any) =>
         item.title.toLowerCase().includes(searchTerm.toLowerCase()) ? (
-          <StudyRoom room={item}/>
+          <StudyRoomButton room={item}/>
         ) : null
       )}
     </List>

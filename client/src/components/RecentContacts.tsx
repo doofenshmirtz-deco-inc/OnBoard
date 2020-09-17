@@ -7,6 +7,8 @@ import TextField from "@material-ui/core/TextField";
 import Button from '@material-ui/core/Button';
 import MessageBox from "./MessageBox";
 import ListItem from "@material-ui/core/ListItem";
+import SearchIcon from '@material-ui/icons/Search';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 const RecentContacts = (props: any) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -39,6 +41,12 @@ const RecentContacts = (props: any) => {
         label="Search"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon/>
+            </InputAdornment>
+          )}}
       />
       {Object.values(contacts).map((item, i) =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase()) ? (

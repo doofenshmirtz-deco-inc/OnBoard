@@ -8,6 +8,8 @@ import ContactCard from "./ContactCard";
 import Popover from "@material-ui/core/Popover";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
+import SearchIcon from '@material-ui/icons/Search';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 import contacts from "./Contacts.json";
 
@@ -28,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function ContactList(props: any) {
+export default function ContactList() {
   const classes = useStyles();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -61,6 +63,12 @@ export default function ContactList(props: any) {
           label="Search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon/>
+              </InputAdornment>
+            )}}
         />
         <List className={classes.contactList}>
           {Object.values(contacts).map((item) =>

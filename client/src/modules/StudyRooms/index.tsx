@@ -8,7 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Recents from "./recents";
 import Explore from "./explore";
-import Classes from "./classes";
+import openRooms from '../../components/openRooms.json'
+import classrooms from '../../components/classrooms.json'
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -77,10 +78,10 @@ const StudyRooms = () => {
         <Recents/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Explore/>
+        <Explore openRooms={openRooms} label={"Search For Open Meeting Rooms"}/>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Classes/>
+      <Explore openRooms={classrooms} label={"Search For Class Meeting Rooms"}/>
       </TabPanel>
     </div>
   );

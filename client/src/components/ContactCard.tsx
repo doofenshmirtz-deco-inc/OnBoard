@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function ContactCard(props: any) {
   const classes = useStyles();
   let buttons, action;
+
   if (!props.buttonsOff) {
     buttons = (
       <CardActions>
@@ -39,10 +40,8 @@ export default function ContactCard(props: any) {
     )
   } 
 
-
   return (
     <Card>
-      <CardActionArea>
         <CardHeader
           avatar={
             <Avatar
@@ -57,7 +56,6 @@ export default function ContactCard(props: any) {
           title={props.contact.name}
           subheader={props.contact.role}
         />
-      </CardActionArea>
       {buttons}
     </Card>
   );
