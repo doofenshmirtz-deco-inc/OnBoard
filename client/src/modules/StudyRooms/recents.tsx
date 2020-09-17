@@ -1,9 +1,15 @@
-import React from "react";
+import React, {useState} from "react";
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import MessageBox from "../../components/MessageBox"
 import RecentContacts from "../../components/RecentContacts";
 
 const Recents = () => {
+  const [message, setMessageState] = useState("");
+  const handleClick = (item: any) => {
+    setMessageState(item.name);
+  }
+
+  
     const useStyles = makeStyles((theme: Theme) => ({
       root: {
         flexGrow: 3,
@@ -12,10 +18,10 @@ const Recents = () => {
       }
     }));
     const classes = useStyles();
-
     return (
       <div className={classes.root}>
-        <RecentContacts/>
+        <RecentContacts handleClick={handleClick}/>
+        <MessageBox name={message}/>;
       </div>
     );
 };

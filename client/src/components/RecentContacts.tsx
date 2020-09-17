@@ -6,14 +6,9 @@ import ContactCard from "./ContactCard";
 import TextField from "@material-ui/core/TextField";
 import Button from '@material-ui/core/Button';
 import MessageBox from "./MessageBox";
+import ListItem from "@material-ui/core/ListItem";
 
-const handleClick = (item: any) => {
-  console.log("clicked");
-
-  return <MessageBox name={item.name}/>;
-}
-
-const RecentContacts = () => {
+const RecentContacts = (props: any) => {
   const [searchTerm, setSearchTerm] = useState("");
   const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -50,7 +45,7 @@ const RecentContacts = () => {
             color="primary" 
             disableElevation
             style={{}}
-            onClick={() => { handleClick(item) }}
+            onClick={(e) => {props.handleClick(item)}}
             className={classes.contact}
           > 
             <ContactCard key={i} contact={item} buttonsOff={true}/>
@@ -58,6 +53,7 @@ const RecentContacts = () => {
         ) : null
       )}
     </List>
+    
   );
 };
 

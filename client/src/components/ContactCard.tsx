@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-
+import CardActionArea from '@material-ui/core/CardActionArea';
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -37,31 +37,27 @@ export default function ContactCard(props: any) {
         </IconButton>
       </CardActions>
     )
-    
-    action = (
-      <IconButton aria-label="settings">
-        <MoreVertIcon />
-      </IconButton>
-    )
-  }
+  } 
 
 
   return (
     <Card>
-      <CardHeader
-        avatar={
-          <Avatar
-            aria-label="contact"
-            className={classes.avatar}
-            src={props.contact.avatar}
-          >
-            {props.contact.name[0]}
-          </Avatar>
-        }
-        action={action}
-        title={props.contact.name}
-        subheader={props.contact.role}
-      />
+      <CardActionArea>
+        <CardHeader
+          avatar={
+            <Avatar
+              aria-label="contact"
+              className={classes.avatar}
+              src={props.contact.avatar}
+            >
+              {props.contact.name[0]}
+            </Avatar>
+          }
+          action={action}
+          title={props.contact.name}
+          subheader={props.contact.role}
+        />
+      </CardActionArea>
       {buttons}
     </Card>
   );
