@@ -56,12 +56,18 @@ export class UserResolver {
   //   return (await user.groups).filter((x) => type == null || x.groupType == type);
   // }
 
-  @FieldResolver(type => [CourseGroup])
+  @FieldResolver((type) => [Course])
   async courses(
     @Root() user: User,
+    @Arg("role", () => CourseRole, { nullable: true }) role: CourseRole | null
   ) {
-    const courseGroups = (await user.groups).filter(x => x.groupType == GroupType.Course) as CourseGroup[];
-    return courseGroups.flatMap(c => c.coursePairs);
+    let query = CourseGroupPair.createQueryBuilder("cgp")
+      .leftJoinAndSelect("cgp.group", "group")
+      .leftJoinAndSelect("cgp.course", "course")
+      .leftJoinAndSelect("group.users", "user")
+      .where("user.id = :uid", { uid: user.id });
+    if (role) query = query.where("cgp.role = :role", { role });
+    return (await query.getMany()).map((p) => p.course);
   }
 
   @FieldResolver(() => [CourseColor])
