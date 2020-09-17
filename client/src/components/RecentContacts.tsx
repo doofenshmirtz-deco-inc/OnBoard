@@ -28,6 +28,7 @@ const RecentContacts = (props: any) => {
       margin: "auto",
     },
   }));
+  
   const classes = useStyles();
 
   return (

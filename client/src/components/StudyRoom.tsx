@@ -17,7 +17,9 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "20%",
       borderRadius: "0px"
     },
-
+    icon: {
+      color: theme.palette.primary.main
+    }
   }),
 );
 
@@ -37,7 +39,7 @@ export default function StudyRoom(props: any) {
 
   return (
     <ListItem alignItems="center" divider={true} className={classes.root}>
-      <ListItemIcon style={{"color":"red"}}>
+      <ListItemIcon className={classes.icon}>
         <PersonIcon/>
         {props.room.roomSize}
       </ListItemIcon>
@@ -49,7 +51,11 @@ export default function StudyRoom(props: any) {
         Join
       </Button>
       <Popover
-        style={{"textAlign":"center"}} 
+        style={{
+          textAlign:"center",
+          marginTop: "0.5em",
+          paddingTop: "2em"
+        }} 
         id={id}
         open={open}
         anchorEl={anchorEl}
@@ -65,10 +71,10 @@ export default function StudyRoom(props: any) {
       >
         Join This Meeting?
         <Typography>
-          <Button variant="contained" style={{"color":"green"}} onClick={() => (alert("entering the meeting room // TODO!!"))}> 
+          <Button variant="outlined" color="primary" style={{margin: "0.5em", padding: "0.25em", textTransform: "none"}} onClick={() => (alert("entering the meeting room // TODO!!"))}> 
             Yes
           </Button>
-          <Button variant="contained" style={{"color":"red"}} onClick={handleClose}>
+          <Button variant="outlined" style={{"color":"red", margin: "0.5em", border: "1px solid red"}} onClick={handleClose}>
             No
           </Button>
         </Typography>
