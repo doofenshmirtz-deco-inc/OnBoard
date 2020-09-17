@@ -5,17 +5,10 @@
 #
 FROM node:12.13.0
 
-WORKDIR /usr/src/server
-
-COPY .npmrc ./
-COPY .yarnrc ./
+WORKDIR /usr/src/client
 
 COPY package.json ./
 COPY tsconfig.json ./
-COPY ormconfig.js ./
-COPY firebase-admin.json ./
 COPY ./src ./src
+COPY ./public ./public
 RUN yarn && yarn build
-
-EXPOSE 5000
-CMD ["yarn", "prod"]
