@@ -9,7 +9,6 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import { useQuery, gql } from "@apollo/client";
-import { MyClasses } from "../graphql/MyClasses";
 
 const localizer = momentLocalizer(moment);
 
