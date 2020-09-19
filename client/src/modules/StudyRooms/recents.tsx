@@ -5,8 +5,10 @@ import RecentContacts from "../../components/RecentContacts";
 
 const Recents = () => {
   const [message, setMessageState] = useState("");
+  const [selected, setSelectedState] = useState("");
   const handleClick = (item: any) => {
     setMessageState(item.name);
+    setSelectedState(item.name);
   }
 
   const useStyles = makeStyles((theme: Theme) => ({
@@ -21,8 +23,8 @@ const Recents = () => {
   
   return (
     <div className={classes.root}>
-      <RecentContacts handleClick={handleClick}/>
-      <MessageBox name={message}/>;
+      <RecentContacts handleClick={handleClick} selected={selected}/>
+      <MessageBox name={message}/>
     </div>
   );
 };

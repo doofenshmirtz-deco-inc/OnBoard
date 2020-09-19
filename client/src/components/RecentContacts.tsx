@@ -51,13 +51,15 @@ const RecentContacts = (props: any) => {
           <Button 
             color="primary" 
             disableElevation
-            style={{}}
+            style={{backgroundColor: props.selected == item.name ? "orange" : "white"}}
             onClick={(e) => {props.handleClick(item)}}
             className={classes.contact}
           > 
-            <ContactCard key={i} contact={item} buttonsOff={true}/>
+            <ContactCard key={item.name} contact={item} buttonsOff={true}/>
           </Button>
-        ) : null
+        ) 
+        : 
+        null
       )}
     </List>
     
