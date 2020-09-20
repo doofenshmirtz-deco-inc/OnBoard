@@ -6,16 +6,10 @@ module.exports = {
   password: "y@yCKiL2oUmJ",
   database: "onboard",
   entities:
-    process.env.NODE_ENV == "development"
-      ? ["./src/models/*.ts"]
-      : ["./src/models/*.js"],
-  seeds:
-    process.env.NODE_ENV == "development"
-      ? ["./src/seeds/*.ts"]
-      : ["./src/seeds/*.js"],
-  factories:
-    process.env.NODE_ENV == "development"
-      ? ["./src/factories/*.ts"]
-      : ["./src/factories/*.js"],
+    process.env.NODE_ENV == "production"
+      ? ["./src/models/*.js"]
+      : ["./src/models/*.ts"],
+  seeds: ["./src/db/seeds/*.ts"],
+  factories: ["./src/db/factories/*.ts"],
   synchronize: true,
 };
