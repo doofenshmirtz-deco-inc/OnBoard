@@ -65,13 +65,6 @@ export abstract class BaseGroup extends BaseEntity {
 export class CourseGroup extends BaseGroup {
   @OneToMany(() => CourseGroupPair, (p) => p.group)
   coursePairs: CourseGroupPair[];
-
-  courses(role?: CourseRole | null) {
-    console.log(this);
-    return this.coursePairs
-      .filter((p) => role == null || p.role == role)
-      .map((p) => p.course);
-  }
 }
 
 @ChildEntity(GroupType.Class)
