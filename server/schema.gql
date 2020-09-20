@@ -100,8 +100,9 @@ scalar Upload
 
 type User {
   courseColors: [CourseColor!]!
+  courses(role: CourseRole): [Course!]!
   email: String!
-  groups(role: CourseRole): [BaseGroup!]!
+  groups: [BaseGroup!]!
   id: ID!
   name: String!
 }
