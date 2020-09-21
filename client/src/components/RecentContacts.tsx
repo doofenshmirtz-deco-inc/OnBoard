@@ -8,22 +8,6 @@ import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import InputAdornment from '@material-ui/core/InputAdornment';
 
-
-/*
-  [
-    {
-      groupId: 2738235,
-      name: "Heinz Doofenshmirtz",
-      users: [
-        {
-          userID: 87234876,
-          name: "Heinz Doofenshmirtz"
-        }
-      ]
-    }
-  ]
-*/
-
 const RecentContacts = (props: any) => {
   const [searchTerm, setSearchTerm] = useState("");
   const useStyles = makeStyles((theme: Theme) => ({
@@ -67,7 +51,7 @@ const RecentContacts = (props: any) => {
           <Button 
             color="primary" 
             disableElevation
-            style={{backgroundColor: props.selected == item.name ? "orange" : "white"}}
+            style={{backgroundColor: props.selected == item.name ? "#e3e1e1" : "white"}}
             onClick={(e) => {props.handleClick(item)}}
             className={classes.contact}
           > 

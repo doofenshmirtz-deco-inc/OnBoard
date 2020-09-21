@@ -15,6 +15,9 @@ const useStyles = makeStyles((theme: Theme) =>
     avatar: {
       backgroundColor: red[500],
     },
+    cardBackground: {
+      backgroundColor: "transparent"
+    }
   })
 );
 
@@ -36,7 +39,7 @@ export default function ContactCard(props: any) {
   } 
 
   return (
-    <Card>
+    <Card className={classes.cardBackground}>
         <CardHeader
           avatar={
             <Avatar
