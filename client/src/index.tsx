@@ -29,7 +29,7 @@ const authLink = setContext(async (_, { headers }) => {
 });
 
 const wsLink = new WebSocketLink({
-  uri: "ws://localost:5000/graphql",
+  uri: "ws://localhost:5000/graphql",
   options: {
     reconnect: true,
   },

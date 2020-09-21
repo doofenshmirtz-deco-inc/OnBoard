@@ -18,11 +18,13 @@ type AuthToken {
 
 type BaseGroup {
   id: ID!
+  lastActive: DateTime!
   users: [User!]!
 }
 
 type ClassGroup {
   id: ID!
+  lastActive: DateTime!
   name: String!
   timetable: Timetable
   type: String!
@@ -46,6 +48,7 @@ type CourseColor {
 
 type CourseGroup {
   id: ID!
+  lastActive: DateTime!
   name: String!
   users: [User!]!
 }
@@ -63,6 +66,7 @@ scalar DateTime
 
 type DMGroup {
   id: ID!
+  lastActive: DateTime!
   name: String!
   users: [User!]!
 }
@@ -107,6 +111,7 @@ enum Semesters {
 
 type StudyGroup {
   id: ID!
+  lastActive: DateTime!
   name: String!
   users: [User!]!
 }
@@ -126,6 +131,7 @@ type Timetable {
 scalar Upload
 
 type User {
+  avatar: String!
   courseColors: [CourseColor!]!
   email: String!
   groups(role: CourseRole): [Group!]!

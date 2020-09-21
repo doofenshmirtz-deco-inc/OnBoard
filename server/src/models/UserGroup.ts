@@ -11,6 +11,7 @@ import {
   OneToOne,
   TableInheritance,
   ChildEntity,
+  BeforeInsert,
 } from "typeorm";
 import {
   ObjectType,
@@ -65,6 +66,15 @@ export abstract class BaseGroup extends BaseEntity {
       return;
     }
     this.users = Promise.resolve(users ?? []);
+  }
+
+  @Column()
+  @Field()
+  lastActive: Date;
+
+  @BeforeInsert()
+  updateDate() {
+    this.lastActive = new Date();
   }
 }
 
