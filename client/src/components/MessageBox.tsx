@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { Button, InputAdornment, makeStyles, TextField } from "@material-ui/core";
 import SendIcon from '@material-ui/icons/Send';
 import VideocamIcon from '@material-ui/icons/Videocam';
+import { gql, useQuery } from "@apollo/client";
+import { LoadingPage } from "./LoadingPage";
+import { MeId } from "../graphql/MeId";
+import { MyMessages } from "../graphql/MyMessages";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -33,8 +37,37 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const MESSAGES_QUERY = gql`
+query MyMessages($groupId: Float!) {
+  getMessages(groupID: $groupId) {
+    text
+    user {
+      id
+      name
+    }
+  }
+}
+`;
+
+const groupsQuery = gql`
+query MyGroups {
+  me {
+    groups {
+      id
+    }
+  }
+}
+`;
+
+const ME_QUERY = gql`
+query MeId {
+  me {
+    id
+  }
+}
+`;
+
 const sendMessage = (send: string, messages: any[], setMessages: any, setMessageSent: any) => {
-  console.log(send);
   if (send == "") {
     return;
   }
@@ -52,43 +85,41 @@ const handleKeyPress = (event: any, send: string, messages: any[], setMessages: 
     sendMessage(send, messages, setMessages, setMessageSent);
   }
 }
+
+const mapMessages = (data: MyMessages, myId: string) => {
+  return data.getMessages.map((msg) => {
+    return {
+      text: msg.text,
+      direction: msg.user.id == myId ? "right" : "left"
+    }
+  })
+}
   
 const MessageBox = (props: any) => {
   const [message, setMessageSent] = useState("");
   const classes = useStyles();
-  let dummyData = [
-    {
-      message: "1: This should be in left and is a super long message but in blue because why not gotta check it out for the aesthetics woohoo design skills 100 i am the best designer in the world LMFAOOOOO teehee eksdee",
-      direction: "left"
-    },
-    {
-      message: "2: This should be in right",
-      direction: "right"
-    },
-    {
-      message: "3: This should be in left again",
-      direction: "left"
-    },
-    {
-      message: "4: This should be in left again 69",
-      direction: "left"
-    },
-    {
-      message: "5: This should be in right again and is a super long message abra cadabra random words 123456789 teehee woohoo according to all known laws of aviation, a bee should not be able to fly",
-      direction: "right"
-    }
-  ];
 
-  const [messages, setMessages] = useState(dummyData);
+  const [messages, setMessages] = useState([]);
+
+  const me = useQuery<MeId>(ME_QUERY);
+
+  const { data } = useQuery<MyMessages>(MESSAGES_QUERY, {
+    variables: { groupId: 4 },
+  });
+
+  if (!data || !me.data || !me.data.me) {
+    return <LoadingPage />
+  }
 
   if (props.name == "") {
     return <div/>;
   }
 
-  const chatBubbles = messages.map((obj, i = 0) => (
+  const maps = mapMessages(data, me.data.me.id);
+  const chatBubbles = maps.map((obj : any, i: number = 0) => (
     <div className={`${classes.bubbleContainer} ${obj.direction == "left" ? classes.left : classes.right}`} key={i}>
       <div key={i++} className={`${classes.bubble} ${obj.direction == "left" ? classes.other : classes.me}`}>
-          <div>{obj.message}</div>
+          <div>{obj.text}</div>
       </div>
     </div>
   ));
@@ -107,7 +138,7 @@ const MessageBox = (props: any) => {
         onKeyPress={(e) => handleKeyPress(e, message, messages, setMessages, setMessageSent)}
         InputProps={{
           endAdornment: (
-            <Button onClick={(e) => sendMessage(message, messages, setMessages, setMessageSent)}>
+            <Button onClick={() => sendMessage(message, messages, setMessages, setMessageSent)}>
               <SendIcon/>
             </Button>
           )

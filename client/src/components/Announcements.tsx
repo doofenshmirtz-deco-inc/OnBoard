@@ -157,8 +157,8 @@ export default function Announcements() {
           );
   // TOOD sort
 
-  console.log("annoucements");
-  console.log(announcements);
+  // console.log("annoucements");
+  // console.log(announcements);
 
   const annoucementsList = !data ? (
     <div></div>

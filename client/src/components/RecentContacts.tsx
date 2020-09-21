@@ -8,6 +8,22 @@ import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import InputAdornment from '@material-ui/core/InputAdornment';
 
+
+/*
+  [
+    {
+      groupId: 2738235,
+      name: "Heinz Doofenshmirtz",
+      users: [
+        {
+          userID: 87234876,
+          name: "Heinz Doofenshmirtz"
+        }
+      ]
+    }
+  ]
+*/
+
 const RecentContacts = (props: any) => {
   const [searchTerm, setSearchTerm] = useState("");
   const useStyles = makeStyles((theme: Theme) => ({
