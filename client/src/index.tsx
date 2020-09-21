@@ -7,6 +7,7 @@ import { ApolloProvider } from "@apollo/client/react/context/ApolloProvider";
 import { createUploadLink } from "apollo-upload-client";
 import { ApolloLink, ApolloClient, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import { WebSocketLink } from "@apollo/client/link/ws";
 import firebase from "firebase";
 
 const httpLink = (createUploadLink({
@@ -24,6 +25,13 @@ const authLink = setContext(async (_, { headers }) => {
       authorization: token ? token : "",
     },
   };
+});
+
+const wsLink = new WebSocketLink({
+  uri: "ws://localost:5000/graphql",
+  options: {
+    reconnect: true,
+  },
 });
 
 const client = new ApolloClient({

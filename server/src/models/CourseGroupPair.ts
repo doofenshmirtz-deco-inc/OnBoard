@@ -6,6 +6,7 @@ import {
   OneToMany,
   ManyToOne,
   JoinTable,
+  OneToOne,
 } from "typeorm";
 import { Course } from "./Course";
 import { registerEnumType } from "type-graphql";
@@ -32,7 +33,7 @@ export class CourseGroupPair extends BaseEntity {
   @PrimaryColumn({ type: "enum", enum: CourseRole })
   role: CourseRole;
 
-  @ManyToOne(() => CourseGroup, (g) => g.coursePairs)
+  @OneToOne(() => CourseGroup, (g) => g.coursePairs)
   @JoinColumn()
   group: CourseGroup;
 }
