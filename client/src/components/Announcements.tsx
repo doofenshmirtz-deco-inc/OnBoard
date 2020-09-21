@@ -136,7 +136,7 @@ const GET_ANNOUNCEMENTS = gql`
 
 export default function Announcements() {
   const classes = useStyles();
-  const { loading, error, data } = useQuery<MyAnnouncements>(GET_ANNOUNCEMENTS);
+  const { data } = useQuery<MyAnnouncements>(GET_ANNOUNCEMENTS);
 
   let announcements =
     !data || !data.me
@@ -155,9 +155,6 @@ export default function Announcements() {
             a.announcement.createdAt < b.announcement.createdAt ? 1 : -1
           );
   // TOOD sort
-
-  console.log("annoucments");
-  console.log(announcements);
 
   const annoucementsList = !data ? (
     <div></div>
