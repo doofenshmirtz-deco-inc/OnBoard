@@ -76,6 +76,7 @@ export class CourseGroup extends BaseGroup {
 
   @Field(() => String)
   name(): string {
+    // TODO
     return "CHANGEME";
     // return this.coursePairs.course.name;
   }
