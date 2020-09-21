@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { Button, InputAdornment, makeStyles, TextField } from "@material-ui/core";
 import SendIcon from '@material-ui/icons/Send';
 import VideocamIcon from '@material-ui/icons/Videocam';
@@ -11,10 +11,20 @@ const useStyles = makeStyles(theme => ({
   container: {
       width: "100%",
       paddingLeft: "2%",
+      height: "70vh",
+  },
+  messagingContainer: {
+    height: "60vh",
+    overflowY: "scroll",
+  },
+  sendBar: {
+    width: "70%",
+    position:"absolute",
+    bottom: "0",
   },
   bubbleContainer: {
       width: "100%",
-      display: "flex"
+      display: "flex",
   },
   bubble: {
       borderRadius: "20px",
@@ -99,6 +109,14 @@ const MessageBox = (props: any) => {
   const [message, setMessageSent] = useState("");
   const classes = useStyles();
 
+  const messagesEndRef = React.useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (messagesEndRef.current !== null) { 
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  });
+
   const [messages, setMessages] = useState([]);
 
   const me = useQuery<MeId>(ME_QUERY);
@@ -126,9 +144,12 @@ const MessageBox = (props: any) => {
 
   return <div className={classes.container}>
     <h1>{props.name} <VideocamIcon/></h1>
-    {chatBubbles}
+    <div className={classes.messagingContainer}>
+      {chatBubbles}
+      <div ref={messagesEndRef}/>
+    </div>
     <TextField
-        className={classes.bubbleContainer}
+        className={classes.sendBar}
         style={{marginTop: "10px"}}
         variant="outlined"
         id="message-send"

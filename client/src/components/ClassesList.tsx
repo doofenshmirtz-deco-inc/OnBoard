@@ -35,7 +35,6 @@ export default function ContactList() {
   const classes = useStyles();
 
   const { loading, error, data } = useQuery<MyClasses>(GET_CLASSES);
-
   const classListElem =
     !data || !data.me ? (
       <div></div>
