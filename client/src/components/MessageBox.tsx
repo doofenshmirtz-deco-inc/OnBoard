@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { Button, InputAdornment, makeStyles, TextField } from "@material-ui/core";
 import SendIcon from '@material-ui/icons/Send';
 import VideocamIcon from '@material-ui/icons/Videocam';
@@ -7,10 +7,20 @@ const useStyles = makeStyles(theme => ({
   container: {
       width: "100%",
       paddingLeft: "2%",
+      height: "70vh",
+  },
+  messagingContainer: {
+    height: "60vh",
+    overflowY: "scroll",
+  },
+  sendBar: {
+    width: "70%",
+    position:"absolute",
+    bottom: "0",
   },
   bubbleContainer: {
       width: "100%",
-      display: "flex"
+      display: "flex",
   },
   bubble: {
       borderRadius: "20px",
@@ -76,10 +86,19 @@ const MessageBox = (props: any) => {
     {
       message: "5: This should be in right again and is a super long message abra cadabra random words 123456789 teehee woohoo according to all known laws of aviation, a bee should not be able to fly",
       direction: "right"
+    },
+    {
+      message: "6: hopefully the next message will make it easier to test stuff aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam mattis, urna ac luctus rhoncus, sem urna laoreet erat, non pharetra erat mauris ut metus. Praesent sollicitudin, sapien eget pulvinar scelerisque, erat mauris pharetra ante, in ornare velit lacus id mauris. Vestibulum laoreet ante risus, eu tincidunt diam consequat sed. Donec non leo lectus. Cras purus magna, tempor vel sapien sit amet, faucibus auctor arcu. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris tempus ultrices ante vel varius. Nulla facilisi. Fusce ultrices venenatis ante nec egestas. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nulla vulputate enim eget feugiat tempus. Duis suscipit, odio eu placerat elementum, lacus purus facilisis sem, non aliquet ipsum augue sed turpis.Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+      direction: "right"
     }
   ];
 
   const [messages, setMessages] = useState(dummyData);
+  const messagesEndRef = React.useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (messagesEndRef.current !== null) messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+  });
 
   if (props.name == "") {
     return <div/>;
@@ -95,9 +114,12 @@ const MessageBox = (props: any) => {
 
   return <div className={classes.container}>
     <h1>{props.name} <VideocamIcon/></h1>
-    {chatBubbles}
+    <div className={classes.messagingContainer}>
+      {chatBubbles}
+      <div ref={messagesEndRef}/>
+    </div>
     <TextField
-        className={classes.bubbleContainer}
+        className={classes.sendBar}
         style={{marginTop: "10px"}}
         variant="outlined"
         id="message-send"
