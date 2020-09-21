@@ -14,7 +14,7 @@ import { User } from "../models/User";
 import { PaginationArgs, getOrder } from "./Types";
 import { isAuth } from "../middleware/isAuth";
 import { Context } from "../middleware/Context";
-import { BaseGroup } from "../models/UserGroup";
+import { BaseGroup, DMGroup } from "../models/UserGroup";
 import { Timetable } from "../models/Timetable";
 
 @Resolver((of) => BaseGroup)
@@ -50,5 +50,14 @@ export class UserGroupResolver {
 
     const users = await group.users;
     return users;
+  }
+}
+
+@Resolver(() => DMGroup)
+export class DMGroupResolver {
+  @FieldResolver(() => String)
+  async name(@Root() group: DMGroup, @Ctx() ctx: Context) {
+    if (!ctx.payload) throw new Error("User must be authenticated");
+    return (await group.users).filter((u) => u.id !== ctx.payload?.uid)[0];
   }
 }

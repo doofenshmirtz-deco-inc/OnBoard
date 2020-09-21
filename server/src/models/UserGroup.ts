@@ -12,7 +12,15 @@ import {
   TableInheritance,
   ChildEntity,
 } from "typeorm";
-import { ObjectType, ID, Field, Int, registerEnumType } from "type-graphql";
+import {
+  ObjectType,
+  ID,
+  Field,
+  Int,
+  registerEnumType,
+  createUnionType,
+  FieldResolver,
+} from "type-graphql";
 import { User } from "./User";
 import { Timetable } from "./Timetable";
 import { Course } from "./Course";
@@ -63,8 +71,14 @@ export abstract class BaseGroup extends BaseEntity {
 @ChildEntity(GroupType.Course)
 @ObjectType()
 export class CourseGroup extends BaseGroup {
-  @OneToMany(() => CourseGroupPair, (p) => p.group)
-  coursePairs: CourseGroupPair[];
+  @OneToOne(() => CourseGroupPair, (p) => p.group, { eager: true })
+  coursePairs: CourseGroupPair;
+
+  @Field(() => String)
+  name(): string {
+    return "CHANGEME";
+    // return this.coursePairs.course.name;
+  }
 }
 
 @ChildEntity(GroupType.Class)
@@ -94,3 +108,8 @@ export class StudyGroup extends BaseGroup {
 @ChildEntity(GroupType.DirectMessage)
 @ObjectType()
 export class DMGroup extends BaseGroup {}
+
+export const Group = createUnionType({
+  name: "Group",
+  types: () => [CourseGroup, ClassGroup, StudyGroup, DMGroup],
+});
