@@ -21,14 +21,18 @@
   "dependencies": {
     "@doofenshmirtz-deco-inc/typeorm-seeding": "1.6.0-1",
     "@types/jest": "^26.0.10",
+    "@types/shortid": "^0.0.29",
     "apollo-server-express": "^2.16.1",
     "apollo-server-testing": "^2.16.1",
     "express": "^4.17.1",
+    "filenamify": "^4.1.0",
     "firebase": "^7.18.0",
     "firebase-admin": "^9.1.0",
     "graphql": "^15.3.0",
     "graphql-subscriptions": "^1.1.0",
+    "graphql-upload": "^11.0.0",
     "pg": "^8.3.0",
+    "shortid": "^2.2.15",
     "subscriptions-transport-ws": "^0.9.18",
     "ts-jest": "^26.2.0",
     "type-graphql": "^1.0.0-rc.3",
@@ -47,8 +51,12 @@
     "typescript": "^3.9.7"
   },
   "nodemonConfig": {
-	"env": {
-		"NODE_ENV": "development"
-	}
+	  "env": {
+		  "NODE_ENV": "development"
+	  }
+  },
+  "resolutions": {
+    "**/**/fs-capacitor": "^6.2.0",
+    "**/graphql-upload": "^11.0.0"
   }
 }

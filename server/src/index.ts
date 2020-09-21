@@ -10,9 +10,16 @@ import { CourseResolver } from "./resolvers/CourseResolver";
 import { UserGroupResolver } from "./resolvers/UserGroupResolver";
 import { MessageResolver } from "./resolvers/MessageResolver";
 import { SubscriptionServer } from "subscriptions-transport-ws";
-import { execute, subscribe } from "graphql";
+import { execute, subscribe, GraphQLScalarType } from "graphql";
 import { createServer } from "http";
 import { AppPubSub } from "./resolvers/AppPubSub";
+import {
+  UploadResolver,
+  UPLOAD_URL_ROOT,
+  UPLOAD_PATH_ROOT,
+} from "./resolvers/UploadResolver";
+import { graphqlUploadExpress, GraphQLUpload } from "graphql-upload";
+import path from "path";
 
 async function main() {
   const port = 5000;
@@ -34,12 +41,17 @@ async function main() {
   });
 
   const schema = await buildSchema({
+    scalarsMap: [
+      // @ts-ignore
+      { type: () => GraphQLUpload, scalar: GraphQLUpload },
+    ],
     resolvers: [
       UserResolver,
       AuthResolver,
       CourseResolver,
       UserGroupResolver,
       MessageResolver,
+      UploadResolver,
     ],
     emitSchemaFile: true,
     pubSub: AppPubSub,
@@ -51,9 +63,15 @@ async function main() {
   const apolloServer = new ApolloServer({
     schema,
     context: ({ req, res, connection }) => ({ req, res, connection }),
+    uploads: false,
   });
 
+  app.use(UPLOAD_URL_ROOT, express.static(UPLOAD_PATH_ROOT));
+  app.use(express.static(path.join(process.cwd(), "../client/build")));
+
+  app.use(graphqlUploadExpress());
   apolloServer.applyMiddleware({ app });
+
   const server = createServer(app);
   apolloServer.installSubscriptionHandlers(server);
 

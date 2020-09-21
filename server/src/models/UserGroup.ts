@@ -17,7 +17,7 @@ import { ObjectType, ID, Field, Int, registerEnumType } from "type-graphql";
 import { User } from "./User";
 import { Timetable } from "./Timetable";
 import { Course } from "./Course";
-import { CourseGroupPair } from "./CourseGroupPair";
+import { CourseGroupPair, CourseRole } from "./CourseGroupPair";
 
 export enum ClassType {
   Lecture = "Lecture",
