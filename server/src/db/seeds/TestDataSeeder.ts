@@ -10,6 +10,7 @@ import { BaseGroup, GroupType, CourseGroup } from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
 import { CourseRole } from "../../models/CourseGroupPair";
 import Faker from "faker";
+import { Message } from "../../models/Message";
 
 // const generateEmptyGroup = (context?: {type: GroupType}) =>
 //   BaseGroup.create({ users: Promise.resolve([]), type: context?.type ?? GroupType.CourseStudents }).save();
@@ -44,11 +45,14 @@ const generateTestCourse = async (
     courseLevel: CourseLevel.Undergrad,
   }).save();
 
-  if (userContext?.role)
-    await course.addGroup(
-      userContext?.role,
-      await factory(CourseGroup)({ users: userContext.users }).create()
-    );
+  const group = await factory(CourseGroup)({
+    users: userContext.users,
+  }).create();
+
+  if (userContext?.role) await course.addGroup(userContext?.role, group);
+
+  // TODO maybe move to group seeder
+  await factory(Message)({ group }).createMany(30);
 
   return course;
 };

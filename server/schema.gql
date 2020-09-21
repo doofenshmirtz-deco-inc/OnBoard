@@ -62,6 +62,7 @@ input MessageInput {
 
 type Mutation {
   addMessage(message: MessageInput!): Message!
+  singleUpload(file: Upload!): String!
 }
 
 type Query {
@@ -85,6 +86,9 @@ enum Semesters {
 type Subscription {
   newMessages(groupID: Float!): Message!
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
 
 type User {
   courseColors: [CourseColor!]!
