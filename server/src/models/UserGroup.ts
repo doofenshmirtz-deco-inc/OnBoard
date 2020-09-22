@@ -12,6 +12,7 @@ import {
   TableInheritance,
   ChildEntity,
   BeforeInsert,
+  Generated,
 } from "typeorm";
 import {
   ObjectType,
@@ -76,6 +77,9 @@ export abstract class BaseGroup extends BaseEntity {
   updateDate() {
     this.lastActive = new Date();
   }
+    
+  @Generated("uuid")
+  meetingPassword: string;
 }
 
 @ChildEntity(GroupType.Course)
