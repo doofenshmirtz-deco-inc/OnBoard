@@ -18,7 +18,20 @@ type AuthToken {
 
 type BaseGroup {
   id: ID!
+<<<<<<< HEAD
   timetable: Timetable
+=======
+  lastActive: DateTime!
+  users: [User!]!
+}
+
+type ClassGroup {
+  id: ID!
+  lastActive: DateTime!
+  name: String!
+  timetable: Timetable
+  type: String!
+>>>>>>> tom-messages
   users: [User!]!
 }
 
@@ -37,6 +50,13 @@ type CourseColor {
   course: Course!
 }
 
+type CourseGroup {
+  id: ID!
+  lastActive: DateTime!
+  name: String!
+  users: [User!]!
+}
+
 enum CourseRole {
   Coordinator
   Student
@@ -47,6 +67,15 @@ enum CourseRole {
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
 scalar DateTime
+
+type DMGroup {
+  id: ID!
+  lastActive: DateTime!
+  name: String!
+  users: [User!]!
+}
+
+union Group = ClassGroup | CourseGroup | DMGroup | StudyGroup
 
 type Message {
   createdAt: DateTime!
@@ -63,6 +92,7 @@ input MessageInput {
 
 type Mutation {
   addMessage(message: MessageInput!): Message!
+  singleUpload(file: Upload!): String!
 }
 
 type Query {
@@ -83,21 +113,35 @@ enum Semesters {
   Two
 }
 
+type StudyGroup {
+  id: ID!
+  lastActive: DateTime!
+  name: String!
+  users: [User!]!
+}
+
 type Subscription {
   newMessages(groupID: Float!): Message!
 }
 
+<<<<<<< HEAD
 type Timetable {
   duration: Float!
   id: ID!
   name: String!
   times: [DateTime!]!
 }
+=======
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+>>>>>>> tom-messages
 
 type User {
+  avatar: String!
   courseColors: [CourseColor!]!
+  courses(role: CourseRole): [CourseColor!]!
   email: String!
-  groups(role: CourseRole): [BaseGroup!]!
+  groups: [BaseGroup!]!
   id: ID!
   name: String!
 }

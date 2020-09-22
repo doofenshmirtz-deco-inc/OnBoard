@@ -4,15 +4,13 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: Me
+// GraphQL mutation operation: SingleUpload
 // ====================================================
 
-export interface Me_me {
-  __typename: "User";
-  name: string;
-  avatar: string;
+export interface SingleUpload {
+  singleUpload: string;
 }
 
-export interface Me {
-  me: Me_me | null;
+export interface SingleUploadVariables {
+  file: any;
 }

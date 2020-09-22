@@ -8,7 +8,7 @@ import {
   ManyToMany,
   JoinTable,
 } from "typeorm";
-import { IsEmail } from "class-validator";
+import { IsEmail, IsUrl } from "class-validator";
 import { ObjectType, ID, Field } from "type-graphql";
 import { BaseGroup } from "./UserGroup";
 import { Announcement } from "./Announcement";
@@ -29,6 +29,12 @@ export class User extends BaseEntity {
   @Field()
   email: string;
 
+  @Column()
+  @IsUrl()
+  @Field()
+  avatar: string;
+
   @ManyToMany(() => BaseGroup, (group) => group.users, { cascade: true })
+  @Field(() => [BaseGroup])
   groups: Promise<BaseGroup[]>;
 }

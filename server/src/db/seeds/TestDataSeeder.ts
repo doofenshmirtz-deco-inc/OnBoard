@@ -10,7 +10,11 @@ import { BaseGroup, GroupType, CourseGroup, ClassGroup, ClassType } from "../../
 import { Announcement } from "../../models/Announcement";
 import { CourseRole } from "../../models/CourseGroupPair";
 import Faker from "faker";
+<<<<<<< HEAD
 import { Timetable } from "../../models/Timetable";
+=======
+import { Message } from "../../models/Message";
+>>>>>>> tom-messages
 
 // const generateEmptyGroup = (context?: {type: GroupType}) =>
 //   BaseGroup.create({ users: Promise.resolve([]), type: context?.type ?? GroupType.CourseStudents }).save();
@@ -24,6 +28,7 @@ const generateTestUser = async (
         uid: string;
         name: string;
         email: string;
+        avatar?: string;
       }
     | undefined
 ) => {
@@ -33,6 +38,9 @@ const generateTestUser = async (
     id: context.uid,
     name: context.name,
     email: context.email,
+    avatar: context.avatar
+      ? context.avatar
+      : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
   }).save();
 };
 
@@ -45,11 +53,14 @@ const generateTestCourse = async (
     courseLevel: CourseLevel.Undergrad,
   }).save();
 
-  if (userContext?.role)
-    await course.addGroup(
-      userContext?.role,
-      await factory(CourseGroup)({ users: userContext.users }).create()
-    );
+  const group = await factory(CourseGroup)({
+    users: userContext.users,
+  }).create();
+
+  if (userContext?.role) await course.addGroup(userContext?.role, group);
+
+  // TODO maybe move to group seeder
+  await factory(Message)({ group }).createMany(30);
 
   return course;
 };
@@ -108,12 +119,16 @@ export default class TestDataSeeder implements Seeder {
       uid: "doof-uid",
       name: "Heinz Doofenshmirtz",
       email: "heinz@evilinc.com",
+      avatar:
+        "https://vignette.wikia.nocookie.net/disney/images/4/41/DoofenshmirtzFull.jpg/revision/latest?cb=20190819173522",
     });
 
     const perry = await generateTestUser({
       uid: "perry-uid",
       name: "Perry The Platypus",
       email: "perry@evilinc.com",
+      avatar:
+        "https://upload.wikimedia.org/wikipedia/en/d/dc/Perry_the_Platypus.png",
     });
 
     await generateTestCourse(
