@@ -57,7 +57,7 @@ export class UserResolver {
       .filter((x) => x.groupType == GroupType.Course)
       .sort((x, y) => y.lastActive.getTime() - x.lastActive.getTime());
   }
-                        
+
   @FieldResolver(() => [CourseColor])
   async courses(
     @Root() user: User,
