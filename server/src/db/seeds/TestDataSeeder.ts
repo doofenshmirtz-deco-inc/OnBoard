@@ -10,11 +10,8 @@ import { BaseGroup, GroupType, CourseGroup, ClassGroup, ClassType } from "../../
 import { Announcement } from "../../models/Announcement";
 import { CourseRole } from "../../models/CourseGroupPair";
 import Faker from "faker";
-<<<<<<< HEAD
 import { Timetable } from "../../models/Timetable";
-=======
 import { Message } from "../../models/Message";
->>>>>>> tom-messages
 
 // const generateEmptyGroup = (context?: {type: GroupType}) =>
 //   BaseGroup.create({ users: Promise.resolve([]), type: context?.type ?? GroupType.CourseStudents }).save();

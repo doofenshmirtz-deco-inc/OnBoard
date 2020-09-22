@@ -14,11 +14,7 @@ import { User } from "../models/User";
 import { PaginationArgs, getOrder } from "./Types";
 import { isAuth } from "../middleware/isAuth";
 import { Context } from "../middleware/Context";
-<<<<<<< HEAD
-import { BaseGroup, ClassGroup, GroupType } from "../models/UserGroup";
-=======
-import { BaseGroup, DMGroup } from "../models/UserGroup";
->>>>>>> tom-messages
+import { BaseGroup, ClassGroup, GroupType, DMGroup } from "../models/UserGroup";
 import { Timetable } from "../models/Timetable";
 
 @Resolver((of) => BaseGroup)
