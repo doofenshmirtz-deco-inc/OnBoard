@@ -73,13 +73,14 @@ const generateTestAnnouncements = async (
 };
 
 const generateTestClass = async (
-  context: { name: string; type: ClassType },
+  context: { name: string; type: ClassType, course: Course },
   userContext: { users: User[]}
 ) => {
   const classGroup = await ClassGroup.create({
     name: context.name,
     type: context.type,
-    users: Promise.resolve(userContext.users)
+    users: Promise.resolve(userContext.users),
+    course: context.course
   }).save()
 
   return classGroup;
@@ -236,6 +237,7 @@ export default class TestDataSeeder implements Seeder {
       {
         name: "Bruh",
         type: ClassType.Lecture,
+        course: math1071
       },
       {
         users: [heinz]
