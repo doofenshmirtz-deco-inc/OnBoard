@@ -11,6 +11,7 @@ import {
   OneToOne,
   TableInheritance,
   ChildEntity,
+  Generated,
 } from "typeorm";
 import { ObjectType, ID, Field, Int, registerEnumType } from "type-graphql";
 import { User } from "./User";
@@ -58,6 +59,10 @@ export abstract class BaseGroup extends BaseEntity {
     }
     this.users = Promise.resolve(users ?? []);
   }
+
+  @Column()
+  @Generated("uuid")
+  meetingPassword: string;
 }
 
 @ChildEntity(GroupType.Course)
