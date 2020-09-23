@@ -53,10 +53,8 @@ export class UserResolver {
     @Root() user: User,
     @Arg("role", () => CourseRole, { nullable: true }) role: CourseRole | null
   ) {
-    return (
-      (await user.groups)
-        // .filter((x) => x.groupType == GroupType.Course)
-        .sort((x, y) => y.lastActive.getTime() - x.lastActive.getTime())
+    return (await user.groups).sort(
+      (x, y) => y.lastActive.getTime() - x.lastActive.getTime()
     );
   }
 
