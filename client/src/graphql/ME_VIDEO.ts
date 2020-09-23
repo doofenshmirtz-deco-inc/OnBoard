@@ -4,15 +4,14 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: Me
+// GraphQL query operation: ME_VIDEO
 // ====================================================
 
-export interface Me_me {
+export interface ME_VIDEO_me {
   __typename: "User";
   name: string;
-  avatar: string;
 }
 
-export interface Me {
-  me: Me_me | null;
+export interface ME_VIDEO {
+  me: ME_VIDEO_me | null;
 }

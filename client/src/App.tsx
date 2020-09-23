@@ -15,15 +15,6 @@ import Sidebar from "./components/Sidebar";
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import { Login } from "./modules/Login";
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  createHttpLink,
-  ApolloLink,
-} from "@apollo/client";
-import { createUploadLink } from "apollo-upload-client";
-import { setContext } from "@apollo/client/link/context";
 import { LoadingPage } from "./components/LoadingPage";
 
 const drawerWidth = 240;
@@ -32,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: "flex",
+      height: "100%",
     },
     appBar: {
       [theme.breakpoints.up("sm")]: {
@@ -96,10 +88,6 @@ export default function App() {
   const classes = useStyles();
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
 
   const [loaded, setLoaded] = React.useState(false);
 

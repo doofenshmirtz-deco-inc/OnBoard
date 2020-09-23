@@ -24,6 +24,7 @@ const generateTestUser = async (
         uid: string;
         name: string;
         email: string;
+        avatar?: string;
       }
     | undefined
 ) => {
@@ -33,6 +34,9 @@ const generateTestUser = async (
     id: context.uid,
     name: context.name,
     email: context.email,
+    avatar: context.avatar
+      ? context.avatar
+      : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
   }).save();
 };
 
@@ -81,12 +85,16 @@ export default class TestDataSeeder implements Seeder {
       uid: "doof-uid",
       name: "Heinz Doofenshmirtz",
       email: "heinz@evilinc.com",
+      avatar:
+        "https://vignette.wikia.nocookie.net/disney/images/4/41/DoofenshmirtzFull.jpg/revision/latest?cb=20190819173522",
     });
 
     const perry = await generateTestUser({
       uid: "perry-uid",
       name: "Perry The Platypus",
       email: "perry@evilinc.com",
+      avatar:
+        "https://upload.wikimedia.org/wikipedia/en/d/dc/Perry_the_Platypus.png",
     });
 
     await generateTestCourse(
