@@ -10,4 +10,4 @@ cd server
 yarn run docker:down
 cd -
 
-rm -rfv ./
+rm -rfv ./*
