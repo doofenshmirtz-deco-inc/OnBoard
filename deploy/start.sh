@@ -1,0 +1,9 @@
+#!/bin/bash
+set -e
+set -x
+
+cd server
+yarn run docker:up
+cd -
+
+docker-compose up -d
