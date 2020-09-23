@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
@@ -6,6 +6,7 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Announcements from "./Announcements";
+import { Link, useParams } from "react-router-dom";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -66,8 +67,11 @@ export default function ClassesTabs() {
     setValue(newValue);
   };
 
+  let { classId } = useParams();
+
   return (
     <div className={classes.root}>
+      <h2>ID: {classId}</h2>
       <AppBar position="static">
         <Tabs
           value={value}
