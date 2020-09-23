@@ -2,7 +2,7 @@
 set -e
 set -x
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")"/..
 
 docker-compose down
 
