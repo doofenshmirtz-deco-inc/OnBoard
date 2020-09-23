@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const GET_CLASSES = gql`
   query MyClasses {
     me {
-      courseColors {
+      courses {
         colour
         course {
           name
@@ -51,7 +51,7 @@ export default function ContactList() {
       <div></div>
     ) : (
       <List>
-        {data.me.courseColors.map((item: any, index: number) => (
+        {data.me.courses.map((item: any, index: number) => (
           <ListItem button key={index}>
             <ListItemIcon>
               <svg width={20} height={20}>
