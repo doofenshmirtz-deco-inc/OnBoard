@@ -35,6 +35,5 @@ export class User extends BaseEntity {
   avatar: string;
 
   @ManyToMany(() => BaseGroup, (group) => group.users, { cascade: true })
-  @Field(() => [BaseGroup])
   groups: Promise<BaseGroup[]>;
 }
