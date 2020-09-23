@@ -6,7 +6,13 @@ import {
 import { Connection } from "typeorm";
 import { User } from "../../models/User";
 import { Semesters, CourseLevel, Course } from "../../models/Course";
-import { BaseGroup, GroupType, CourseGroup, ClassGroup, ClassType } from "../../models/UserGroup";
+import {
+  BaseGroup,
+  GroupType,
+  CourseGroup,
+  ClassGroup,
+  ClassType,
+} from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
 import { CourseRole } from "../../models/CourseGroupPair";
 import Faker from "faker";
@@ -74,29 +80,33 @@ const generateTestAnnouncements = async (
 
 const generateTestClass = async (
   context: { name: string; type: ClassType },
-  userContext: { users: User[]}
+  userContext: { users: User[] }
 ) => {
-  const classGroup = await ClassGroup.create({
+  const classGroup = ClassGroup.create({
     name: context.name,
     type: context.type,
-    users: Promise.resolve(userContext.users)
-  }).save()
+  }).save();
 
-  return classGroup;
+  (await classGroup).setUsers(userContext.users);
+
+  return await classGroup;
 };
 
-const generateTestTimetable = async (
-  context: { classGroup: ClassGroup; name: string; times: Date[]; duration: number }
-) => {
+const generateTestTimetable = async (context: {
+  classGroup: ClassGroup;
+  name: string;
+  times: Date[];
+  duration: number;
+}) => {
   const timetable = await Timetable.create({
     name: context.name,
     times: context.times,
     duration: context.duration,
-    classes: Promise.resolve(context.classGroup)
+    classes: Promise.resolve(context.classGroup),
   }).save();
 
   context.classGroup.timetable = Promise.resolve(timetable);
-  await context.classGroup.save()
+  await context.classGroup.save();
 
   return timetable;
 };
@@ -238,16 +248,15 @@ export default class TestDataSeeder implements Seeder {
         type: ClassType.Lecture,
       },
       {
-        users: [heinz]
+        users: [heinz],
       }
     );
 
     const timetable = await generateTestTimetable({
-        duration: 60,
-        name: "Bruh",
-        times: [new Date(Date.now())],
-        classGroup: classGroup
-      }
-    );
+      duration: 60,
+      name: "Bruh",
+      times: [new Date(Date.now())],
+      classGroup: classGroup,
+    });
   }
 }
