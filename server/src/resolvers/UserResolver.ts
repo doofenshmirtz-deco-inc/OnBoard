@@ -14,7 +14,7 @@ import { User } from "../models/User";
 import { PaginationArgs, getOrder } from "./Types";
 import { isAuth } from "../middleware/isAuth";
 import { Context } from "../middleware/Context";
-import { BaseGroup, GroupType, CourseGroup } from "../models/UserGroup";
+import { BaseGroup, GroupType, CourseGroup, Group } from "../models/UserGroup";
 import { Course, CourseColor, CourseColours } from "../models/Course";
 import { CourseRole, CourseGroupPair } from "../models/CourseGroupPair";
 
@@ -48,27 +48,33 @@ export class UserResolver {
     });
   }
 
-  @FieldResolver((type) => [BaseGroup])
+  @FieldResolver((type) => [Group])
   async groups(
     @Root() user: User,
     @Arg("role", () => CourseRole, { nullable: true }) role: CourseRole | null
   ) {
-    return (await user.groups).filter((x) => x.groupType == GroupType.Course);
+    return (
+      (await user.groups)
+        // .filter((x) => x.groupType == GroupType.Course)
+        .sort((x, y) => y.lastActive.getTime() - x.lastActive.getTime())
+    );
   }
 
   @FieldResolver(() => [CourseColor])
-  async courseColors(@Root() user: User): Promise<CourseColor[]> {
-    return (
-      await CourseGroupPair.createQueryBuilder("cgp")
-        .leftJoinAndSelect("cgp.group", "group")
-        .leftJoinAndSelect("cgp.course", "course")
-        .leftJoinAndSelect("group.users", "user")
-        .where("user.id = :uid", { uid: user.id })
-        .getMany()
-    ).map((pair, index) => {
+  async courses(
+    @Root() user: User,
+    @Arg("role", () => CourseRole, { nullable: true }) role: CourseRole | null
+  ): Promise<CourseColor[]> {
+    let query = CourseGroupPair.createQueryBuilder("cgp")
+      .leftJoinAndSelect("cgp.group", "group")
+      .leftJoinAndSelect("cgp.course", "course")
+      .leftJoinAndSelect("group.users", "user")
+      .where("user.id = :uid", { uid: user.id });
+    if (role) query = query.where("cgp.role = :role", { role });
+    return (await query.getMany()).map((p, i) => {
       return {
-        course: pair.course,
-        colour: CourseColours[index % 4],
+        course: p.course,
+        colour: CourseColours[i % 4],
       };
     });
   }

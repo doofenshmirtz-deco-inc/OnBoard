@@ -50,6 +50,13 @@ export class Message extends BaseEntity {
   async newMessage() {
     await AppPubSub.publish(Subscriptions.Messages, this);
   }
+
+  @AfterInsert()
+  updateGroupDate() {
+    BaseGroup.update(this.group.id, {
+      lastActive: new Date(),
+    });
+  }
 }
 
 @InputType()

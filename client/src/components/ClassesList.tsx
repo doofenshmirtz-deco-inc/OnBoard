@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const GET_CLASSES = gql`
   query MyClasses {
     me {
-      courseColors {
+      courses {
         colour
         course {
           name
@@ -44,14 +44,14 @@ const GET_CLASSES = gql`
 export default function ContactList() {
   const classes = useStyles();
 
-  const { loading, error, data } = useQuery<MyClasses>(GET_CLASSES);
+  const { data } = useQuery<MyClasses>(GET_CLASSES);
 
   const classListElem =
     !data || !data.me ? (
       <div></div>
     ) : (
       <List>
-        {data.me.courseColors.map((item: any, index: number) => (
+        {data.me.courses.map((item: any, index: number) => (
           <ListItem button key={index}>
             <ListItemIcon>
               <svg width={20} height={20}>
