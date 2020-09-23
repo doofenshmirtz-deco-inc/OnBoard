@@ -8,6 +8,7 @@ docker network create meet.jitsi || true
 
 aws ssm get-parameters --region ap-southeast-2 --names git-crypt --with-decryption --query Parameters[0].Value \
     | tr -d \" | base64 -d > .key
+    
 for f in server/TOKEN.txt server/.npmrc; do
     git-crypt smudge --key-file .key < $f > $f.out
     mv $f.out $f
