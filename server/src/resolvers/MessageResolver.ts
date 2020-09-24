@@ -71,6 +71,7 @@ export class MessageResolver {
     @Root() message: Message,
     @Arg("groupID", () => ID) groupID: number
   ): Promise<Message> {
+    // TOOD make this actually for group
     // TODO auth: https://www.apollographql.com/docs/graphql-subscriptions/authentication/
     return message;
   }
