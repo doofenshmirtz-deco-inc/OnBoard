@@ -129,6 +129,7 @@ const mapMessages = (data: MyMessages, myId: string) => {
   })
 }
   
+// TODO: the groupID needs to change, should be passed into props from recents.tsx i think
 const MessageBox = (props: any) => {
   const [message, setMessageSent] = useState("");
   const [messages, setMessages] = useState([]);
@@ -147,29 +148,20 @@ const MessageBox = (props: any) => {
     { variables: { groupId:  4 } }
   );
 
-  // useEffect(() => {
-  //   console.log("helooooooooooooooooooooooooo");
-  //   subscribeToMore({
-  //     document: MESSAGES_SUBSCRIPTION,
-  //     variables: { groupId: 4 },
-  //     updateQuery: (prev, { subscriptionData }) => {
-  //       console.log("something something test")
-  //       console.log(prev);
-  //       if (!subscriptionData.data) return prev;
-  //       const newMessages = subscriptionData.data.newMessages;
-  //       return Object.assign({}, prev, {
-  //         post: {
-  //           comments: [newMessages, ...messages]
-  //         }
-  //       });
-  //     }
-  //   });
-  // });
-
-  const subdata = useSubscription<OnMessageSent>(
-    MESSAGES_SUBSCRIPTION,
-    { variables: { groupId: 4 } }
-  );
+  useEffect(() => {
+    subscribeToMore({
+      document: MESSAGES_SUBSCRIPTION,
+      variables: { groupId: 4 },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const newMessage = subscriptionData.data.newMessages;
+        console.log(newMessage);
+        return Object.assign({}, prev, {
+          getMessages: [newMessage, ...messages]
+        });
+      }
+    });
+  });
 
   // get my id
   const me = useQuery<MeId>(ME_QUERY);
@@ -180,17 +172,6 @@ const MessageBox = (props: any) => {
     variables: { groupId: 4 },
   });
 
-  if (!subdata.loading) {
-    if (subdata.data) {
-      return <div>{subdata.data.newMessages}</div>
-    }
-  }
-
-  // const { data: { newMessages } } = useSubscription(
-  //   MESSAGES_SUBSCRIPTION,
-  //   { variables: { groupId: "4" } }
-  // );
-
   if (!data || !me.data || !me.data.me) {
     return <LoadingPage />
   }
@@ -200,7 +181,7 @@ const MessageBox = (props: any) => {
     return <div/>;
   }
 
-  // TODO: the query for myId can probably easily be moved up the tree
+  // TODO: the query for myId should probably be up the tree
   const myId = me.data.me.id;
   const maps = mapMessages(data, myId);
   const chatBubbles = maps.map((obj : any, i: number = 0) => (
