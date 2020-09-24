@@ -15,7 +15,10 @@ const RecentContacts = (props: any) => {
       backgroundColor: theme.palette.background.paper,
       display: "flex",
       flexDirection: "column",
-      width: "25%"
+      width: "25%",
+      height: "60vh",
+      overflowY: "scroll",
+      paddingBottom: "0px"
     },
     contact: {
       display: "initial", 
@@ -24,8 +27,8 @@ const RecentContacts = (props: any) => {
       padding: "0"
     },
     searchBar: {
-      width: "75%",
-      margin: "auto",
+      width: "100%",
+      margin: "0",
     },
   }));
   

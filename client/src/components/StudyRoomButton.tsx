@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) =>
       height: "10vh",
     },
     itemText: {
-      fontSize: "1.2rem"
+      fontSize: "1.5vw"
     },
     joinButton: {
       height: "85%",

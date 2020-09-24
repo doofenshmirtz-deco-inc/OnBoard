@@ -78,7 +78,7 @@ const StudyRooms = () => {
         <Recents/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Explore openRooms={openRooms} label={"Search For Open Meeting Rooms"}/>
+        <Explore openRooms={openRooms} exploreTab={true} label={"Search For Open Meeting Rooms"}/>
       </TabPanel>
       <TabPanel value={value} index={2}>
       <Explore openRooms={classrooms} label={"Search For Class Meeting Rooms"}/>

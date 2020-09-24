@@ -11,27 +11,26 @@ const useStyles = makeStyles(theme => ({
   container: {
       width: "100%",
       paddingLeft: "2%",
-      height: "70vh",
+      height: "55vh",
   },
   messagingContainer: {
-    height: "60vh",
     overflowY: "scroll",
   },
   sendBar: {
-    width: "70%",
+    width: "65%",
     position:"absolute",
     bottom: "0",
   },
   bubbleContainer: {
-      width: "100%",
-      display: "flex",
+    width: "100%",
+    display: "flex",
   },
   bubble: {
-      borderRadius: "20px",
-      margin: "1px",
-      padding: "10px",
-      display: "inline-block",
-      maxWidth: "40%"
+    borderRadius: "20px",
+    margin: "1px",
+    padding: "10px",
+    display: "inline-block",
+    maxWidth: "40%"
   },
   right: {
     justifyContent: "flex-end"
