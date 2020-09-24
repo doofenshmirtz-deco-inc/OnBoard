@@ -7,6 +7,8 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Announcements from "./Announcements";
 import { Link, useParams } from "react-router-dom";
+import { useQuery, gql } from "@apollo/client";
+import { GetClassInfo } from "../graphql/GetClassInfo";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -59,7 +61,23 @@ let menuBarComponents: string[] = [
   "Course Profile (ECP)",
 ];
 
-export default function ClassesTabs() {
+const COURSE_INFO = gql`
+  query GetClassInfo {
+    me {
+      courses {
+        course {
+          id
+          name
+          code
+          year
+          semester
+        }
+      }
+    }
+  }
+`;
+
+export default function ClassView() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -69,9 +87,26 @@ export default function ClassesTabs() {
 
   let { classId } = useParams();
 
-  return (
+  const { loading, error, data } = useQuery<GetClassInfo>(COURSE_INFO);
+
+  let courseData = null;
+  if (!data || !data.me) {
+  } else {
+    courseData = data.me.courses.find(
+      (element) => element.course.id == classId
+    );
+  }
+
+  return !courseData ? (
+    <div>Class was not found</div>
+  ) : (
     <div className={classes.root}>
-      <h2>ID: {classId}</h2>
+      <h1>
+        {courseData.course.code}: {courseData.course.name}
+      </h1>
+      <h2>
+        Semester {courseData.course.semester} {courseData.course.year}
+      </h2>
       <AppBar position="static">
         <Tabs
           value={value}
