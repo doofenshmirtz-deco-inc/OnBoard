@@ -69,7 +69,7 @@ export default function StudyRoomButton(props: any) {
       >
         Join This Meeting?
         <Typography>
-          <Button variant="outlined" color="primary" style={{margin: "0.5em", padding: "0.25em", textTransform: "none"}} onClick={() => (alert("entering the meeting room // TODO!!"))}> 
+          <Button variant="outlined" color="primary" style={{margin: "0.5em", padding: "0.25em", textTransform: "none"}} onClick={props.handleClickOpen}> 
             Yes
           </Button>
           <Button variant="outlined" style={{"color":"red", margin: "0.5em", border: "1px solid red"}} onClick={handleClose}>

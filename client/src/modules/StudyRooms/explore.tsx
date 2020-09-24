@@ -66,7 +66,7 @@ const Explore = (props: any) => {
 
       {(props.openRooms).map((item:any) =>
         item.title.toLowerCase().includes(searchTerm.toLowerCase()) ? (
-          <StudyRoomButton room={item}/>
+          <StudyRoomButton handleClickOpen={() => props.handleClickOpen(item.title)} room={item}/>
         ) : null
       )}
     </List>

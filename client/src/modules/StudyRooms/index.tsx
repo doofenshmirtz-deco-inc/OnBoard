@@ -10,6 +10,7 @@ import Recents from "./recents";
 import Explore from "./explore";
 import openRooms from '../../components/openRooms.json'
 import classrooms from '../../components/classrooms.json'
+import MeetingRoom from '../../components/MeetingRoom'
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -63,6 +64,19 @@ const StudyRooms = () => {
     setValue(newValue);
   };
 
+  const [open, setOpen] = React.useState(false);
+
+  const [meetingName, setMeeting] = React.useState("");
+
+  const handleClickOpen = (item: string) => {
+    setMeeting(item);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const classes = useStyles();
   return (
     <div className={classes.root}>
@@ -78,11 +92,12 @@ const StudyRooms = () => {
         <Recents/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Explore openRooms={openRooms} exploreTab={true} label={"Search For Open Meeting Rooms"}/>
+        <Explore handleClose={handleClose} handleClickOpen={handleClickOpen} openRooms={openRooms} exploreTab={true} label={"Search For Open Meeting Rooms"}/>
       </TabPanel>
       <TabPanel value={value} index={2}>
-      <Explore openRooms={classrooms} label={"Search For Class Meeting Rooms"}/>
+        <Explore handleClose={handleClose} handleClickOpen={handleClickOpen} openRooms={classrooms} label={"Search For Class Meeting Rooms"}/>
       </TabPanel>
+      <MeetingRoom open={open} handleClose={handleClose} title={meetingName}/>
     </div>
   );
 };
