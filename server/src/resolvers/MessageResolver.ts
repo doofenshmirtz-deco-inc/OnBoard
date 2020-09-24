@@ -66,7 +66,7 @@ export class MessageResolver {
     topics: Subscriptions.Messages,
     filter: ({ payload, args }) => payload.group.id == args.groupID,
   })
-  @UseMiddleware(isAuthSub)
+  // @UseMiddleware(isAuthSub)
   async newMessages(
     @Root() message: Message,
     @Arg("groupID", () => ID) groupID: number
