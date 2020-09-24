@@ -22,19 +22,32 @@ define(Course, async (faker: typeof Faker, context?: CourseFactoryContext) => {
   const code = faker.random.number({ min: 1000, max: 4999, precision: 1 });
 
   const course = new Course();
-  course.code = `${subject}${code}`;
-  course.name = faker.lorem.words(4);
-  course.year = faker.random.number({ min: 2017, max: 2022, precision: 1 });
-  course.semester = faker.random.number() % 2 ? Semesters.One : Semesters.Two;
+  course.code = context && context.code ? context.code : `${subject}${code}`;
+  course.name = context && context.name ? context.name : faker.lorem.words(4);
+  course.year =
+    context && context.year
+      ? context.year
+      : faker.random.number({ min: 2017, max: 2022, precision: 1 });
+  course.semester =
+    context && context.semester
+      ? context.semester
+      : faker.random.number() % 2
+      ? Semesters.One
+      : Semesters.Two;
   course.courseLevel =
-    faker.random.number() % 3 ? CourseLevel.Postgrad : CourseLevel.Undergrad;
+    context && context.level
+      ? context.level
+      : faker.random.number() % 3
+      ? CourseLevel.Postgrad
+      : CourseLevel.Undergrad;
 
-  /* TODO: this is now broken
+  /*
   if (context?.groups) {
     for (const [role, group] of Object.entries(context.groups)) {
       course.addGroup(role as CourseRole, group);
     }
-  }*/
+  }
+  */
 
   const page = new FolderNode();
   page.title = `${course.code}: ${course.name}`;
@@ -48,12 +61,15 @@ define(Course, async (faker: typeof Faker, context?: CourseFactoryContext) => {
   await text.save();
 
   const authors = context?.groups?.[CourseRole.Coordinator];
+
+  /* 
   if (authors) {
     course.announcements = factory(Announcement)({
       course,
       authors: await authors.users,
     }).createMany(faker.random.number(10));
   }
+  */
 
   return course;
 });
