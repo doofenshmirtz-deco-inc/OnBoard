@@ -19,7 +19,6 @@ git-crypt unlock .key
 
 cd server
 cat ./TOKEN.txt | docker login https://docker.pkg.github.com -u kentonlam --password-stdin
-yarn
 yarn run docker:up
 cd -
 

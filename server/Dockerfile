@@ -9,14 +9,15 @@ WORKDIR /usr/src/server
 
 COPY .npmrc ./
 COPY .yarnrc ./
-
 COPY package.json ./
 COPY yarn.lock ./
+RUN yarn
+
 COPY tsconfig.json ./
 COPY ormconfig.js ./
 COPY firebase-admin.json ./
 COPY ./src ./src
-RUN yarn && yarn build
+RUN yarn build
 
 EXPOSE 5000
 CMD ["yarn", "prod"]

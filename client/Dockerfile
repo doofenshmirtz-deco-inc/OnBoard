@@ -9,7 +9,9 @@ WORKDIR /usr/src/client
 
 COPY package.json ./
 COPY yarn.lock ./
+RUN yarn
+
 COPY tsconfig.json ./
 COPY ./src ./src
 COPY ./public ./public
-RUN yarn && yarn build
+RUN yarn build
