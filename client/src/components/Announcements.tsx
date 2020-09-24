@@ -152,6 +152,7 @@ const GET_ANNOUNCEMENTS = gql`
       courses {
         colour
         course {
+          id
           announcements {
             createdAt
             html
@@ -163,33 +164,31 @@ const GET_ANNOUNCEMENTS = gql`
   }
 `;
 
-export default (props: { isDashboard: boolean }) => {
+export default (props: { isDashboard: boolean; courseId?: string }) => {
   const classesShared = sharedStyles();
   const classes = props.isDashboard ? dashboardStyles() : notDashboardStyles();
   const { loading, error, data } = useQuery<MyAnnouncements>(GET_ANNOUNCEMENTS);
 
-  let announcements =
-    !data || !data.me
-      ? []
-      : data.me.courses
-          .map((item) => {
-            return item.course.announcements?.map((announcement) => {
-              return {
-                announcement,
-                colour: item.colour,
-              };
-            });
-          })
-          .flat(1)
-          .sort((a, b) =>
-            a.announcement.createdAt < b.announcement.createdAt ? 1 : -1
-          );
+  let announcements = data?.me?.courses
+    .filter((element) => !props.courseId || element.course.id == props.courseId)
+    .map((item) => {
+      return item.course.announcements?.map((announcement) => {
+        return {
+          announcement,
+          colour: item.colour,
+        };
+      });
+    })
+    .flat(1)
+    .sort((a, b) =>
+      a.announcement.createdAt < b.announcement.createdAt ? 1 : -1
+    );
 
   const annoucementsList = !data ? (
     <div></div>
   ) : (
     <List className={classes.classList}>
-      {announcements.map((item, index) =>
+      {announcements?.map((item, index) =>
         renderAnnouncement(item, classesShared, index, props.isDashboard)
       )}
     </List>

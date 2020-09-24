@@ -9,7 +9,6 @@ const Classes = () => (
     <BrowserRouter>
       <Switch>
         <Route path="/classes/:classId">
-          {/* <h1>A Class</h1> */}
           <ClassesTabs />
         </Route>
         <Route path="/">

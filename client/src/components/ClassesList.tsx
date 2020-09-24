@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -9,16 +9,6 @@ import Container from "@material-ui/core/Container";
 import { useQuery, gql } from "@apollo/client";
 import { MyClasses } from "../graphql/MyClasses";
 import { Link } from "react-router-dom";
-
-class Course {
-  name: string;
-  colour: string;
-
-  constructor(name: string, colour: string) {
-    this.name = name;
-    this.colour = colour;
-  }
-}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

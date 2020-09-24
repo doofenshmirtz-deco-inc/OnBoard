@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
@@ -6,14 +6,19 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Announcements from "./Announcements";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useQuery, gql } from "@apollo/client";
 import { GetClassInfo } from "../graphql/GetClassInfo";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 interface TabPanelProps {
   children?: React.ReactNode;
   index: any;
   value: any;
+}
+
+interface ClassViewProps {
+  classId: any;
 }
 
 function TabPanel(props: TabPanelProps) {
@@ -85,20 +90,20 @@ export default function ClassView() {
     setValue(newValue);
   };
 
-  let { classId } = useParams();
+  let { classId } = useParams<ClassViewProps>();
 
   const { loading, error, data } = useQuery<GetClassInfo>(COURSE_INFO);
 
-  let courseData = null;
-  if (!data || !data.me) {
-  } else {
-    courseData = data.me.courses.find(
-      (element) => element.course.id == classId
-    );
-  }
+  let courseData = data?.me?.courses.find(
+    (element) => element.course.id === classId
+  );
 
   return !courseData ? (
-    <div>Class was not found</div>
+    loading ? (
+      <CircularProgress />
+    ) : (
+      <div>Class was not found</div>
+    )
   ) : (
     <div className={classes.root}>
       <h1>
@@ -129,7 +134,7 @@ export default function ClassView() {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <Announcements isDashboard={false} />
+        <Announcements isDashboard={false} courseId={courseData.course.id} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         Item Two
