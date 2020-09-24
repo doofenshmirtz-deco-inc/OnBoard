@@ -10,16 +10,18 @@ import { OnMessageSent } from "../graphql/OnMessageSent";
 
 const useStyles = makeStyles(theme => ({
   container: {
-      width: "100%",
-      paddingLeft: "2%",
-      height: "55vh",
+    width: "100%",
+    paddingLeft: "2%",
+    height: "69vh",
+    overflowY: "hidden",
   },
   messagingContainer: {
     overflowY: "scroll",
+    height: "75%",
   },
   sendBar: {
-    width: "65%",
-    position:"absolute",
+    width: "100%",
+    position:"relative",
     bottom: "0",
   },
   bubbleContainer: {
@@ -31,7 +33,8 @@ const useStyles = makeStyles(theme => ({
     margin: "1px",
     padding: "10px",
     display: "inline-block",
-    maxWidth: "40%"
+    maxWidth: "40%",
+    marginRight: "10px",
   },
   right: {
     justifyContent: "flex-end"
@@ -139,7 +142,7 @@ const MessageBox = (props: any) => {
 
   useLayoutEffect(() => {
     if (messagesEndRef.current !== null) { 
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      messagesEndRef.current.scrollIntoView({ behavior: "auto" });
     }
   });
 
