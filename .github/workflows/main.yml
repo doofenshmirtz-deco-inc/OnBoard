@@ -55,10 +55,10 @@ jobs:
         NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     # Runs a set of commands using the runners shell
-    - name: Run tests on server
-      working-directory: server
-      run: |
-        yarn test
+    # - name: Run tests on server
+    #   working-directory: server
+    #   run: |
+    #     yarn test
 
     - name: Run prettier check on server
       working-directory: server
