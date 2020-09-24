@@ -11,6 +11,7 @@ COPY .npmrc ./
 COPY .yarnrc ./
 
 COPY package.json ./
+COPY yarn.lock ./
 COPY tsconfig.json ./
 COPY ormconfig.js ./
 COPY firebase-admin.json ./

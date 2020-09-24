@@ -24,10 +24,10 @@ yarn run docker:up
 cd -
 
 cd client
-docker build .
+docker build -t doof/onboard-client:latest .
 cd -
 cd server
-docker build .
+docker build -t doof/onboard-server:latest .
 cd -
 
 docker-compose up -d

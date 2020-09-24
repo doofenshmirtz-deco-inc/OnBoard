@@ -1,7 +1,7 @@
 version: '3'
 services:
   onboard-server:
-    image: doof/onboard-server
+    build: server
     restart: "unless-stopped"
     ports:
       - "5000:5000"
@@ -10,7 +10,7 @@ services:
     volumes:
         - client-build:/usr/src/client/build
   onboard-client:
-    image: doof/onboard-client
+    build: client
     networks:
       - onboard-network 
     volumes:
