@@ -268,8 +268,8 @@ export default class TestDataSeeder implements Seeder {
 
     const timetable = await generateTestTimetable({
       duration: 60,
-      name: "Bruh",
-      times: [new Date(Date.now())],
+      name: math1071.name,
+      times: [new Date(Date.now()), new Date(Date.now() + 1)],
       classGroup: classGroup,
     });
   }
