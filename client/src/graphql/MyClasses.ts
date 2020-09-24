@@ -7,21 +7,21 @@
 // GraphQL query operation: MyClasses
 // ====================================================
 
-export interface MyClasses_me_courseColors_course {
+export interface MyClasses_me_courses_course {
   __typename: "Course";
   name: string;
   code: string;
 }
 
-export interface MyClasses_me_courseColors {
+export interface MyClasses_me_courses {
   __typename: "CourseColor";
   colour: string;
-  course: MyClasses_me_courseColors_course;
+  course: MyClasses_me_courses_course;
 }
 
 export interface MyClasses_me {
   __typename: "User";
-  courseColors: MyClasses_me_courseColors[];
+  courses: MyClasses_me_courses[];
 }
 
 export interface MyClasses {

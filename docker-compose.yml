@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  onboard-server:
+    image: doof/onboard-server
+    restart: "unless-stopped"
+    ports:
+      - "5000:5000"
+    networks:
+      - onboard-network 
+    volumes:
+        - client-build:/usr/src/client/build
+  onboard-client:
+    image: doof/onboard-client
+    networks:
+      - onboard-network 
+    volumes:
+        - client-build:/usr/src/client/build
+
+
+networks:
+  onboard-network:
+    external:
+      name: onboard-network
+volumes: 
+  client-build:

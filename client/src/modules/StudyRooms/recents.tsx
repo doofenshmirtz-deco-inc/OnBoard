@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import MessageBox from "../../components/MessageBox"
 import RecentContacts from "../../components/RecentContacts";
+import { gql, useQuery } from "@apollo/client";
 
 const Recents = () => {
   const [message, setMessageState] = useState("");
@@ -24,7 +25,7 @@ const Recents = () => {
   return (
     <div className={classes.root}>
       <RecentContacts handleClick={handleClick} selected={selected}/>
-      <MessageBox name={message}/>
+      <MessageBox name={message} />
     </div>
   );
 };

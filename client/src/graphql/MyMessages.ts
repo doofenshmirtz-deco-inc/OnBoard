@@ -24,5 +24,5 @@ export interface MyMessages {
 }
 
 export interface MyMessagesVariables {
-  groupId: number;
+  groupId: string;
 }

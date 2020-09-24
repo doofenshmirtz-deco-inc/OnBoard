@@ -22,7 +22,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import modules from "../modules";
 import { NavLink } from "react-router-dom";
 import * as firebase from "firebase";
-import { ExitToApp } from "@material-ui/icons";
+import { Icon, Avatar } from "@material-ui/core";
+import { Lock, ExitToApp } from "@material-ui/icons";
 import { useQuery, gql } from "@apollo/client";
 import { Me } from "../graphql/Me";
 
@@ -109,6 +110,13 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
       flexGrow: 1,
     },
+    userDetails: {
+      display: "flex",
+      alignItems: "center",
+      "& div": {
+        marginLeft: 10,
+      },
+    },
   })
 );
 
@@ -116,6 +124,7 @@ const meQuery = gql`
   query Me {
     me {
       name
+      avatar
     }
   }
 `;
@@ -133,7 +142,7 @@ export default function MiniDrawer() {
     setOpen(false);
   };
 
-  const { loading, error, data } = useQuery<Me>(meQuery);
+  const { data } = useQuery<Me>(meQuery);
 
   return (
     <div className={classes.root}>
@@ -159,8 +168,12 @@ export default function MiniDrawer() {
           <Typography variant="h6" noWrap className={classes.title}>
             OnBoard
           </Typography>
-          <div>
+          <div className={classes.userDetails}>
             <Typography>{data && data.me ? data.me.name : ""}</Typography>
+            <Avatar
+              alt="Profile Picture"
+              src={data && data.me ? data.me.avatar : ""}
+            />
           </div>
         </Toolbar>
       </AppBar>

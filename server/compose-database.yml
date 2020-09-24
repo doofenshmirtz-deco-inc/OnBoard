@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
   db:
     image: "postgres:12"
@@ -24,6 +24,7 @@ services:
       - onboard-network
     depends_on:
       - db
+
 volumes:
   database-data: 
 networks:

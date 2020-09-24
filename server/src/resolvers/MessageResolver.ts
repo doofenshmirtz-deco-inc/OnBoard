@@ -9,6 +9,7 @@ import {
   Subscription,
   Root,
   ArgsType,
+  ID,
 } from "type-graphql";
 import { User } from "../models/User";
 import { isAuth } from "../middleware/isAuth";
@@ -44,7 +45,7 @@ export class MessageResolver {
   @Query((type) => [Message])
   @UseMiddleware(isAuth)
   async getMessages(
-    @Arg("groupID") groupID: number,
+    @Arg("groupID", () => ID) groupID: number,
     @Ctx() ctx: Context
   ): Promise<Message[]> {
     let group = await BaseGroup.findOne({ id: groupID });
@@ -65,11 +66,12 @@ export class MessageResolver {
     topics: Subscriptions.Messages,
     filter: ({ payload, args }) => payload.group.id == args.groupID,
   })
-  @UseMiddleware(isAuthSub)
+  // @UseMiddleware(isAuthSub)
   async newMessages(
     @Root() message: Message,
-    @Arg("groupID") groupID: number
+    @Arg("groupID", () => ID) groupID: number
   ): Promise<Message> {
+    // TOOD make this actually for group
     // TODO auth: https://www.apollographql.com/docs/graphql-subscriptions/authentication/
     return message;
   }

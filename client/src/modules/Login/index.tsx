@@ -1,11 +1,6 @@
 import React from "react";
-import {
-  TextField,
-  makeStyles,
-  Grid,
-  Button,
-} from "@material-ui/core";
-import { useQuery, gql, useApolloClient } from "@apollo/client";
+import { TextField, makeStyles, Grid, Button } from "@material-ui/core";
+import { gql, useApolloClient } from "@apollo/client";
 import * as firebase from "firebase";
 import { LoadingPage } from "../../components/LoadingPage";
 import { GetCustomToken } from "../../graphql/GetCustomToken";
@@ -48,9 +43,7 @@ export const Login = () => {
       .result();
 
     if (!data || !data.getCustomToken.token) return; // TODO actual error handling pls
-    const user = await firebase
-      .auth()
-      .signInWithCustomToken(data.getCustomToken.token);
+    await firebase.auth().signInWithCustomToken(data.getCustomToken.token);
   };
 
   if (loading) return <LoadingPage />;

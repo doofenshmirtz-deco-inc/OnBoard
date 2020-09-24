@@ -11,6 +11,8 @@ define(User, (faker: typeof Faker) => {
   user.id = faker.random.uuid();
   user.name = `${firstName} ${lastName}`;
   user.email = `${firstName}@decodoof.net`;
+  user.avatar =
+    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
   return user;
 });
