@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import { useQuery, gql } from "@apollo/client";
 import { GetClassInfo } from "../graphql/GetClassInfo";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import ResourceFolder from "./ResourceFolder"
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -102,7 +103,10 @@ export default function ClassView() {
     loading ? (
       <CircularProgress />
     ) : (
-      <div>Class was not found</div>
+      <div>
+        <h1>Well, that didn't work</h1>
+        <p>The class you were looking for was not found or you don't have access to view it.</p>
+      </div>
     )
   ) : (
     <div className={classes.root}>
@@ -137,7 +141,7 @@ export default function ClassView() {
         <Announcements isDashboard={false} courseId={courseData.course.id} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <ResourceFolder />
       </TabPanel>
       <TabPanel value={value} index={2}>
         Item Three

@@ -11,7 +11,7 @@ const Classes = () => (
         <Route path="/classes/:classId">
           <ClassesTabs />
         </Route>
-        <Route path="/">
+        <Route path="/classes">
           <h1>My Classes</h1>
           <ClassesList />
         </Route>
