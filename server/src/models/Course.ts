@@ -84,12 +84,12 @@ export class Course extends BaseEntity {
 
   @OneToOne(() => FolderNode, { eager: true })
   @JoinColumn()
-  @Field()
+  @Field(() => FolderNode)
   coursePage: FolderNode;
 
   @OneToOne(() => FolderNode, { eager: true })
   @JoinColumn()
-  @Field()
+  @Field(() => FolderNode)
   assesmentPage: FolderNode;
 
   // TODO validation that user groups are disjoint
