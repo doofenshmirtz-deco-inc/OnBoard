@@ -11,12 +11,13 @@ import {
   OneToOne,
   TableInheritance,
   ChildEntity,
+  Generated,
 } from "typeorm";
 import { ObjectType, ID, Field, Int, registerEnumType } from "type-graphql";
 import { User } from "./User";
 import { Timetable } from "./Timetable";
 import { Course } from "./Course";
-import { CourseGroupPair } from "./CourseGroupPair";
+import { CourseGroupPair, CourseRole } from "./CourseGroupPair";
 
 export enum ClassType {
   Lecture = "Lecture",
@@ -58,6 +59,10 @@ export abstract class BaseGroup extends BaseEntity {
     }
     this.users = Promise.resolve(users ?? []);
   }
+
+  @Column()
+  @Generated("uuid")
+  meetingPassword: string;
 }
 
 @ChildEntity(GroupType.Course)

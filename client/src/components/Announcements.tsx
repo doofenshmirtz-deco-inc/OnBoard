@@ -149,7 +149,7 @@ const renderAnnouncement = (
 const GET_ANNOUNCEMENTS = gql`
   query MyAnnouncements {
     me {
-      courseColors {
+      courses {
         colour
         course {
           announcements {
@@ -171,7 +171,7 @@ export default (props: { isDashboard: boolean }) => {
   let announcements =
     !data || !data.me
       ? []
-      : data.me.courseColors
+      : data.me.courses
           .map((item) => {
             return item.course.announcements?.map((announcement) => {
               return {

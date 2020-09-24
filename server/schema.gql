@@ -18,7 +18,6 @@ type AuthToken {
 
 type BaseGroup {
   id: ID!
-  timetable: Timetable
   users: [User!]!
 }
 
@@ -101,20 +100,13 @@ type Subscription {
   newMessages(groupID: Float!): Message!
 }
 
-type Timetable {
-  duration: Float!
-  id: ID!
-  name: String!
-  times: [DateTime!]!
-}
-
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
 
 type User {
-  courseColors: [CourseColor!]!
+  courses(role: CourseRole): [CourseColor!]!
   email: String!
-  groups(role: CourseRole): [BaseGroup!]!
+  groups: [BaseGroup!]!
   id: ID!
   name: String!
 }
