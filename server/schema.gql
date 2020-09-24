@@ -82,7 +82,7 @@ type Message {
 }
 
 input MessageInput {
-  groupID: Int!
+  groupID: ID!
   text: String!
 }
 
