@@ -10,7 +10,7 @@ aws ssm get-parameters --region ap-southeast-2 --names git-crypt --with-decrypti
     | tr -d \" | base64 -d > .key
 
 git init
-git remote add origin git@github.com:doofenshmirtz-deco-inc/secrets.git
+git remote add origin https://github.com/doofenshmirtz-deco-inc/secrets.git
 git fetch
 git checkout -t origin/master -f
 
