@@ -23,4 +23,11 @@ yarn
 yarn run docker:up
 cd -
 
+cd client
+docker build .
+cd -
+cd server
+docker build .
+cd -
+
 docker-compose up -d
