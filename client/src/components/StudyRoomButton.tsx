@@ -37,6 +37,11 @@ export default function StudyRoomButton(props: any) {
     setAnchorEl(null);
   };
 
+  const handleOpen = () => {
+    setAnchorEl(null);
+    props.handleClickOpen();
+  }
+
   return (
     <ListItem alignItems="center" divider={true} className={classes.root}>
       <ListItemIcon className={classes.icon}>
@@ -69,7 +74,7 @@ export default function StudyRoomButton(props: any) {
       >
         Join This Meeting?
         <Typography>
-          <Button variant="outlined" color="primary" style={{margin: "0.5em", padding: "0.25em", textTransform: "none"}} onClick={props.handleClickOpen}> 
+          <Button variant="outlined" color="primary" style={{margin: "0.5em", padding: "0.25em", textTransform: "none"}} onClick={handleOpen}> 
             Yes
           </Button>
           <Button variant="outlined" style={{"color":"red", margin: "0.5em", border: "1px solid red"}} onClick={handleClose}>
