@@ -9,7 +9,11 @@ docker network create meet.jitsi || true
 aws ssm get-parameters --region ap-southeast-2 --names git-crypt --with-decryption --query Parameters[0].Value \
     | tr -d \" | base64 -d > .key
 
-git clone git@github.com:doofenshmirtz-deco-inc/secrets.git .
+git init
+git remote add origin git@github.com:doofenshmirtz-deco-inc/secrets.git
+git fetch
+git checkout -t origin/master -f
+
 git-crypt unlock .key
 
 cd server
