@@ -2,10 +2,11 @@ import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { Button, InputAdornment, makeStyles, TextField } from "@material-ui/core";
 import SendIcon from '@material-ui/icons/Send';
 import VideocamIcon from '@material-ui/icons/Videocam';
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery, useSubscription } from "@apollo/client";
 import { LoadingPage } from "./LoadingPage";
 import { MeId } from "../graphql/MeId";
 import { MyMessages } from "../graphql/MyMessages";
+import { OnMessageSent } from "../graphql/OnMessageSent";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -46,23 +47,23 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+// const groupsQuery = gql`
+// query MyGroups {
+//   me {
+//     groups {
+      
+//     }
+//   }
+// }
+// `;
+
 const MESSAGES_QUERY = gql`
-query MyMessages($groupId: Float!) {
+query MyMessages($groupId: ID!) {
   getMessages(groupID: $groupId) {
     text
     user {
       id
       name
-    }
-  }
-}
-`;
-
-const groupsQuery = gql`
-query MyGroups {
-  me {
-    groups {
-      id
     }
   }
 }
@@ -76,6 +77,27 @@ query MeId {
 }
 `;
 
+const ADD_MESSAGE = gql`
+mutation AddMessage($send: String!, $groupId: ID!) {
+  addMessage(message: {
+    text: $send,
+    groupID: $groupId
+  }) {
+    id
+  }
+}
+`;
+
+
+// the subscription should run for all groups at all times
+const MESSAGES_SUBSCRIPTION = gql`
+  subscription OnMessageSent($groupId: ID!) {
+      newMessages(groupID: $groupId) {
+        text
+      }
+  }
+`;
+
 const sendMessage = (send: string, messages: any[], setMessages: any, setMessageSent: any, myId: string) => {
   if (send == "") {
     return;
@@ -86,6 +108,7 @@ const sendMessage = (send: string, messages: any[], setMessages: any, setMessage
     direction: "right",
     sender: myId
   });
+
   setMessages(messages);
   setMessageSent("");
 }
@@ -101,7 +124,7 @@ const mapMessages = (data: MyMessages, myId: string) => {
     return {
       text: msg.text,
       direction: msg.user.id == myId ? "right" : "left",
-      sender: msg.user.id
+      sender: msg.user.name
     }
   })
 }
@@ -119,13 +142,54 @@ const MessageBox = (props: any) => {
     }
   });
 
+  const { subscribeToMore, ...result } = useQuery(
+    MESSAGES_QUERY,
+    { variables: { groupId:  4 } }
+  );
+
+  // useEffect(() => {
+  //   console.log("helooooooooooooooooooooooooo");
+  //   subscribeToMore({
+  //     document: MESSAGES_SUBSCRIPTION,
+  //     variables: { groupId: 4 },
+  //     updateQuery: (prev, { subscriptionData }) => {
+  //       console.log("something something test")
+  //       console.log(prev);
+  //       if (!subscriptionData.data) return prev;
+  //       const newMessages = subscriptionData.data.newMessages;
+  //       return Object.assign({}, prev, {
+  //         post: {
+  //           comments: [newMessages, ...messages]
+  //         }
+  //       });
+  //     }
+  //   });
+  // });
+
+  const subdata = useSubscription<OnMessageSent>(
+    MESSAGES_SUBSCRIPTION,
+    { variables: { groupId: 4 } }
+  );
+
   // get my id
   const me = useQuery<MeId>(ME_QUERY);
+  const [sendToServer] = useMutation(ADD_MESSAGE);
 
   // get my messages for a specific contact
   const { data } = useQuery<MyMessages>(MESSAGES_QUERY, {
     variables: { groupId: 4 },
   });
+
+  if (!subdata.loading) {
+    if (subdata.data) {
+      return <div>{subdata.data.newMessages}</div>
+    }
+  }
+
+  // const { data: { newMessages } } = useSubscription(
+  //   MESSAGES_SUBSCRIPTION,
+  //   { variables: { groupId: "4" } }
+  // );
 
   if (!data || !me.data || !me.data.me) {
     return <LoadingPage />
@@ -136,6 +200,7 @@ const MessageBox = (props: any) => {
     return <div/>;
   }
 
+  // TODO: the query for myId can probably easily be moved up the tree
   const myId = me.data.me.id;
   const maps = mapMessages(data, myId);
   const chatBubbles = maps.map((obj : any, i: number = 0) => (
@@ -160,7 +225,17 @@ const MessageBox = (props: any) => {
         label="Send message"
         value={message}
         onChange={(e) => setMessageSent(e.target.value)}
-        onKeyPress={(e) => handleKeyPress(e, message, messages, setMessages, setMessageSent, myId)}
+        onKeyPress={(e) => {
+          if (e.key === "Enter") {
+            handleKeyPress(e, message, messages, setMessages, setMessageSent, myId);
+            sendToServer({
+              variables: {
+                send: message,
+                groupId: 4
+              }
+            });
+          }
+        }}
         InputProps={{
           endAdornment: (
             <Button onClick={() => sendMessage(message, messages, setMessages, setMessageSent, myId)}>
