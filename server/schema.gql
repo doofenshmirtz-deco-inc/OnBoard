@@ -94,7 +94,7 @@ type Mutation {
 type Query {
   courses(limit: Int = 10, order: String, orderBy: String, skip: Int = 0): [Course!]!
   getCustomToken(testUID: String = "test-uid"): AuthToken!
-  getMessages(groupID: Float!): [Message!]!
+  getMessages(groupID: ID!): [Message!]!
   getTestingToken(testUID: String = "test-uid"): AuthToken!
   me: User
   user(id: String!): User
@@ -117,7 +117,7 @@ type StudyGroup {
 }
 
 type Subscription {
-  newMessages(groupID: Float!): Message!
+  newMessages(groupID: ID!): Message!
 }
 
 type Timetable {
