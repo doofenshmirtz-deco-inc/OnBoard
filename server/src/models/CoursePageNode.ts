@@ -11,7 +11,8 @@ import {
   ManyToOne,
   OneToMany,
 } from "typeorm";
-import { ObjectType, ID, Field } from "type-graphql";
+import { ObjectType, ID, Field, createUnionType } from "type-graphql";
+import { DMGroup } from "./UserGroup";
 
 export enum CoursePageNodeTypes {
   Text = "text",
@@ -36,12 +37,9 @@ export abstract class BaseNode extends BaseEntity {
   @Field()
   title: string;
 
-  @ManyToOne(() => BaseNode, (node) => node.children)
-  // @Field({ nullable: true })
-  parent: BaseNode;
-
-  @OneToMany(() => BaseNode, (node) => node.parent)
-  children: Promise<BaseNode[]>;
+  @ManyToOne(() => FolderNode, (node) => node.children)
+  @Field({ nullable: true })
+  parent: FolderNode;
 }
 
 @ChildEntity(CoursePageNodeTypes.Text)
@@ -56,4 +54,12 @@ export class HeadingNode extends BaseNode {}
 
 @ChildEntity(CoursePageNodeTypes.Folder)
 @ObjectType()
-export class FolderNode extends BaseNode {}
+export class FolderNode extends BaseNode {
+  @OneToMany(() => BaseNode, (node) => node.parent)
+  children: Promise<BaseNode[]>;
+}
+
+export const Node = createUnionType({
+  name: "Node",
+  types: () => [TextNode, HeadingNode, DMGroup],
+});
