@@ -16,7 +16,7 @@ phases:
       - "bash deploy/pre_build.sh"
   build:
     commands:
-      - "bash deploy/pre_build.sh"
+      - "bash deploy/build.sh"
 artifacts:
   files:
     - server.tar.gz
