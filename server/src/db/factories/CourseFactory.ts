@@ -5,12 +5,16 @@ import { BaseGroup, CourseGroup } from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
 import { CourseGroupPair, CourseRole } from "../../models/CourseGroupPair";
 import { FolderNode, TextNode, BaseNode } from "../../models/CoursePageNode";
-import { getManager } from "typeorm";
 
 export type CourseFactoryContext = {
   groups?: {
     [role: string]: CourseGroup;
   };
+  code?: string;
+  name?: string;
+  year?: number;
+  semester?: Semesters;
+  level?: CourseLevel;
 };
 
 define(Course, async (faker: typeof Faker, context?: CourseFactoryContext) => {
@@ -19,7 +23,7 @@ define(Course, async (faker: typeof Faker, context?: CourseFactoryContext) => {
 
   const course = new Course();
   course.code = `${subject}${code}`;
-  course.name = faker.lorem.sentence(4);
+  course.name = faker.lorem.words(4);
   course.year = faker.random.number({ min: 2017, max: 2022, precision: 1 });
   course.semester = faker.random.number() % 2 ? Semesters.One : Semesters.Two;
   course.courseLevel =
@@ -40,7 +44,7 @@ define(Course, async (faker: typeof Faker, context?: CourseFactoryContext) => {
   const text = new TextNode();
   text.title = `Welcome to ${code}`;
   text.text = "This will be a fun course";
-  text.parent = page;
+  text.parent = Promise.resolve(page);
   await text.save();
 
   const authors = context?.groups?.[CourseRole.Coordinator];

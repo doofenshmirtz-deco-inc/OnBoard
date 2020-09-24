@@ -44,11 +44,12 @@ const generateTestCourse = async (
     title: context.code,
   }).save();
 
-  const text = await TextNode.create({
+  const text = TextNode.create({
     title: `Welcome to ${context.code}`,
     text: "This will be a fun course",
-    parent: page,
-  }).save();
+  });
+  text.parent = Promise.resolve(page);
+  await text.save();
 
   const course = await Course.create({
     ...context,
