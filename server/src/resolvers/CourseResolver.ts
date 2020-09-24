@@ -1,21 +1,7 @@
-import {
-  Resolver,
-  Query,
-  Args,
-  Arg,
-  ID,
-  Int,
-  UseMiddleware,
-  Ctx,
-  FieldResolver,
-  Root,
-} from "type-graphql";
-import { User } from "../models/User";
+import { Resolver, Query, Args, Arg, ID, UseMiddleware } from "type-graphql";
 import { PaginationArgs, getOrder } from "./Types";
 import { isAuth } from "../middleware/isAuth";
-import { Context } from "../middleware/Context";
 import { Course } from "../models/Course";
-import { BaseGroup } from "../models/UserGroup";
 
 @Resolver((of) => Course)
 export class CourseResolver {
@@ -29,5 +15,11 @@ export class CourseResolver {
         skip: pag.skip,
       })
     )[0];
+  }
+
+  @Query(() => Course)
+  @UseMiddleware(isAuth)
+  async course(@Arg("courseID", () => ID) courseID: number) {
+    return await Course.findOne({ id: courseID });
   }
 }

@@ -9,3 +9,12 @@ export class FolderNodeResolver {
     return children ? children : [];
   }
 }
+
+@Resolver(() => BaseNode)
+export class NodeResolver {
+  @FieldResolver(() => FolderNode, { nullable: true })
+  async parent(@Root() node: BaseNode) {
+    let parent = await node.parent;
+    return parent;
+  }
+}

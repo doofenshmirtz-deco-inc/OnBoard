@@ -34,14 +34,22 @@ export abstract class BaseNode extends BaseEntity {
   @Field()
   title: string;
 
-  @ManyToOne(() => FolderNode, (node) => node.children)
-  @Field({ nullable: true })
-  parent: FolderNode;
+  // TODO maybe custom type checking
+  // TODO so bad v bad fix me
+  @ManyToOne(() => BaseNode, (node) => node.children)
+  parent: Promise<BaseNode>;
+
+  // TODO this is bad!!
+  // TODO maybe custom type checking lmao
+  @OneToMany(() => BaseNode, (node) => node.parent)
+  children: Promise<BaseNode[]>;
 }
 
 @ChildEntity(CoursePageNodeTypes.Text)
 @ObjectType()
 export class TextNode extends BaseNode {
+  @Column()
+  @Field()
   text: string;
 }
 
@@ -51,12 +59,9 @@ export class HeadingNode extends BaseNode {}
 
 @ChildEntity(CoursePageNodeTypes.Folder)
 @ObjectType()
-export class FolderNode extends BaseNode {
-  @OneToMany(() => BaseNode, (node) => node.parent)
-  children: Promise<BaseNode[]>;
-}
+export class FolderNode extends BaseNode {}
 
 export const Node = createUnionType({
   name: "Node",
-  types: () => [TextNode, HeadingNode, DMGroup],
+  types: () => [TextNode, HeadingNode, FolderNode],
 });
