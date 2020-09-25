@@ -6,18 +6,17 @@ import {
 import { Connection } from "typeorm";
 import { User } from "../../models/User";
 import { Semesters, CourseLevel, Course } from "../../models/Course";
-import { BaseGroup, GroupType, CourseGroup } from "../../models/UserGroup";
+import {
+  BaseGroup,
+  GroupType,
+  CourseGroup,
+  DMGroup,
+} from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
 import { CourseRole, CourseGroupPair } from "../../models/CourseGroupPair";
+import { Message } from "../../models/Message";
 import Faker from "faker";
-import { FolderNode, TextNode } from "../../models/CoursePageNode";
 
-// const generateEmptyGroup = (context?: {type: GroupType}) =>
-//   BaseGroup.create({ users: Promise.resolve([]), type: context?.type ?? GroupType.CourseStudents }).save();
-
-/**
- * Generates a user for test (e.g. the user is enrolled in a course)
- */
 const addGroups = async (
   groups: {
     [role: string]: User[];
@@ -50,18 +49,63 @@ const generateTestAnnouncements = async (
   }
 };
 
+const generateDMs = async (users: User[]) => {
+  const pairs = ([] as User[][]).concat(
+    ...users.map((u1, i1) => users.slice(i1 + 1).map((u2) => [u1, u2]))
+  );
+
+  const groups = pairs.map(
+    async (pair) => await factory(DMGroup)({ users: pair }).create()
+  );
+
+  //groups.forEach((group) => factory(Message)({ group: group }).createMany(1));
+};
+
 export default class TestDataSeeder implements Seeder {
   public async run(factory: Factory, connection: Connection): Promise<void> {
     const heinz = await factory(User)({
-      ui: "doof-uid",
+      ui: "doof",
       name: "Heinz Doofenshmirtz",
       email: "heinz@evilinc.com",
     }).create();
 
     const perry = await factory(User)({
-      ui: "perry-uid",
-      name: "Perry The Platypus",
+      ui: "perry",
+      name: "Perry the Platypus",
     }).create();
+
+    const tom = await factory(User)({
+      ui: "tom",
+      name: "Tom Cranitch",
+    }).create();
+
+    const kenton = await factory(User)({
+      ui: "kenton",
+      name: "Kenton Lam",
+    }).create();
+
+    const matt = await factory(User)({
+      ui: "matt",
+      name: "Matthew Low",
+    }).create();
+
+    const james = await factory(User)({
+      ui: "james",
+      name: "James Dearlove",
+    }).create();
+
+    const sanni = await factory(User)({
+      ui: "sanni",
+      name: "Sanni Bosamia",
+    }).create();
+
+    const nat = await factory(User)({
+      ui: "nat",
+      name: "Natalie Hong",
+    }).create();
+
+    generateDMs([heinz, perry, tom, kenton, matt, james, sanni, nat]);
+    // generateDMs([heinz, perry]);
 
     const secr = await factory(Course)({
       code: "SECR1000",
@@ -97,7 +141,21 @@ export default class TestDataSeeder implements Seeder {
       level: CourseLevel.Undergrad,
       year: 2018,
     }).create();
-    addGroups({ [CourseRole.Student]: [heinz, perry] }, edis);
+    addGroups(
+      {
+        [CourseRole.Student]: [
+          heinz,
+          perry,
+          tom,
+          kenton,
+          james,
+          sanni,
+          nat,
+          matt,
+        ],
+      },
+      edis
+    );
 
     await generateTestAnnouncements(
       {
@@ -121,6 +179,7 @@ export default class TestDataSeeder implements Seeder {
       ]
     );
 
+    /* TODO: for some reason this doesnt work????
     await generateTestAnnouncements(
       {
         course: evil,
@@ -131,5 +190,6 @@ export default class TestDataSeeder implements Seeder {
         "Doofenshmirtz Evil Dirigible It's my awesome blimp! Doofenshmirtz Evil Incorparated! I don't wanna sing anymore! So we're through!",
       ]
     );
+    */
   }
 }

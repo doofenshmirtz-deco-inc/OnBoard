@@ -1,9 +1,8 @@
-import Faker from "faker";
 import { define, factory } from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import { User } from "../../models/User";
 
 define(User, (
-  faker: typeof Faker,
+  faker,
   context?: {
     id: string;
     name: string;

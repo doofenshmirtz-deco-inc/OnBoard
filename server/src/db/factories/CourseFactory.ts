@@ -17,7 +17,7 @@ export type CourseFactoryContext = {
   level?: CourseLevel;
 };
 
-define(Course, async (faker: typeof Faker, context?: CourseFactoryContext) => {
+define(Course, async (faker, context?: CourseFactoryContext) => {
   const subject = faker.random.arrayElement(["MATH", "CSSE", "COMP", "STAT"]);
   const code = faker.random.number({ min: 1000, max: 4999, precision: 1 });
 
