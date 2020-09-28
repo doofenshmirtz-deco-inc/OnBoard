@@ -26,7 +26,9 @@ export interface MyCalendar_me_groups_ClassGroup {
   timetable: MyCalendar_me_groups_ClassGroup_timetable | null;
 }
 
-export type MyCalendar_me_groups = MyCalendar_me_groups_CourseGroup | MyCalendar_me_groups_ClassGroup;
+export type MyCalendar_me_groups =
+  | MyCalendar_me_groups_CourseGroup
+  | MyCalendar_me_groups_ClassGroup;
 
 export interface MyCalendar_me {
   __typename: "User";

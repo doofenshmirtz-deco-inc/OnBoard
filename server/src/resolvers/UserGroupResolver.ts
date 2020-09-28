@@ -52,7 +52,7 @@ export class UserGroupResolver {
     return users;
   }
 
-  @FieldResolver(() => Timetable, {nullable: true})
+  @FieldResolver(() => Timetable, { nullable: true })
   @UseMiddleware(isAuth)
   async timetable(@Root() group: BaseGroup, @Ctx() ctx: Context) {
     if (group.groupType == GroupType.Class) {

@@ -9,7 +9,10 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import { useQuery, gql } from "@apollo/client";
-import { MyCalendar, MyCalendar_me_groups_ClassGroup } from "../graphql/MyCalendar";
+import {
+  MyCalendar,
+  MyCalendar_me_groups_ClassGroup,
+} from "../graphql/MyCalendar";
 
 const localizer = momentLocalizer(moment);
 
@@ -17,7 +20,7 @@ const GET_CALENDAR = gql`
   query MyCalendar {
     me {
       groups {
-        ...on ClassGroup {
+        ... on ClassGroup {
           id
           name
           timetable {
@@ -43,31 +46,32 @@ export default function MyCal() {
   const [myTimetable, setMyTimetable] = useState([]);
 
   useEffect(() => {
-    let calendar =
-      data?.me?.groups?.filter(
-        e => e.__typename == "ClassGroup"
-      ) as MyCalendar_me_groups_ClassGroup[] | null;
+    let calendar = data?.me?.groups?.filter(
+      (e) => e.__typename == "ClassGroup"
+    ) as MyCalendar_me_groups_ClassGroup[] | null;
 
-    let timetable = calendar?.map(e => e.timetable)
-                    .map(e => [e?.times, e?.duration, e?.name])
+    let timetable = calendar
+      ?.map((e) => e.timetable)
+      .map((e) => [e?.times, e?.duration, e?.name]);
 
     let events = [] as any[];
 
-    timetable?.forEach(e => {
+    timetable?.forEach((e) => {
       let times = e[0] as Array<String>;
-      let duration = e[1]
-      let title = e[2]
-      times?.forEach(f => 
+      let duration = e[1];
+      let title = e[2];
+      times?.forEach((f) =>
         events.push({
           start: moment(f as string).toDate(),
-          end: moment(f as string).add(duration as number, "minutes").toDate(),
-          title: title
+          end: moment(f as string)
+            .add(duration as number, "minutes")
+            .toDate(),
+          title: title,
         })
-      )
+      );
     });
 
     setMyTimetable(events as never[]);
-
   }, [data]);
 
   return (
@@ -81,21 +85,19 @@ export default function MyCal() {
           views={["month", "work_week"]}
           endAccessor="end"
           style={{ height: 446 }}
-          eventPropGetter={
-            (event, start, end, isSelected) => {
-              let newStyle = {
-                backgroundColor: "#6B2BC6",
-                color: 'white',
-                borderRadius: "0px",
-                border: "none"
-              };
-        
-              return {
-                className: "",
-                style: newStyle
-              };
-            }
-          }
+          eventPropGetter={(event, start, end, isSelected) => {
+            let newStyle = {
+              backgroundColor: "#6B2BC6",
+              color: "white",
+              borderRadius: "0px",
+              border: "none",
+            };
+
+            return {
+              className: "",
+              style: newStyle,
+            };
+          }}
         />
       </CardContent>
     </Box>

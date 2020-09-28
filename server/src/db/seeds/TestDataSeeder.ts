@@ -266,11 +266,29 @@ export default class TestDataSeeder implements Seeder {
       }
     );
 
+    const classGroup2 = await generateTestClass(
+      {
+        name: "Bruh2",
+        type: ClassType.Lecture,
+        course: csse2310,
+      },
+      {
+        users: [heinz],
+      }
+    );
+
     const timetable = await generateTestTimetable({
       duration: 60,
       name: math1071.name,
-      times: [new Date(Date.now()), new Date(Date.now() + 1)],
+      times: [new Date(Date.now()), new Date(Date.now() + 1000 * 60 * 60 * 24)],
       classGroup: classGroup,
+    });
+
+    const timetable2 = await generateTestTimetable({
+      duration: 120,
+      name: csse2310.name,
+      times: [new Date(Date.now()), new Date(Date.now() + 1000 * 60 * 60 * 24)],
+      classGroup: classGroup2,
     });
   }
 }
