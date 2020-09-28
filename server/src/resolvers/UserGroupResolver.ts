@@ -16,6 +16,7 @@ import { isAuth } from "../middleware/isAuth";
 import { Context } from "../middleware/Context";
 import { BaseGroup, DMGroup, CourseGroup } from "../models/UserGroup";
 import { Timetable } from "../models/Timetable";
+import { CourseGroupPair } from "../models/CourseGroupPair";
 
 @Resolver((of) => BaseGroup)
 export class UserGroupResolver {
@@ -51,10 +52,19 @@ export class UserGroupResolver {
     const users = await group.users;
     return users;
   }
-
   @FieldResolver(() => String)
-  async name(@Root() group: DMGroup, @Ctx() ctx: Context) {
+  async name(@Root() group: BaseGroup, @Ctx() ctx: Context) {
     if (!ctx.payload) throw new Error("User must be authenticated");
-    return (await group.users).filter((u) => u.id !== ctx.payload?.uid)[0].name;
+    if (group instanceof DMGroup)
+      return (await group.users).filter((u) => u.id !== ctx.payload?.uid)[0]
+        .name;
+    if (group instanceof CourseGroup) {
+      let query = CourseGroupPair.createQueryBuilder("cgp")
+        .leftJoinAndSelect("cgp.group", "group")
+        .leftJoinAndSelect("cgp.course", "course")
+        .where("group.id = :id", { id: group.id });
+      const cgp = await query.getOne();
+      return `${cgp?.course.code}: ${cgp?.course.name}`;
+    }
   }
 }
