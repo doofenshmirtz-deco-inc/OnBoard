@@ -9,7 +9,6 @@ WORKDIR /usr/src/client
 
 COPY package.json ./
 COPY tsconfig.json ./
-COPY .env ./
 COPY ./src ./src
 COPY ./public ./public
 RUN yarn && yarn build
