@@ -1,4 +1,5 @@
 /uploads
+.config/.jitsi-meet-cfg
 
 # Logs
 logs
