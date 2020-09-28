@@ -3,15 +3,13 @@ import {
   BaseEntity,
   Entity,
   PrimaryGeneratedColumn,
-  TreeChildren,
-  TreeParent,
-  Tree,
   TableInheritance,
   ChildEntity,
   ManyToOne,
   OneToMany,
 } from "typeorm";
-import { ObjectType, ID, Field } from "type-graphql";
+import { ObjectType, ID, Field, createUnionType } from "type-graphql";
+import { DMGroup } from "./UserGroup";
 
 export enum CoursePageNodeTypes {
   Text = "text",
@@ -36,10 +34,13 @@ export abstract class BaseNode extends BaseEntity {
   @Field()
   title: string;
 
+  // TODO maybe custom type checking
+  // TODO so bad v bad fix me
   @ManyToOne(() => BaseNode, (node) => node.children)
-  // @Field({ nullable: true })
-  parent: BaseNode;
+  parent: Promise<BaseNode>;
 
+  // TODO this is bad!!
+  // TODO maybe custom type checking lmao
   @OneToMany(() => BaseNode, (node) => node.parent)
   children: Promise<BaseNode[]>;
 }
@@ -47,6 +48,8 @@ export abstract class BaseNode extends BaseEntity {
 @ChildEntity(CoursePageNodeTypes.Text)
 @ObjectType()
 export class TextNode extends BaseNode {
+  @Column()
+  @Field()
   text: string;
 }
 
@@ -57,3 +60,8 @@ export class HeadingNode extends BaseNode {}
 @ChildEntity(CoursePageNodeTypes.Folder)
 @ObjectType()
 export class FolderNode extends BaseNode {}
+
+export const Node = createUnionType({
+  name: "Node",
+  types: () => [TextNode, HeadingNode, FolderNode],
+});
