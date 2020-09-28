@@ -22,11 +22,13 @@ import {
   registerEnumType,
   createUnionType,
   FieldResolver,
+  Ctx,
 } from "type-graphql";
 import { User } from "./User";
 import { Timetable } from "./Timetable";
 import { Course } from "./Course";
 import { CourseGroupPair, CourseRole } from "./CourseGroupPair";
+import { Context } from "../middleware/Context";
 
 export enum ClassType {
   Lecture = "Lecture",
