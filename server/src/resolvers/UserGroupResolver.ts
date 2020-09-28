@@ -14,7 +14,7 @@ import { User } from "../models/User";
 import { PaginationArgs, getOrder } from "./Types";
 import { isAuth } from "../middleware/isAuth";
 import { Context } from "../middleware/Context";
-import { BaseGroup, DMGroup } from "../models/UserGroup";
+import { BaseGroup, DMGroup, CourseGroup } from "../models/UserGroup";
 import { Timetable } from "../models/Timetable";
 
 @Resolver((of) => BaseGroup)
@@ -46,18 +46,15 @@ export class UserGroupResolver {
     const user = await User.findOne({ where: { id: ctx.payload?.uid } });
     if (!user) throw new Error("User is invalid");
 	  if (!users.map(user => user.id).includes(user.id)) throw new Error("Invali persmissions to view group members");
-	  */
+	*/
 
     const users = await group.users;
     return users;
   }
-}
 
-@Resolver(() => DMGroup)
-export class DMGroupResolver {
   @FieldResolver(() => String)
   async name(@Root() group: DMGroup, @Ctx() ctx: Context) {
     if (!ctx.payload) throw new Error("User must be authenticated");
-    return (await group.users).filter((u) => u.id !== ctx.payload?.uid)[0];
+    return (await group.users).filter((u) => u.id !== ctx.payload?.uid)[0].name;
   }
 }

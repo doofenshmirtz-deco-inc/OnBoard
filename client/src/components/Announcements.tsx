@@ -1,4 +1,5 @@
 import React from "react";
+import clsx from "clsx";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -9,32 +10,13 @@ import { gql, useQuery } from "@apollo/client";
 import moment from "moment";
 import { MyAnnouncements } from "../graphql/MyAnnouncements";
 
-const useStyles = makeStyles((theme: Theme) =>
+const sharedStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      backgroundColor: theme.palette.background.paper,
-      overflow: "hidden",
-      border: "1px solid black",
-      height: "100%",
-      display: "flex",
-      flexFlow: "column",
-      padding: theme.spacing(2),
-    },
     enrolledClass: {
       // height: 300, // Subject to change
       minWidth: 250,
       border: "1px solid black",
-      marginLeft: "5px",
-      marginRight: "5px",
       overflow: "hidden",
-    },
-    classList: {
-      overflow: "auto",
-      display: "flex",
-      width: "100%",
-      maxWidth: `calc(100vw - ${100}px)`,
-      flex: 1,
-      alignItems: "strech",
     },
     classBody: {
       alignSelf: "stretch",
@@ -51,14 +33,62 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: 0,
       margin: 0,
     },
+    classItemMargin: {
+      marginLeft: "5px",
+      marginRight: "5px",
+    },
+  })
+);
+
+const dashboardStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      backgroundColor: theme.palette.background.paper,
+      overflow: "hidden",
+      border: "1px solid black",
+      height: "100%",
+      display: "flex",
+      flexFlow: "column",
+      padding: theme.spacing(2),
+    },
+    classList: {
+      overflow: "auto",
+      display: "flex",
+      width: "100%",
+      maxWidth: `calc(100vw - ${100}px)`,
+      flex: 1,
+      alignItems: "strech",
+    },
+  })
+);
+
+const notDashboardStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      // backgroundColor: theme.palette.background.paper,
+      overflow: "hidden",
+      height: "100%",
+    },
+    classList: {
+      // overflow: "auto",
+      display: "flex",
+      flexFlow: "column",
+      width: "100%",
+      // maxWidth: `calc(100vw - ${100}px)`,
+      // flex: 1,
+      //alignItems: "strech",
+    },
   })
 );
 
 const CHARACTER_LIMIT: number = 225;
 
-const getDescription = (announcement: any) => {
+const getDescription = (announcement: any, isDashboard: boolean) => {
   let text;
-  if (announcement.announcement.html.length <= CHARACTER_LIMIT) {
+  if (
+    announcement.announcement.html.length <= CHARACTER_LIMIT ||
+    !isDashboard
+  ) {
     text = announcement.announcement.html;
   } else {
     // Trim to 225 chars and add... at the end for the funny
@@ -68,11 +98,6 @@ const getDescription = (announcement: any) => {
   return <span>{TextToLinks(text, announcement.colour)}</span>;
 };
 
-// TODO: Change for full query or something idk what you want here hahaha
-function onClickHandler(link: string) {
-  console.log(link);
-}
-
 /* Render a single announcement button. Haha any go brr */
 const renderAnnouncement = (
   announcement: {
@@ -80,18 +105,22 @@ const renderAnnouncement = (
     colour: string;
   },
   classes: any,
-  key: number
+  key: number,
+  isDashboard: boolean
 ) => {
-  let trimmeDesc = getDescription(announcement);
+  let trimmeDesc = getDescription(announcement, isDashboard);
   return (
     <ListItem
       button
-      className={classes.enrolledClass}
+      className={clsx(classes.enrolledClass, {
+        [classes.classItemMargin]: isDashboard,
+      })}
       key={key}
       style={{
         borderLeft: `5px solid ${announcement.colour}`,
         fontWeight: "bolder",
         fontSize: "1.1rem",
+        borderTop: key != 0 && !isDashboard ? 0 : undefined,
       }}
       onClick={() => onClickHandler(announcement.announcement.title)}
     >
@@ -135,9 +164,10 @@ const GET_ANNOUNCEMENTS = gql`
   }
 `;
 
-export default function Announcements() {
-  const classes = useStyles();
-  const { data } = useQuery<MyAnnouncements>(GET_ANNOUNCEMENTS);
+export default (props: { isDashboard: boolean }) => {
+  const classesShared = sharedStyles();
+  const classes = props.isDashboard ? dashboardStyles() : notDashboardStyles();
+  const { loading, error, data } = useQuery<MyAnnouncements>(GET_ANNOUNCEMENTS);
 
   let announcements =
     !data || !data.me
@@ -162,15 +192,19 @@ export default function Announcements() {
   ) : (
     <List className={classes.classList}>
       {announcements.map((item, index) =>
-        renderAnnouncement(item, classes, index)
+        renderAnnouncement(item, classesShared, index, props.isDashboard)
       )}
     </List>
   );
 
   return (
     <div className={classes.root}>
-      <h2 className={classes.heading}>Announcements</h2>
+      {props.isDashboard ? (
+        <h2 className={classesShared.heading}>Announcements</h2>
+      ) : (
+        ""
+      )}
       {annoucementsList}
     </div>
   );
-}
+};
