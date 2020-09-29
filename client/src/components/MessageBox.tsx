@@ -6,6 +6,7 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import { LoadingPage } from "./LoadingPage";
 import { MyMessages } from "../graphql/MyMessages";
 import { OnMessageSent } from "../graphql/OnMessageSent";
+import { group } from "console";
 
 const MESSAGES_QUERY = gql`
   query MyMessages($groupId: ID!) {
@@ -83,7 +84,7 @@ const sendMessage = (
   messages: any[],
   setMessages: any,
   setMessageSent: any,
-  myId: string
+  props: any
 ) => {
   if (send == "") {
     return;
@@ -92,11 +93,30 @@ const sendMessage = (
   messages.push({
     message: send,
     direction: "right",
-    sender: myId,
+    sender: props.myId,
   });
 
   setMessages(messages);
   setMessageSent("");
+
+  // TODO: probably change this to a splay tree or something?
+  let contacts: any[] = props.contacts;
+  let index = -1;
+  for (let i = 0; i < contacts.length; i++) {
+    if (contacts[i].id === props.id) {
+      index = i;
+      break;
+    }
+  }
+
+  let newContacts: any[] = [contacts[index]];
+  for (let i = 0; i < contacts.length; i++) {
+    if (i !== index) {
+      newContacts.push(contacts[i]);
+    }
+  }
+
+  props.setContacts(newContacts);
 };
 
 const handleKeyPress = (
@@ -105,20 +125,20 @@ const handleKeyPress = (
   messages: any[],
   setMessages: any,
   setMessageSent: any,
-  myId: string
+  props: any
 ) => {
   if (event.key == "Enter") {
-    sendMessage(send, messages, setMessages, setMessageSent, myId);
+    sendMessage(send, messages, setMessages, setMessageSent, props);
   }
 };
 
 const mapMessages = (data: MyMessages, myId: string) => {
   return data.getMessages.map((msg) => {
-    return ({
+    return {
       text: msg.text,
       direction: msg.user.id == myId ? "right" : "left",
       sender: msg.user.name,
-    });
+    };
   });
 };
 
@@ -216,7 +236,7 @@ const MessageBox = (props: any) => {
               messages,
               setMessages,
               setMessageSent,
-              props.myId
+              props
             );
             sendToServer({
               variables: {
@@ -235,7 +255,7 @@ const MessageBox = (props: any) => {
                   messages,
                   setMessages,
                   setMessageSent,
-                  props.myId
+                  props
                 )
               }
             >

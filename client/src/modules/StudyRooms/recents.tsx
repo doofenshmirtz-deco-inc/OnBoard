@@ -49,14 +49,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Recents = () => {
-  const [message, setMessageState] = useState({
-    id: "INVALID",
+  const [selected, setSelectedState] = useState({
+    id: "",
     name: "",
   });
 
-  const [selected, setSelectedState] = useState("");
+  const [messages, setMessages] = useState(new Object());
+  const [contacts, setContacts] = useState([{}]);
+
   const handleClick = (item: any) => {
-    setMessageState(item);
     setSelectedState(item);
   };
 
@@ -79,24 +80,34 @@ const Recents = () => {
     return <LoadingPage />;
   }
 
-  const myGroups = data.me.groups.map((group) => {
+  const myGroups = data.me.groups.map((group: any) => {
     return {
       id: parseInt(group.id, 10),
       name: `${group.name}-${group.id}`,
     };
   });
 
+  if (contacts.length != myGroups.length) {
+    setContacts(myGroups);
+  }
+
   return (
     <div className={classes.root}>
       <RecentContacts
-        contacts={myGroups}
+        contacts={contacts}
         handleClick={handleClick}
         selected={selected}
       />
-      {selected === "" ? (
+      {selected.id === "" ? (
         <div />
       ) : (
-        <MessageBox myId={me.data.me.id} id={message.id} name={message.name} />
+        <MessageBox
+          contacts={contacts}
+          setContacts={setContacts}
+          myId={me.data.me.id}
+          id={selected.id}
+          name={selected.name}
+        />
       )}
     </div>
   );

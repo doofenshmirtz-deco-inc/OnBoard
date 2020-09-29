@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import List from "@material-ui/core/List";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-// import contacts from "../components/Contacts.json";
 import ContactCard from "./ContactCard";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -33,7 +32,6 @@ const RecentContacts = (props: any) => {
   }));
 
   const classes = useStyles();
-  const contacts = props.contacts;
 
   return (
     <List className={classes.root}>
@@ -51,14 +49,14 @@ const RecentContacts = (props: any) => {
           ),
         }}
       />
-      {Object.values(contacts).map((item: any) =>
+      {Object.values(props.contacts).map((item: any) =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase()) ? (
           <Button
             color="primary"
             disableElevation
             style={{
               backgroundColor:
-                props.selected == item.name ? "#e3e1e1" : "white",
+                props.selected.id === item.id ? "#e3e1e1" : "white",
             }}
             onClick={(e) => {
               props.handleClick(item);
