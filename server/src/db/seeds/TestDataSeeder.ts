@@ -64,43 +64,45 @@ const generateDMs = async (users: User[]) => {
 export default class TestDataSeeder implements Seeder {
   public async run(factory: Factory, connection: Connection): Promise<void> {
     const heinz = await factory(User)({
-      ui: "doof",
+      uid: "doof",
       name: "Heinz Doofenshmirtz",
       email: "heinz@evilinc.com",
+      avatar:
+        "https://vignette.wikia.nocookie.net/disney/images/4/41/DoofenshmirtzFull.jpg/revision/latest?cb=20190819173522",
     }).create();
 
     const perry = await factory(User)({
-      ui: "perry",
+      uid: "perry",
       name: "Perry the Platypus",
     }).create();
 
     const tom = await factory(User)({
-      ui: "tom",
+      uid: "tom",
       name: "Tom Cranitch",
     }).create();
 
     const kenton = await factory(User)({
-      ui: "kenton",
+      uid: "kenton",
       name: "Kenton Lam",
     }).create();
 
     const matt = await factory(User)({
-      ui: "matt",
+      uid: "matt",
       name: "Matthew Low",
     }).create();
 
     const james = await factory(User)({
-      ui: "james",
+      uid: "james",
       name: "James Dearlove",
     }).create();
 
     const sanni = await factory(User)({
-      ui: "sanni",
+      uid: "sanni",
       name: "Sanni Bosamia",
     }).create();
 
     const nat = await factory(User)({
-      ui: "nat",
+      uid: "nat",
       name: "Natalie Hong",
     }).create();
 

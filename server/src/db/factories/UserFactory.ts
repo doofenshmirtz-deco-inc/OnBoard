@@ -4,9 +4,10 @@ import { User } from "../../models/User";
 define(User, (
   faker,
   context?: {
-    id: string;
+    uid: string;
     name: string;
     email: string;
+    avatar: string;
   }
 ) => {
   const gender = faker.random.number(1);
@@ -14,7 +15,7 @@ define(User, (
   const lastName = faker.name.lastName(gender);
 
   const user = new User();
-  user.id = context && context.id ? context.id : faker.random.uuid();
+  user.id = context && context.uid ? context.uid : faker.random.uuid();
   user.name =
     context && context.name ? context.name : `${firstName} ${lastName}`;
   user.email =
@@ -23,6 +24,10 @@ define(User, (
       : context && context.name
       ? `${context.name.split(" ")[0].toLowerCase()}@decodoff.net`
       : `${firstName.toLowerCase()}@decodoof.net`;
+  user.avatar =
+    context && context.avatar
+      ? context.avatar
+      : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
   return user;
 });
