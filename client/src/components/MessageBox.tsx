@@ -6,7 +6,6 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import { LoadingPage } from "./LoadingPage";
 import { MyMessages } from "../graphql/MyMessages";
 import { OnMessageSent } from "../graphql/OnMessageSent";
-import { group } from "console";
 
 const MESSAGES_QUERY = gql`
   query MyMessages($groupId: ID!) {
@@ -100,7 +99,7 @@ const sendMessage = (
   setMessageSent("");
 
   // TODO: probably change this to a splay tree or something?
-  let contacts: any[] = props.contacts;
+  const contacts: any[] = props.contacts;
   let index = -1;
   for (let i = 0; i < contacts.length; i++) {
     if (contacts[i].id === props.id) {
@@ -186,11 +185,6 @@ const MessageBox = (props: any) => {
   if (!data) {
     return <LoadingPage />;
   }
-
-  // if none of the contacts have been selected, render an empty div (no messages)
-  // if (props.name === "" || props.id === "INVALID") {
-  //   return <div />;
-  // }
 
   const maps = mapMessages(data, props.myId);
   const chatBubbles = maps.map((obj: any, i: number = 0) => (
