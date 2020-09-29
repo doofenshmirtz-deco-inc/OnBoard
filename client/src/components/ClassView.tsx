@@ -82,11 +82,7 @@ let tabPages: MenuBarComponent[] = [
   {
     name: "Announcements",
     path: "announcements",
-    content: (
-      <Announcements
-        isDashboard={false}
-      />
-    ),
+    content: <Announcements isDashboard={false} />,
   },
   {
     name: "Learning Resources",

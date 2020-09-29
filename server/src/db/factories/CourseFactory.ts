@@ -55,10 +55,32 @@ define(Course, async (faker, context?: CourseFactoryContext) => {
   course.coursePage = page;
 
   const text = new TextNode();
-  text.title = `Welcome to ${code}`;
+  text.title = `Welcome to ${subject}${code}`;
   text.text = "This will be a fun course";
   text.parent = Promise.resolve(page);
   await text.save();
+
+  const folder = new FolderNode();
+  folder.title = `Week 1`;
+  folder.parent = Promise.resolve(page);
+  await folder.save();
+
+  const text2 = new TextNode();
+  text2.title = `Another text node`;
+  text2.text = "This will still be a fun course";
+  text2.parent = Promise.resolve(page);
+  await text2.save();
+
+  const subfolder = new FolderNode();
+  subfolder.title = `Tutorial`;
+  subfolder.parent = Promise.resolve(folder);
+  await subfolder.save();
+
+  const folderText = new TextNode();
+  folderText.title = "Week 1 content";
+  folderText.text = "Get excited for the first week of summer";
+  folderText.parent = Promise.resolve(folder);
+  await folderText.save();
 
   const authors = context?.groups?.[CourseRole.Coordinator];
 
