@@ -1,29 +1,27 @@
 import React from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles"
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import ImageIcon from '@material-ui/icons/Image';
-import FolderIcon from '@material-ui/icons/Folder';
-import DescriptionIcon from '@material-ui/icons/Description';
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Avatar from "@material-ui/core/Avatar";
+import ImageIcon from "@material-ui/icons/Image";
+import FolderIcon from "@material-ui/icons/Folder";
+import DescriptionIcon from "@material-ui/icons/Description";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: '100%',
+      width: "100%",
       maxWidth: 500,
     },
-  }),
+  })
 );
 
-export default function ResourceFolder() {
-    const classes = useStyles();
+export default function ResourceFolder(props: {courseId?: string}) {
+  const classes = useStyles();
 
-
-    
-    return (
+  return (
     <List className={classes.root}>
       <ListItem button>
         <ListItemAvatar>
@@ -39,7 +37,10 @@ export default function ResourceFolder() {
             <ImageIcon />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary="An Image" secondary="The secret sketch of the secret plan prototype 5000" />
+        <ListItemText
+          primary="An Image"
+          secondary="The secret sketch of the secret plan prototype 5000"
+        />
       </ListItem>
       <ListItem button>
         <ListItemAvatar>
@@ -47,7 +48,10 @@ export default function ResourceFolder() {
             <DescriptionIcon />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary="A Document" secondary="Here is the secret plans" />
+        <ListItemText
+          primary="A Document"
+          secondary="Here is the secret plans"
+        />
       </ListItem>
     </List>
   );

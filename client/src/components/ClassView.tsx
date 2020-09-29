@@ -3,41 +3,48 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Announcements from "./Announcements";
-import { useParams } from "react-router-dom";
 import { useQuery, gql } from "@apollo/client";
 import { GetClassInfo } from "../graphql/GetClassInfo";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import ResourceFolder from "./ResourceFolder"
+import ResourceFolder from "./ResourceFolder";
+import {
+  Switch,
+  Route,
+  Link,
+  Redirect,
+  useRouteMatch,
+  useLocation,
+  useParams,
+} from "react-router-dom";
 
 interface TabPanelProps {
   children?: React.ReactNode;
   index: any;
-  value: any;
 }
 
 interface ClassViewProps {
   classId: any;
 }
 
+interface MenuBarComponent {
+  name: any;
+  path: any;
+  content: React.ReactElement;
+}
+
 function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+  const { children, index, ...other } = props;
 
   return (
     <div
       role="tabpanel"
-      hidden={value !== index}
       id={`scrollable-auto-tabpanel-${index}`}
       aria-labelledby={`scrollable-auto-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      <Box p={3}>{children}</Box>
     </div>
   );
 }
@@ -47,6 +54,18 @@ function a11yProps(index: any) {
     id: `scrollable-auto-tab-${index}`,
     "aria-controls": `scrollable-auto-tabpanel-${index}`,
   };
+}
+
+function classNotFound() {
+  return (
+    <div>
+      <h1>Well, that didn't work</h1>
+      <p>
+        The class you were looking for was not found or you don't have access to
+        view it.
+      </p>
+    </div>
+  );
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -59,12 +78,28 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-let menuBarComponents: string[] = [
-  "Announcements",
-  "Learning Resources",
-  "Assessment",
-  "Course Staff",
-  "Course Profile (ECP)",
+let tabPages: MenuBarComponent[] = [
+  {
+    name: "Announcements",
+    path: "announcements",
+    content: (
+      <Announcements
+        isDashboard={false}
+      />
+    ),
+  },
+  {
+    name: "Learning Resources",
+    path: "resources",
+    content: <ResourceFolder />,
+  },
+  { name: "Assessment", path: "assessment", content: <p>Assessment</p> },
+  { name: "Course Staff", path: "staff", content: <p>Staff</p> },
+  {
+    name: "Course Profile (ECP)",
+    path: "profile",
+    content: <p>Course Profile (ECP)</p>,
+  },
 ];
 
 const COURSE_INFO = gql`
@@ -85,28 +120,23 @@ const COURSE_INFO = gql`
 
 export default function ClassView() {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-    setValue(newValue);
-  };
+  let { classId: courseId } = useParams<ClassViewProps>();
 
-  let { classId } = useParams<ClassViewProps>();
+  let { url } = useRouteMatch();
+  let location = useLocation();
 
-  const { loading, error, data } = useQuery<GetClassInfo>(COURSE_INFO);
+  const { loading, data } = useQuery<GetClassInfo>(COURSE_INFO);
 
   let courseData = data?.me?.courses.find(
-    (element) => element.course.id === classId
+    (element) => element.course.id === courseId
   );
 
   return !courseData ? (
     loading ? (
       <CircularProgress />
     ) : (
-      <div>
-        <h1>Well, that didn't work</h1>
-        <p>The class you were looking for was not found or you don't have access to view it.</p>
-      </div>
+      classNotFound()
     )
   ) : (
     <div className={classes.root}>
@@ -118,40 +148,45 @@ export default function ClassView() {
       </h2>
       <AppBar position="static">
         <Tabs
-          value={value}
-          onChange={handleChange}
+          value={location.pathname}
           indicatorColor="secondary"
           variant="scrollable"
           scrollButtons="auto"
           aria-label="scrollable auto tabs example"
         >
-          {menuBarComponents.map((item, index) => {
+          {tabPages.map((item, index) => {
             return (
               <Tab
                 key={index}
                 className={classes.tabs}
-                label={item}
+                label={item.name}
+                value={`${url}/${item.path}`}
+                component={Link}
+                to={`${url}/${item.path}`}
                 {...a11yProps(index)}
               />
             );
           })}
         </Tabs>
       </AppBar>
-      <TabPanel value={value} index={0}>
-        <Announcements isDashboard={false} courseId={courseData.course.id} />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <ResourceFolder />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        Item Three
-      </TabPanel>
-      <TabPanel value={value} index={3}>
-        Item Four
-      </TabPanel>
-      <TabPanel value={value} index={4}>
-        Item Five
-      </TabPanel>
+      <Switch>
+        {tabPages.map((item, index) => {
+          return (
+            <Route
+              key={index}
+              path={`${url}/${item.path}`}
+              render={() => (
+                <TabPanel index={index}>
+                  {React.cloneElement(item.content, { courseId: courseId })}
+                </TabPanel>
+              )}
+            />
+          );
+        })}
+        <Route path="/">
+          <Redirect to={`${url}/${tabPages[0].path}`} />
+        </Route>
+      </Switch>
     </div>
   );
 }
