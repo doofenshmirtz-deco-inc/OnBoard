@@ -8,8 +8,8 @@ import ContactCard from "./ContactCard";
 import Popover from "@material-ui/core/Popover";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
-import SearchIcon from '@material-ui/icons/Search';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import SearchIcon from "@material-ui/icons/Search";
+import InputAdornment from "@material-ui/core/InputAdornment";
 
 import contacts from "./Contacts.json";
 
@@ -66,9 +66,10 @@ export default function ContactList() {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon/>
+                <SearchIcon />
               </InputAdornment>
-            )}}
+            ),
+          }}
         />
         <List className={classes.contactList}>
           {Object.values(contacts).map((item) =>
@@ -93,7 +94,7 @@ export default function ContactList() {
             horizontal: "center",
           }}
         >
-          <ContactCard contact={selectedContact}/>
+          <ContactCard contact={selectedContact} />
         </Popover>
       </Container>
     </Box>

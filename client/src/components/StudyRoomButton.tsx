@@ -1,7 +1,14 @@
 import React from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import PersonIcon from '@material-ui/icons/Person';
-import {Popover, Button, ListItemIcon, ListItemText, ListItem, Typography} from '@material-ui/core';
+import PersonIcon from "@material-ui/icons/Person";
+import {
+  Popover,
+  Button,
+  ListItemIcon,
+  ListItemText,
+  ListItem,
+  Typography,
+} from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -10,24 +17,26 @@ const useStyles = makeStyles((theme: Theme) =>
       height: "10vh",
     },
     itemText: {
-      fontSize: "1.5vw"
+      fontSize: "1.5vw",
     },
     joinButton: {
       height: "85%",
       width: "20%",
-      borderRadius: "0px"
+      borderRadius: "0px",
     },
     icon: {
-      color: theme.palette.primary.main
-    }
-  }),
+      color: theme.palette.primary.main,
+    },
+  })
 );
 
 export default function StudyRoomButton(props: any) {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null
+  );
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const id = open ? "simple-popover" : undefined;
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -40,44 +49,59 @@ export default function StudyRoomButton(props: any) {
   const handleOpen = () => {
     setAnchorEl(null);
     props.handleClickOpen();
-  }
+  };
 
   return (
     <ListItem alignItems="center" divider={true} className={classes.root}>
       <ListItemIcon className={classes.icon}>
-        <PersonIcon/>
+        <PersonIcon />
         {props.room.roomSize}
       </ListItemIcon>
-      <ListItemText
-        className={classes.itemText}
-        primary={props.room.title}
-      />
-      <Button variant="contained" color="primary" onClick={handleClick} className={classes.joinButton}>
+      <ListItemText className={classes.itemText} primary={props.room.title} />
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleClick}
+        className={classes.joinButton}
+      >
         Join
       </Button>
       <Popover
         style={{
-          textAlign:"center"
-        }} 
+          textAlign: "center",
+        }}
         id={id}
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
+          vertical: "bottom",
+          horizontal: "center",
         }}
         transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
+          vertical: "top",
+          horizontal: "center",
         }}
       >
         Join This Meeting?
         <Typography>
-          <Button variant="outlined" color="primary" style={{margin: "0.5em", padding: "0.25em", textTransform: "none"}} onClick={handleOpen}> 
+          <Button
+            variant="outlined"
+            color="primary"
+            style={{
+              margin: "0.5em",
+              padding: "0.25em",
+              textTransform: "none",
+            }}
+            onClick={handleOpen}
+          >
             Yes
           </Button>
-          <Button variant="outlined" style={{"color":"red", margin: "0.5em", border: "1px solid red"}} onClick={handleClose}>
+          <Button
+            variant="outlined"
+            style={{ color: "red", margin: "0.5em", border: "1px solid red" }}
+            onClick={handleClose}
+          >
             No
           </Button>
         </Typography>

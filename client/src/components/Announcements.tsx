@@ -122,7 +122,6 @@ const renderAnnouncement = (
         fontSize: "1.1rem",
         borderTop: key != 0 && !isDashboard ? 0 : undefined,
       }}
-      onClick={() => onClickHandler(announcement.announcement.title)}
     >
       <ListItemText
         className={classes.classBody}

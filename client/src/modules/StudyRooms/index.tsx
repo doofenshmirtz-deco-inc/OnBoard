@@ -1,16 +1,16 @@
 import React from "react";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import { makeStyles, Theme } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
 import Recents from "./recents";
 import Explore from "./explore";
-import openRooms from '../../components/openRooms.json'
-import classrooms from '../../components/classrooms.json'
-import MeetingRoom from '../../components/MeetingRoom'
+import openRooms from "../../components/openRooms.json";
+import classrooms from "../../components/classrooms.json";
+import MeetingRoom from "../../components/MeetingRoom";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -41,10 +41,9 @@ function TabPanel(props: TabPanelProps) {
 function a11yProps(index: any) {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 }
-
 
 const StudyRooms = () => {
   const useStyles = makeStyles((theme: Theme) => ({
@@ -56,10 +55,9 @@ const StudyRooms = () => {
       textTransform: "none",
     },
   }));
-  
-  
+
   const [value, setValue] = React.useState(0);
-  
+
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
@@ -82,26 +80,41 @@ const StudyRooms = () => {
     <div className={classes.root}>
       <h1>Messaging</h1>
       <AppBar position="static">
-        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example" variant="fullWidth">
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="simple tabs example"
+          variant="fullWidth"
+        >
           <Tab className={classes.tabs} label="Recents" {...a11yProps(0)} />
           <Tab className={classes.tabs} label="Explore" {...a11yProps(1)} />
           <Tab className={classes.tabs} label="Classes" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <Recents/>
+        <Recents />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Explore handleClose={handleClose} handleClickOpen={handleClickOpen} openRooms={openRooms} exploreTab={true} label={"Search For Open Meeting Rooms"}/>
+        <Explore
+          handleClose={handleClose}
+          handleClickOpen={handleClickOpen}
+          openRooms={openRooms}
+          exploreTab={true}
+          label={"Search For Open Meeting Rooms"}
+        />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Explore handleClose={handleClose} handleClickOpen={handleClickOpen} openRooms={classrooms} label={"Search For Class Meeting Rooms"}/>
+        <Explore
+          handleClose={handleClose}
+          handleClickOpen={handleClickOpen}
+          openRooms={classrooms}
+          label={"Search For Class Meeting Rooms"}
+        />
       </TabPanel>
-      <MeetingRoom open={open} handleClose={handleClose} title={meetingName}/>
+      <MeetingRoom open={open} handleClose={handleClose} title={meetingName} />
     </div>
   );
 };
-
 
 export default {
   routeProps: {

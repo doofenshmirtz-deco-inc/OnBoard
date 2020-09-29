@@ -16,8 +16,8 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: red[500],
     },
     cardBackground: {
-      backgroundColor: "transparent"
-    }
+      backgroundColor: "transparent",
+    },
   })
 );
 
@@ -35,25 +35,25 @@ export default function ContactCard(props: any) {
           <MessageIcon />
         </IconButton>
       </CardActions>
-    )
-  } 
+    );
+  }
 
   return (
     <Card className={classes.cardBackground}>
-        <CardHeader
-          avatar={
-            <Avatar
-              aria-label="contact"
-              className={classes.avatar}
-              src={props.contact.avatar}
-            >
-              {props.contact.name[0]}
-            </Avatar>
-          }
-          action={action}
-          title={props.contact.name}
-          subheader={props.contact.role}
-        />
+      <CardHeader
+        avatar={
+          <Avatar
+            aria-label="contact"
+            className={classes.avatar}
+            src={props.contact.avatar}
+          >
+            {props.contact.name[0]}
+          </Avatar>
+        }
+        action={action}
+        title={props.contact.name}
+        subheader={props.contact.role}
+      />
       {buttons}
     </Card>
   );

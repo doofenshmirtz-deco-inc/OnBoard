@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import TextField from "@material-ui/core/TextField";
 import StudyRoomButton from "../../components/StudyRoomButton";
-import SearchIcon from '@material-ui/icons/Search';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import AddIcon from '@material-ui/icons/Add';
-import Button from '@material-ui/core/Button';
-
+import SearchIcon from "@material-ui/icons/Search";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import AddIcon from "@material-ui/icons/Add";
+import Button from "@material-ui/core/Button";
 
 const Explore = (props: any) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -17,26 +16,26 @@ const Explore = (props: any) => {
       display: "flex",
       flexDirection: "column",
     },
-    searchBar : {
+    searchBar: {
       width: "70%",
       fontSize: "1.75rem",
       alignContent: "center",
-      marginRight: "10%"
+      marginRight: "10%",
     },
     button: {
       margin: theme.spacing(1),
-      width: "16%"
+      width: "16%",
     },
   }));
   const classes = useStyles();
-  var addButton:any = useState;
+  var addButton: any = useState;
   if (props.exploreTab) {
     addButton = (
       <Button
-      variant="contained"
-      color="secondary"
-      className={classes.button}
-      startIcon={<AddIcon/>}
+        variant="contained"
+        color="secondary"
+        className={classes.button}
+        startIcon={<AddIcon />}
       >
         Create Study Room
       </Button>
@@ -48,7 +47,7 @@ const Explore = (props: any) => {
       <div>
         <TextField
           id="contacts-search"
-          style={{fontSize: "1.2rem", marginBottom: "1em"}}
+          style={{ fontSize: "1.2rem", marginBottom: "1em" }}
           label={props.label}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -56,17 +55,20 @@ const Explore = (props: any) => {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon/>
+                <SearchIcon />
               </InputAdornment>
             ),
           }}
-          />
-          {addButton}
+        />
+        {addButton}
       </div>
 
-      {(props.openRooms).map((item:any) =>
+      {props.openRooms.map((item: any) =>
         item.title.toLowerCase().includes(searchTerm.toLowerCase()) ? (
-          <StudyRoomButton handleClickOpen={() => props.handleClickOpen(item.title)} room={item}/>
+          <StudyRoomButton
+            handleClickOpen={() => props.handleClickOpen(item.title)}
+            room={item}
+          />
         ) : null
       )}
     </List>
