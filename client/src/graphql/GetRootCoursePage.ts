@@ -26,10 +26,7 @@ export interface GetRootCoursePage_course_coursePage_children_FolderNode {
   title: string;
 }
 
-export type GetRootCoursePage_course_coursePage_children =
-  | GetRootCoursePage_course_coursePage_children_TextNode
-  | GetRootCoursePage_course_coursePage_children_HeadingNode
-  | GetRootCoursePage_course_coursePage_children_FolderNode;
+export type GetRootCoursePage_course_coursePage_children = GetRootCoursePage_course_coursePage_children_TextNode | GetRootCoursePage_course_coursePage_children_HeadingNode | GetRootCoursePage_course_coursePage_children_FolderNode;
 
 export interface GetRootCoursePage_course_coursePage {
   __typename: "FolderNode";

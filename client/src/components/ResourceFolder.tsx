@@ -15,7 +15,9 @@ import {
   GetRootCoursePage_course_coursePage_children_FolderNode,
   GetRootCoursePage_course_coursePage_children_TextNode,
 } from "../graphql/GetRootCoursePage";
+import { GetNode } from "../graphql/GetNode";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { Route, Switch, useParams, useRouteMatch } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,6 +27,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+
+interface NodeProps {
+  nodeId: any;
+}
 
 const ROOT_FOLDER = gql`
   query GetRootCoursePage($courseID: ID!) {
@@ -52,6 +58,50 @@ const ROOT_FOLDER = gql`
     }
   }
 `;
+
+const GET_NODE = gql`
+  query GetNode($nodeID: Float!) {
+    node(id: $nodeID) {
+      ... on TextNode {
+        id
+        title
+        text
+        parent {
+          id
+        }
+      }
+      ... on HeadingNode {
+        id
+        title
+        parent {
+          id
+        }
+      }
+      ... on FolderNode {
+        id
+        title
+        parent {
+          id
+        }
+        children {
+          ... on TextNode {
+            id
+            title
+            text
+          }
+          ... on HeadingNode {
+            id
+            title
+          }
+          ... on FolderNode {
+            id
+            title
+          }
+        }
+      }
+    }
+  }
+`
 
 function FolderItem(
   item: GetRootCoursePage_course_coursePage_children_FolderNode
@@ -109,28 +159,71 @@ function HeadingItem(
   );
 }
 
-export default function ResourceFolder(props: { courseId?: string }) {
-  const classes = useStyles();
-
+function RootDirectory(props: {courseId?: string}) {
   const { loading, data, error } = useQuery<GetRootCoursePage>(ROOT_FOLDER, {
     variables: { courseID: props.courseId },
   });
 
   return (
+    <>
+    {data?.course.coursePage.children.map((item, index) => {
+      if (item.__typename === "TextNode") {
+        return TextItem(item);
+      } else if (item.__typename === "HeadingNode") {
+        return HeadingItem(item);
+      } else if (item.__typename === "FolderNode") {
+        return FolderItem(item);
+      }
+    })
+  }
+    </>
+  );
+}
+
+// This is so jank it's not funny, figure this out.
+function NodeDirectory(props: {courseId?: string, nodeId?: string}) {
+  let { nodeId } = useParams<NodeProps>();
+
+  const { loading, data, error } = useQuery<GetNode>(GET_NODE, {
+    variables: { nodeID: props.nodeId ? parseInt(props.nodeId) : parseInt(nodeId) },
+  });
+
+  if (data?.node?.__typename === "TextNode") {
+    return <>{<NodeDirectory nodeId={data?.node?.parent?.id}/>}</>;
+  } else if (data?.node?.__typename === "HeadingNode") {
+    return <>{HeadingItem(data.node)}</>;
+  } else if (data?.node?.__typename === "FolderNode") {
+    // return <>{FolderItem(data.node)}</>;
+    return <>{data?.node?.children.map((item, index) => {
+      if (item.__typename === "TextNode") {
+        return TextItem(item);
+      } else if (item.__typename === "HeadingNode") {
+        return HeadingItem(item);
+      } else if (item.__typename === "FolderNode") {
+        return FolderItem(item);
+      }
+    })
+    }</>
+  }
+  return <p>Nothing here</p>;
+}
+
+export default function ResourceFolder(props: { courseId?: string }) {
+  const classes = useStyles();
+
+  let { url } = useRouteMatch();
+
+  return (
     <List className={classes.root}>
-      {loading ? (
-        <CircularProgress />
-      ) : (
-        data?.course.coursePage.children.map((item, index) => {
-          if (item.__typename === "TextNode") {
-            return TextItem(item);
-          } else if (item.__typename === "HeadingNode") {
-            return HeadingItem(item);
-          } else if (item.__typename === "FolderNode") {
-            return FolderItem(item);
-          }
-        })
-      )}
+      <Switch>
+      <Route path={`${url}/:nodeId`}>
+        <NodeDirectory {...props}/>
+      </Route>
+      <Route path="/">
+        <RootDirectory {...props}/>
+      </Route>
+      </Switch>
+        
     </List>
   );
 }
