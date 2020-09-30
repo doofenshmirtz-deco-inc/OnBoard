@@ -3,6 +3,8 @@ set -x
 
 cd "$(dirname "$0")"/..
 
+docker system prune -f
+
 docker-compose down -v
 
 cd server

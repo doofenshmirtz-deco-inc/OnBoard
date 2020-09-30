@@ -9,6 +9,7 @@ services:
       - "5000:5000"
     networks:
       - onboard-network
+      # - meet.jitsi
     volumes:
       - client-build:/usr/src/client/build
   onboard-client:
@@ -37,8 +38,6 @@ services:
     networks:
       - onboard-network
       - meet.jitsi
-    external_links:
-      - onboard-server:onboard-server-x
 
 networks:
   onboard-network:
