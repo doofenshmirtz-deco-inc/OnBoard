@@ -76,6 +76,8 @@ export default class TestDataSeeder implements Seeder {
     const perry = await factory(User)({
       uid: "perry",
       name: "Perry the Platypus",
+      avatar:
+        "https://vignette.wikia.nocookie.net/phineasandferb/images/6/66/Profile_-_Perry_the_Platypus.PNG",
     }).create();
 
     const tom = await factory(User)({
