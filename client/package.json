@@ -29,6 +29,7 @@
     "react-jitsi": "^1.0.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
+    "subscriptions-transport-ws": "^0.9.18",
     "typescript": "~3.7.2"
   },
   "scripts": {

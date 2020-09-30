@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -44,7 +44,7 @@ const GET_CLASSES = gql`
 export default function ContactList() {
   const classes = useStyles();
 
-  const { loading, error, data } = useQuery<MyClasses>(GET_CLASSES);
+  const { data } = useQuery<MyClasses>(GET_CLASSES);
 
   const classListElem =
     !data || !data.me ? (

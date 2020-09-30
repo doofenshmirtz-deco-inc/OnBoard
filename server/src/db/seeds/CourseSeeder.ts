@@ -11,15 +11,19 @@ export default class CourseSeeder implements Seeder {
       (await factory(User)().createMany(3)).map((u) => u.save())
     );
 
+    /*
     const coordinators = await factory(CourseGroup)({
       users,
     }).create();
     coordinators.save();
+	*/
 
+    /* TODO
     const courses = await factory(Course)({
       groups: {
         [CourseRole.Coordinator]: coordinators,
       },
     }).createMany(10);
+	*/
   }
 }

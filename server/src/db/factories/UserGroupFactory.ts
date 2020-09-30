@@ -16,6 +16,7 @@ type Users = {
 };
 
 define(CourseGroup, async (faker, context?: Users) => {
+  console.log("course");
   const group = new CourseGroup();
   group.setUsers(context?.users);
   return group;
