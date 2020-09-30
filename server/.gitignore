@@ -117,7 +117,12 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-.config/
+.config/.jitsi-meet-cfg/jicofo
+.config/.jitsi-meet-cfg/jvb
+.config/.jitsi-meet-cfg/prosody
+.config/.jitsi-meet-cfg/transcripts
+.config/.jitsi-meet-cfg/web/*
 !.config/.jitsi-meet-cfg/web/interface_config.js
+
 
 .npmrc
