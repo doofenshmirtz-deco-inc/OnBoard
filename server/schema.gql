@@ -19,6 +19,7 @@ type AuthToken {
 type BaseGroup {
   id: ID!
   lastActive: DateTime!
+  name: String!
   timetable: Timetable
   users: [User!]!
 }
@@ -53,6 +54,7 @@ type CourseColor {
 type CourseGroup {
   id: ID!
   lastActive: DateTime!
+  name: String!
   timetable: Timetable
   users: [User!]!
 }
