@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
 } from "typeorm";
-import { ObjectType, ID, Field, Int } from "type-graphql";
+import { ObjectType, ID, Field, Int, ClassType } from "type-graphql";
 import { User } from "./User";
 import { BaseGroup, CourseGroup, ClassGroup } from "./UserGroup";
 import { CourseGroupPair } from "./CourseGroupPair";

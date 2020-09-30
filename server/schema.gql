@@ -18,13 +18,28 @@ type AuthToken {
 
 type BaseGroup {
   id: ID!
+  lastActive: DateTime!
+  name: String!
+  timetable: Timetable
+  users: [User!]!
+}
+
+type ClassGroup {
+  course: Course!
+  id: ID!
+  lastActive: DateTime!
+  name: String!
+  timetable: Timetable
+  type: String!
   users: [User!]!
 }
 
 type Course {
   announcements: [Announcement!]
+  assesmentPage: FolderNode!
   code: String!
   courseLevel: String!
+  coursePage: FolderNode!
   id: ID!
   name: String!
   semester: Semesters!
@@ -34,6 +49,14 @@ type Course {
 type CourseColor {
   colour: String!
   course: Course!
+}
+
+type CourseGroup {
+  id: ID!
+  lastActive: DateTime!
+  name: String!
+  timetable: Timetable
+  users: [User!]!
 }
 
 enum CourseRole {
@@ -47,6 +70,29 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 """
 scalar DateTime
 
+type DMGroup {
+  id: ID!
+  lastActive: DateTime!
+  name: String!
+  timetable: Timetable
+  users: [User!]!
+}
+
+type FolderNode {
+  children: [Node!]!
+  id: ID!
+  parent: FolderNode
+  title: String!
+}
+
+union Group = ClassGroup | CourseGroup | DMGroup | StudyGroup
+
+type HeadingNode {
+  id: ID!
+  parent: FolderNode
+  title: String!
+}
+
 type Message {
   createdAt: DateTime!
   group: BaseGroup!
@@ -56,7 +102,7 @@ type Message {
 }
 
 input MessageInput {
-  groupID: Int!
+  groupID: ID!
   text: String!
 }
 
@@ -65,12 +111,16 @@ type Mutation {
   singleUpload(file: Upload!): String!
 }
 
+union Node = FolderNode | HeadingNode | TextNode
+
 type Query {
+  course(courseID: ID!): Course!
   courses(limit: Int = 10, order: String, orderBy: String, skip: Int = 0): [Course!]!
   getCustomToken(testUID: String = "test-uid"): AuthToken!
-  getMessages(groupID: Float!): [Message!]!
+  getMessages(groupID: ID!): [Message!]!
   getTestingToken(testUID: String = "test-uid"): AuthToken!
   me: User
+  node(id: Float!): Node
   user(id: String!): User
   userGroup(id: String!): BaseGroup
   userGroups(limit: Int = 10, order: String, orderBy: String, skip: Int = 0): [BaseGroup!]!
@@ -83,17 +133,40 @@ enum Semesters {
   Two
 }
 
+type StudyGroup {
+  id: ID!
+  lastActive: DateTime!
+  name: String!
+  timetable: Timetable
+  users: [User!]!
+}
+
 type Subscription {
-  newMessages(groupID: Float!): Message!
+  newMessages(uid: ID!): Message!
+}
+
+type TextNode {
+  id: ID!
+  parent: FolderNode
+  text: String!
+  title: String!
+}
+
+type Timetable {
+  duration: Float!
+  id: ID!
+  name: String!
+  times: [DateTime!]!
 }
 
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
 
 type User {
+  avatar: String!
   courses(role: CourseRole): [CourseColor!]!
   email: String!
-  groups: [BaseGroup!]!
+  groups(role: CourseRole): [Group!]!
   id: ID!
   name: String!
 }

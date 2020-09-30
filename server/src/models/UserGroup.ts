@@ -11,13 +11,24 @@ import {
   OneToOne,
   TableInheritance,
   ChildEntity,
+  BeforeInsert,
   Generated,
 } from "typeorm";
-import { ObjectType, ID, Field, Int, registerEnumType } from "type-graphql";
+import {
+  ObjectType,
+  ID,
+  Field,
+  Int,
+  registerEnumType,
+  createUnionType,
+  FieldResolver,
+  Ctx,
+} from "type-graphql";
 import { User } from "./User";
 import { Timetable } from "./Timetable";
 import { Course } from "./Course";
 import { CourseGroupPair, CourseRole } from "./CourseGroupPair";
+import { Context } from "../middleware/Context";
 
 export enum ClassType {
   Lecture = "Lecture",
@@ -61,6 +72,14 @@ export abstract class BaseGroup extends BaseEntity {
   }
 
   @Column()
+  @Field()
+  lastActive: Date;
+
+  @BeforeInsert()
+  updateDate() {
+    this.lastActive = new Date();
+  }
+
   @Generated("uuid")
   meetingPassword: string;
 }
@@ -68,8 +87,9 @@ export abstract class BaseGroup extends BaseEntity {
 @ChildEntity(GroupType.Course)
 @ObjectType()
 export class CourseGroup extends BaseGroup {
-  @OneToMany(() => CourseGroupPair, (p) => p.group)
-  coursePairs: CourseGroupPair[];
+  // @OneToOne(() => CourseGroupPair, (p) => p.group, { eager: true })
+  @OneToOne(() => CourseGroupPair, (p) => p.group)
+  coursePair: Promise<CourseGroupPair>;
 }
 
 @ChildEntity(GroupType.Class)
@@ -86,6 +106,10 @@ export class ClassGroup extends BaseGroup {
   @ManyToOne(() => Timetable, (t) => t.classes, { nullable: true })
   @Field(() => Timetable, { nullable: true })
   timetable?: Promise<Timetable>;
+
+  @ManyToOne(() => Course)
+  @Field(() => Course)
+  course: Course;
 }
 
 @ChildEntity(GroupType.Study)
@@ -99,3 +123,8 @@ export class StudyGroup extends BaseGroup {
 @ChildEntity(GroupType.DirectMessage)
 @ObjectType()
 export class DMGroup extends BaseGroup {}
+
+export const Group = createUnionType({
+  name: "Group",
+  types: () => [CourseGroup, ClassGroup, StudyGroup, DMGroup],
+});

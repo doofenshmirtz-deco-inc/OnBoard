@@ -24,6 +24,7 @@ import { CourseGroup } from "./UserGroup";
 import { Announcement } from "./Announcement";
 import { User } from "./User";
 import { CourseGroupPair, CourseRole } from "./CourseGroupPair";
+import { FolderNode } from "./CoursePageNode";
 
 export enum Semesters {
   One = "Semester One",
@@ -81,6 +82,16 @@ export class Course extends BaseEntity {
   @OneToMany(() => CourseGroupPair, (p) => p.course)
   groupPairs: Promise<CourseGroupPair[]>;
 
+  @OneToOne(() => FolderNode, { eager: true })
+  @JoinColumn()
+  @Field(() => FolderNode)
+  coursePage: FolderNode;
+
+  @OneToOne(() => FolderNode, { eager: true })
+  @JoinColumn()
+  @Field(() => FolderNode)
+  assesmentPage: FolderNode;
+
   // TODO validation that user groups are disjoint
 
   @OneToMany(() => Announcement, (a) => a.course)
@@ -108,16 +119,4 @@ export class CourseColor {
 
   @Field()
   colour: string;
-}
-
-@ArgsType()
-export class CoursePK {
-  @Field(() => String)
-  id: string;
-
-  @Field(() => Int)
-  year: number;
-
-  @Field(() => Semesters)
-  semester: Semesters;
 }

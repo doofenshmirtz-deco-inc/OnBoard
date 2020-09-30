@@ -14,7 +14,7 @@ import { User } from "../models/User";
 import { PaginationArgs, getOrder } from "./Types";
 import { isAuth } from "../middleware/isAuth";
 import { Context } from "../middleware/Context";
-import { BaseGroup, GroupType, CourseGroup } from "../models/UserGroup";
+import { BaseGroup, GroupType, CourseGroup, Group } from "../models/UserGroup";
 import { Course, CourseColor, CourseColours } from "../models/Course";
 import { CourseRole, CourseGroupPair } from "../models/CourseGroupPair";
 
@@ -48,13 +48,15 @@ export class UserResolver {
     });
   }
 
-  // @FieldResolver((type) => [BaseGroup])
-  // async groupsByType(
-  //   @Root() user: User,
-  //   @Arg("type", () => GroupType, { nullable: true }) type: GroupType | null
-  // ) {
-  //   return (await user.groups).filter((x) => type == null || x.groupType == type);
-  // }
+  @FieldResolver((type) => [Group])
+  async groups(
+    @Root() user: User,
+    @Arg("role", () => CourseRole, { nullable: true }) role: CourseRole | null
+  ) {
+    return (await user.groups).sort(
+      (x, y) => y.lastActive.getTime() - x.lastActive.getTime()
+    );
+  }
 
   @FieldResolver(() => [CourseColor])
   async courses(

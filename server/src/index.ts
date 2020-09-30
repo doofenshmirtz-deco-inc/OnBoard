@@ -14,6 +14,10 @@ import { execute, subscribe, GraphQLScalarType } from "graphql";
 import { createServer } from "http";
 import { AppPubSub } from "./resolvers/AppPubSub";
 import {
+  FolderNodeResolver,
+  NodeResolver,
+} from "./resolvers/CoursePageResolver";
+import {
   UploadResolver,
   UPLOAD_URL_ROOT,
   UPLOAD_PATH_ROOT,
@@ -51,7 +55,10 @@ async function main() {
       CourseResolver,
       UserGroupResolver,
       MessageResolver,
+      FolderNodeResolver,
       UploadResolver,
+      FolderNodeResolver,
+      NodeResolver,
     ],
     emitSchemaFile: true,
     pubSub: AppPubSub,

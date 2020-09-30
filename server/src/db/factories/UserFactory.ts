@@ -1,16 +1,33 @@
-import Faker from "faker";
 import { define, factory } from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import { User } from "../../models/User";
 
-define(User, (faker: typeof Faker) => {
+define(User, (
+  faker,
+  context?: {
+    uid: string;
+    name: string;
+    email: string;
+    avatar: string;
+  }
+) => {
   const gender = faker.random.number(1);
   const firstName = faker.name.firstName(gender);
   const lastName = faker.name.lastName(gender);
 
   const user = new User();
-  user.id = faker.random.uuid();
-  user.name = `${firstName} ${lastName}`;
-  user.email = `${firstName}@decodoof.net`;
+  user.id = context && context.uid ? context.uid : faker.random.uuid();
+  user.name =
+    context && context.name ? context.name : `${firstName} ${lastName}`;
+  user.email =
+    context && context.email
+      ? context.email
+      : context && context.name
+      ? `${context.name.split(" ")[0].toLowerCase()}@decodoff.net`
+      : `${firstName.toLowerCase()}@decodoof.net`;
+  user.avatar =
+    context && context.avatar
+      ? context.avatar
+      : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
   return user;
 });

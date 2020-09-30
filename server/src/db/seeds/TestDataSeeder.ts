@@ -6,51 +6,32 @@ import {
 import { Connection } from "typeorm";
 import { User } from "../../models/User";
 import { Semesters, CourseLevel, Course } from "../../models/Course";
-import { BaseGroup, GroupType, CourseGroup } from "../../models/UserGroup";
+import {
+  BaseGroup,
+  GroupType,
+  CourseGroup,
+  DMGroup,
+  ClassGroup,
+  ClassType,
+} from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
-import { CourseRole } from "../../models/CourseGroupPair";
+import { CourseRole, CourseGroupPair } from "../../models/CourseGroupPair";
+import { Timetable } from "../../models/Timetable";
+import { Message } from "../../models/Message";
 import Faker from "faker";
 
-// const generateEmptyGroup = (context?: {type: GroupType}) =>
-//   BaseGroup.create({ users: Promise.resolve([]), type: context?.type ?? GroupType.CourseStudents }).save();
-
-/**
- * Generates a user for test (e.g. the user is enrolled in a course)
- */
-const generateTestUser = async (
-  context:
-    | {
-        uid: string;
-        name: string;
-        email: string;
-      }
-    | undefined
+const addGroups = async (
+  groups: {
+    [role: string]: User[];
+  },
+  course: Course
 ) => {
-  if (!context) throw new Error("TestUserFactory requires context");
-
-  return User.create({
-    id: context.uid,
-    name: context.name,
-    email: context.email,
-  }).save();
-};
-
-const generateTestCourse = async (
-  context: { code: string; name: string; semester: Semesters; year: number },
-  userContext: { users: User[]; role: CourseRole }
-) => {
-  const course = await Course.create({
-    ...context,
-    courseLevel: CourseLevel.Undergrad,
-  }).save();
-
-  if (userContext?.role)
-    await course.addGroup(
-      userContext?.role,
-      await factory(CourseGroup)({ users: userContext.users }).create()
-    );
-
-  return course;
+  if (groups) {
+    for (const [role, users] of Object.entries(groups)) {
+      const group = await factory(CourseGroup)({ users }).create();
+      course.addGroup(role as CourseRole, group);
+    }
+  }
 };
 
 const generateTestAnnouncements = async (
@@ -71,107 +52,152 @@ const generateTestAnnouncements = async (
   }
 };
 
+const generateDMs = async (users: User[]) => {
+  const pairs = ([] as User[][]).concat(
+    ...users.map((u1, i1) => users.slice(i1 + 1).map((u2) => [u1, u2]))
+  );
+
+  const groups = pairs.map(
+    async (pair) => await factory(DMGroup)({ users: pair }).create()
+  );
+
+  //groups.forEach((group) => factory(Message)({ group: group }).createMany(1));
+};
+
+const generateTestClass = async (
+  context: { name: string; type: ClassType; course: Course },
+  userContext: { users: User[] }
+) => {
+  const classGroup = ClassGroup.create({
+    name: context.name,
+    type: context.type,
+    course: context.course,
+  }).save();
+
+  (await classGroup).setUsers(userContext.users);
+
+  return await classGroup;
+};
+
+const generateTestTimetable = async (context: {
+  classGroup: ClassGroup;
+  name: string;
+  times: Date[];
+  duration: number;
+}) => {
+  const timetable = await Timetable.create({
+    name: context.name,
+    times: context.times,
+    duration: context.duration,
+    classes: Promise.resolve(context.classGroup),
+  }).save();
+
+  context.classGroup.timetable = Promise.resolve(timetable);
+  await context.classGroup.save();
+
+  return timetable;
+};
+
 export default class TestDataSeeder implements Seeder {
   public async run(factory: Factory, connection: Connection): Promise<void> {
-    const heinz = await generateTestUser({
-      uid: "doof-uid",
+    const heinz = await factory(User)({
+      uid: "doof",
       name: "Heinz Doofenshmirtz",
       email: "heinz@evilinc.com",
-    });
+      avatar:
+        "https://vignette.wikia.nocookie.net/disney/images/4/41/DoofenshmirtzFull.jpg/revision/latest?cb=20190819173522",
+    }).create();
 
-    const perry = await generateTestUser({
-      uid: "perry-uid",
-      name: "Perry The Platypus",
-      email: "perry@evilinc.com",
-    });
+    const perry = await factory(User)({
+      uid: "perry",
+      name: "Perry the Platypus",
+    }).create();
 
-    await generateTestCourse(
+    const tom = await factory(User)({
+      uid: "tom",
+      name: "Tom Cranitch",
+    }).create();
+
+    const kenton = await factory(User)({
+      uid: "kenton",
+      name: "Kenton Lam",
+    }).create();
+
+    const matt = await factory(User)({
+      uid: "matt",
+      name: "Matthew Low",
+    }).create();
+
+    const james = await factory(User)({
+      uid: "james",
+      name: "James Dearlove",
+    }).create();
+
+    const sanni = await factory(User)({
+      uid: "sanni",
+      name: "Sanni Bosamia",
+    }).create();
+
+    const nat = await factory(User)({
+      uid: "nat",
+      name: "Natalie Hong",
+    }).create();
+
+    generateDMs([heinz, perry, tom, kenton, matt, james, sanni, nat]);
+
+    const secr = await factory(Course)({
+      code: "SECR1000",
+      name: "Protecting Your Schemes from Secret Agents",
+      semester: Semesters.One,
+      level: CourseLevel.Undergrad,
+      year: 2018,
+    }).create();
+    addGroups({ [CourseRole.Coordinator]: [heinz] }, secr);
+
+    const phfe = await factory(Course)({
+      code: "PHFE2001",
+      name: "Finding Ways to Spend Your Summer Vacation",
+      semester: Semesters.Two,
+      level: CourseLevel.Undergrad,
+      year: 2019,
+    }).create();
+    addGroups({ [CourseRole.Student]: [heinz, perry] }, phfe);
+
+    const evil = await factory(Course)({
+      code: "EVIL3079",
+      name: "Advanced Evil Jingles",
+      semester: Semesters.One,
+      level: CourseLevel.Undergrad,
+      year: 2018,
+    }).create();
+    addGroups({ [CourseRole.Student]: [heinz] }, evil);
+
+    const edis = await factory(Course)({
+      code: "EDIS3801",
+      name: "Evil Design Inventing Studio 3 - Buidld",
+      semester: Semesters.One,
+      level: CourseLevel.Undergrad,
+      year: 2018,
+    }).create();
+    addGroups(
       {
-        code: "MATH1071",
-        name: "Protecting Your Schemes from Secret Agents",
-        semester: Semesters.One,
-        year: 2018,
+        [CourseRole.Student]: [
+          heinz,
+          perry,
+          tom,
+          kenton,
+          james,
+          sanni,
+          nat,
+          matt,
+        ],
       },
-      {
-        users: [heinz],
-        role: CourseRole.Coordinator,
-      }
-    );
-
-    const math1071 = await generateTestCourse(
-      {
-        code: "SECR1000",
-        name: "Protecting Your Schemes from Secret Agents",
-        semester: Semesters.One,
-        year: 2018,
-      },
-      {
-        users: [heinz],
-        role: CourseRole.Coordinator,
-      }
-    );
-
-    const csse2310 = await generateTestCourse(
-      {
-        code: "PHFE2001",
-        name: "Finding Ways to Spend Your Summer Vacation",
-        semester: Semesters.Two,
-        year: 2019,
-      },
-      {
-        users: [heinz, perry],
-        role: CourseRole.Student,
-      }
-    );
-
-    const jingle = await generateTestCourse(
-      {
-        code: "EVIL3079",
-        name: "Advanced Evil Jingles",
-        semester: Semesters.Two,
-        year: 2019,
-      },
-      {
-        users: [heinz, perry],
-        role: CourseRole.Student,
-      }
-    );
-
-    await generateTestCourse(
-      {
-        code: "EDIS3801",
-        name: "Evil Design Inventing Studio 3 - Build",
-        semester: Semesters.Two,
-        year: 2019,
-      },
-      {
-        users: [heinz],
-        role: CourseRole.Student,
-      }
-    );
-
-    const bad = await generateTestUser({
-      uid: "bad-uid",
-      name: "Bad User",
-      email: "bad@bad.bad",
-    });
-
-    const badCourse = await generateTestCourse(
-      {
-        code: "Bad Course",
-        name: "A really bad course",
-        semester: Semesters.One,
-        year: 2018,
-      },
-      {
-        users: [bad],
-        role: CourseRole.Student,
-      }
+      edis
     );
 
     await generateTestAnnouncements(
       {
-        course: math1071,
+        course: secr,
         author: heinz,
       },
       [
@@ -182,7 +208,7 @@ export default class TestDataSeeder implements Seeder {
 
     await generateTestAnnouncements(
       {
-        course: csse2310,
+        course: phfe,
         author: heinz,
       },
       [
@@ -191,9 +217,10 @@ export default class TestDataSeeder implements Seeder {
       ]
     );
 
+    /* TODO: for some reason this doesnt work????
     await generateTestAnnouncements(
       {
-        course: jingle,
+        course: evil,
         author: heinz,
       },
       [
@@ -201,5 +228,42 @@ export default class TestDataSeeder implements Seeder {
         "Doofenshmirtz Evil Dirigible It's my awesome blimp! Doofenshmirtz Evil Incorparated! I don't wanna sing anymore! So we're through!",
       ]
     );
+    */
+
+    const classGroup = await generateTestClass(
+      {
+        name: "Bruh",
+        type: ClassType.Lecture,
+        course: secr,
+      },
+      {
+        users: [heinz],
+      }
+    );
+
+    const classGroup2 = await generateTestClass(
+      {
+        name: "Bruh2",
+        type: ClassType.Lecture,
+        course: secr,
+      },
+      {
+        users: [heinz],
+      }
+    );
+
+    const timetable = await generateTestTimetable({
+      duration: 60,
+      name: secr.name,
+      times: [new Date(Date.now()), new Date(Date.now() + 1000 * 60 * 60 * 24)],
+      classGroup: classGroup,
+    });
+
+    const timetable2 = await generateTestTimetable({
+      duration: 120,
+      name: secr.name,
+      times: [new Date(Date.now()), new Date(Date.now() + 1000 * 60 * 60 * 24)],
+      classGroup: classGroup2,
+    });
   }
 }
