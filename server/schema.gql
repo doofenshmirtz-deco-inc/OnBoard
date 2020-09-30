@@ -20,16 +20,16 @@ type BaseGroup {
   id: ID!
   lastActive: DateTime!
   name: String!
-  timetable: Timetable
   users: [User!]!
 }
 
 type ClassGroup {
   course: Course!
+  duration: Float!
   id: ID!
   lastActive: DateTime!
   name: String!
-  timetable: Timetable
+  times: [DateTime!]!
   type: String!
   users: [User!]!
 }
@@ -55,7 +55,6 @@ type CourseGroup {
   id: ID!
   lastActive: DateTime!
   name: String!
-  timetable: Timetable
   users: [User!]!
 }
 
@@ -74,7 +73,6 @@ type DMGroup {
   id: ID!
   lastActive: DateTime!
   name: String!
-  timetable: Timetable
   users: [User!]!
 }
 
@@ -137,7 +135,6 @@ type StudyGroup {
   id: ID!
   lastActive: DateTime!
   name: String!
-  timetable: Timetable
   users: [User!]!
 }
 
@@ -150,13 +147,6 @@ type TextNode {
   parent: FolderNode
   text: String!
   title: String!
-}
-
-type Timetable {
-  duration: Float!
-  id: ID!
-  name: String!
-  times: [DateTime!]!
 }
 
 """The `Upload` scalar type represents a file upload."""

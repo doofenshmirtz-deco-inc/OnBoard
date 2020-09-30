@@ -23,12 +23,9 @@ const GET_CALENDAR = gql`
         ... on ClassGroup {
           id
           name
-          timetable {
-            id
-            name
-            times
-            duration
-          }
+          times
+          duration
+          type
         }
       }
     }
@@ -50,9 +47,12 @@ export default function MyCal() {
       (e) => e.__typename == "ClassGroup"
     ) as MyCalendar_me_groups_ClassGroup[] | null;
 
-    let timetable = calendar
-      ?.map((e) => e.timetable)
-      .map((e) => [e?.times, e?.duration, e?.name]);
+    let timetable = calendar?.map((e) => [
+      e?.times,
+      e?.duration,
+      e?.name,
+      e?.type,
+    ]);
 
     let events = [] as any[];
 
@@ -60,13 +60,14 @@ export default function MyCal() {
       let times = e[0] as Array<String>;
       let duration = e[1];
       let title = e[2];
+      let type = e[3];
       times?.forEach((f) =>
         events.push({
           start: moment(f as string).toDate(),
           end: moment(f as string)
             .add(duration as number, "minutes")
             .toDate(),
-          title: title,
+          title: `${type}: ${title}`,
         })
       );
     });
