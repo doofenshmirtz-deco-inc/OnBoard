@@ -106,6 +106,10 @@ export class ClassGroup extends BaseGroup {
   @ManyToOne(() => Timetable, (t) => t.classes, { nullable: true })
   @Field(() => Timetable, { nullable: true })
   timetable?: Promise<Timetable>;
+
+  @ManyToOne(() => Course)
+  @Field(() => Course)
+  course: Course;
 }
 
 @ChildEntity(GroupType.Study)
