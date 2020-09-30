@@ -118,6 +118,6 @@ dist
 .pnp.*
 
 .config/
-!.confg/.jitsi-meet-cfg/web/interface_config.js
+!.config/.jitsi-meet-cfg/web/interface_config.js
 
 .npmrc

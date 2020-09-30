@@ -11,9 +11,13 @@ import {
   GroupType,
   CourseGroup,
   DMGroup,
+  ClassGroup,
+  ClassType,
 } from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
 import { CourseRole, CourseGroupPair } from "../../models/CourseGroupPair";
+import Faker from "faker";
+import { Timetable } from "../../models/Timetable";
 import { Message } from "../../models/Message";
 import Faker from "faker";
 
@@ -59,6 +63,39 @@ const generateDMs = async (users: User[]) => {
   );
 
   //groups.forEach((group) => factory(Message)({ group: group }).createMany(1));
+
+ const generateTestClass = async (
+  context: { name: string; type: ClassType; course: Course },
+  userContext: { users: User[] }
+) => {
+  const classGroup = ClassGroup.create({
+    name: context.name,
+    type: context.type,
+    course: context.course,
+  }).save();
+
+  (await classGroup).setUsers(userContext.users);
+
+  return await classGroup;
+};
+
+const generateTestTimetable = async (context: {
+  classGroup: ClassGroup;
+  name: string;
+  times: Date[];
+  duration: number;
+}) => {
+  const timetable = await Timetable.create({
+    name: context.name,
+    times: context.times,
+    duration: context.duration,
+    classes: Promise.resolve(context.classGroup),
+  }).save();
+
+  context.classGroup.timetable = Promise.resolve(timetable);
+  await context.classGroup.save();
+
+  return timetable;
 };
 
 export default class TestDataSeeder implements Seeder {
@@ -193,5 +230,41 @@ export default class TestDataSeeder implements Seeder {
       ]
     );
     */
+
+    const classGroup = await generateTestClass(
+      {
+        name: "Bruh",
+        type: ClassType.Lecture,
+        course: math1071,
+      },
+      {
+        users: [heinz],
+      }
+    );
+
+    const classGroup2 = await generateTestClass(
+      {
+        name: "Bruh2",
+        type: ClassType.Lecture,
+        course: csse2310,
+      },
+      {
+        users: [heinz],
+      }
+    );
+
+    const timetable = await generateTestTimetable({
+      duration: 60,
+      name: math1071.name,
+      times: [new Date(Date.now()), new Date(Date.now() + 1000 * 60 * 60 * 24)],
+      classGroup: classGroup,
+    });
+
+    const timetable2 = await generateTestTimetable({
+      duration: 120,
+      name: csse2310.name,
+      times: [new Date(Date.now()), new Date(Date.now() + 1000 * 60 * 60 * 24)],
+      classGroup: classGroup2,
+    });
   }
 }
