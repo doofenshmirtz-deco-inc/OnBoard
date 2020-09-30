@@ -41,7 +41,7 @@ export class UserGroupResolver {
   }
 
   @FieldResolver((type) => [User])
-  @UseMiddleware(isAuth)
+  // @UseMiddleware(isAuth)
   async users(@Root() group: BaseGroup, @Ctx() ctx: Context) {
     /* TODO need to decide how to handle permissions
     const user = await User.findOne({ where: { id: ctx.payload?.uid } });
@@ -52,6 +52,7 @@ export class UserGroupResolver {
     const users = await group.users;
     return users;
   }
+
   @FieldResolver(() => String)
   async name(@Root() group: BaseGroup, @Ctx() ctx: Context) {
     if (!ctx.payload) throw new Error("User must be authenticated");
