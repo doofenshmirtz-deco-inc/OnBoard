@@ -14,4 +14,5 @@ RUN yarn
 COPY tsconfig.json ./
 COPY ./src ./src
 COPY ./public ./public
+COPY .env* ./
 RUN yarn build

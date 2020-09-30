@@ -17,6 +17,7 @@ COPY tsconfig.json ./
 COPY ormconfig.js ./
 COPY firebase-admin.json ./
 COPY ./src ./src
+COPY .env* ./
 RUN yarn build
 
 EXPOSE 5000

@@ -22,4 +22,4 @@ cat ./TOKEN.txt | docker login https://docker.pkg.github.com -u kentonlam --pass
 yarn run docker:up
 cd -
 
-docker-compose up -d
+docker-compose up -d --build
