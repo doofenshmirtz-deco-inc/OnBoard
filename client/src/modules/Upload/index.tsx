@@ -23,6 +23,7 @@ const UploadTest = () => {
 
   return (
     <div>
+      SOMETHING UPDATED HERE
       <form encType="multipart/form-data">
         <input type="file" onChange={uploadCallback} multiple={false} />
       </form>
