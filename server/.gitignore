@@ -1,5 +1,4 @@
 /uploads
-.config/.jitsi-meet-cfg
 
 # Logs
 logs
@@ -119,6 +118,6 @@ dist
 .pnp.*
 
 .config/
-!.confg/.jitsi-meet-cfg/web/interface_config.js
+!.config/.jitsi-meet-cfg/web/interface_config.js
 
 .npmrc
