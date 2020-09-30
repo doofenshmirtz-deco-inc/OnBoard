@@ -25,7 +25,6 @@ import {
   Ctx,
 } from "type-graphql";
 import { User } from "./User";
-import { Timetable } from "./Timetable";
 import { Course } from "./Course";
 import { CourseGroupPair, CourseRole } from "./CourseGroupPair";
 import { Context } from "../middleware/Context";
@@ -103,13 +102,17 @@ export class ClassGroup extends BaseGroup {
   @Field()
   type: ClassType;
 
-  @ManyToOne(() => Timetable, (t) => t.classes, { nullable: true })
-  @Field(() => Timetable, { nullable: true })
-  timetable?: Promise<Timetable>;
-
   @ManyToOne(() => Course)
   @Field(() => Course)
   course: Course;
+
+  @Column("timestamp", { array: true })
+  @Field(() => [Date])
+  times: Date[];
+
+  @Column()
+  @Field()
+  duration: number;
 }
 
 @ChildEntity(GroupType.Study)

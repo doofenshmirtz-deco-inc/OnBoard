@@ -16,7 +16,6 @@ import {
 } from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
 import { CourseRole, CourseGroupPair } from "../../models/CourseGroupPair";
-import { Timetable } from "../../models/Timetable";
 import { Message } from "../../models/Message";
 import Faker from "faker";
 
@@ -64,40 +63,6 @@ const generateDMs = async (users: User[]) => {
   //groups.forEach((group) => factory(Message)({ group: group }).createMany(1));
 };
 
-const generateTestClass = async (
-  context: { name: string; type: ClassType; course: Course },
-  userContext: { users: User[] }
-) => {
-  const classGroup = ClassGroup.create({
-    name: context.name,
-    type: context.type,
-    course: context.course,
-  }).save();
-
-  (await classGroup).setUsers(userContext.users);
-
-  return await classGroup;
-};
-
-const generateTestTimetable = async (context: {
-  classGroup: ClassGroup;
-  name: string;
-  times: Date[];
-  duration: number;
-}) => {
-  const timetable = await Timetable.create({
-    name: context.name,
-    times: context.times,
-    duration: context.duration,
-    classes: Promise.resolve(context.classGroup),
-  }).save();
-
-  context.classGroup.timetable = Promise.resolve(timetable);
-  await context.classGroup.save();
-
-  return timetable;
-};
-
 export default class TestDataSeeder implements Seeder {
   public async run(factory: Factory, connection: Connection): Promise<void> {
     const heinz = await factory(User)({
@@ -111,6 +76,8 @@ export default class TestDataSeeder implements Seeder {
     const perry = await factory(User)({
       uid: "perry",
       name: "Perry the Platypus",
+      avatar:
+        "https://vignette.wikia.nocookie.net/phineasandferb/images/6/66/Profile_-_Perry_the_Platypus.PNG",
     }).create();
 
     const tom = await factory(User)({
@@ -230,40 +197,19 @@ export default class TestDataSeeder implements Seeder {
     );
     */
 
-    const classGroup = await generateTestClass(
-      {
-        name: "Bruh",
-        type: ClassType.Lecture,
-        course: secr,
-      },
-      {
-        users: [heinz],
-      }
-    );
+    await factory(ClassGroup)({
+      name: "Bruh",
+      type: ClassType.Lecture,
+      course: secr,
+      users: [heinz],
+    }).create();
 
-    const classGroup2 = await generateTestClass(
-      {
-        name: "Bruh2",
-        type: ClassType.Lecture,
-        course: secr,
-      },
-      {
-        users: [heinz],
-      }
-    );
-
-    const timetable = await generateTestTimetable({
-      duration: 60,
-      name: secr.name,
-      times: [new Date(Date.now()), new Date(Date.now() + 1000 * 60 * 60 * 24)],
-      classGroup: classGroup,
-    });
-
-    const timetable2 = await generateTestTimetable({
+    await factory(ClassGroup)({
+      name: "Bruh2",
+      type: ClassType.Lecture,
+      course: secr,
+      users: [heinz],
       duration: 120,
-      name: secr.name,
-      times: [new Date(Date.now()), new Date(Date.now() + 1000 * 60 * 60 * 24)],
-      classGroup: classGroup2,
-    });
+    }).create();
   }
 }
