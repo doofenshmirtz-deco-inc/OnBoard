@@ -61,7 +61,7 @@ export class Message extends BaseEntity {
 
 @InputType()
 export class MessageInput extends BaseEntity {
-  @Field(() => Int)
+  @Field(() => ID)
   groupID: number;
 
   @Field()

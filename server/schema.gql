@@ -35,8 +35,10 @@ type ClassGroup {
 
 type Course {
   announcements: [Announcement!]
+  assesmentPage: FolderNode!
   code: String!
   courseLevel: String!
+  coursePage: FolderNode!
   id: ID!
   name: String!
   semester: Semesters!
@@ -51,7 +53,6 @@ type CourseColor {
 type CourseGroup {
   id: ID!
   lastActive: DateTime!
-  name: String!
   timetable: Timetable
   users: [User!]!
 }
@@ -75,7 +76,20 @@ type DMGroup {
   users: [User!]!
 }
 
+type FolderNode {
+  children: [Node!]!
+  id: ID!
+  parent: FolderNode
+  title: String!
+}
+
 union Group = ClassGroup | CourseGroup | DMGroup | StudyGroup
+
+type HeadingNode {
+  id: ID!
+  parent: FolderNode
+  title: String!
+}
 
 type Message {
   createdAt: DateTime!
@@ -86,7 +100,7 @@ type Message {
 }
 
 input MessageInput {
-  groupID: Int!
+  groupID: ID!
   text: String!
 }
 
@@ -95,10 +109,13 @@ type Mutation {
   singleUpload(file: Upload!): String!
 }
 
+union Node = FolderNode | HeadingNode | TextNode
+
 type Query {
+  course(courseID: ID!): Course!
   courses(limit: Int = 10, order: String, orderBy: String, skip: Int = 0): [Course!]!
   getCustomToken(testUID: String = "test-uid"): AuthToken!
-  getMessages(groupID: Float!): [Message!]!
+  getMessages(groupID: ID!): [Message!]!
   getTestingToken(testUID: String = "test-uid"): AuthToken!
   me: User
   user(id: String!): User
@@ -122,7 +139,14 @@ type StudyGroup {
 }
 
 type Subscription {
-  newMessages(groupID: Float!): Message!
+  newMessages(groupID: ID!): Message!
+}
+
+type TextNode {
+  id: ID!
+  parent: FolderNode
+  text: String!
+  title: String!
 }
 
 type Timetable {

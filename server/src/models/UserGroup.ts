@@ -22,11 +22,13 @@ import {
   registerEnumType,
   createUnionType,
   FieldResolver,
+  Ctx,
 } from "type-graphql";
 import { User } from "./User";
 import { Timetable } from "./Timetable";
 import { Course } from "./Course";
 import { CourseGroupPair, CourseRole } from "./CourseGroupPair";
+import { Context } from "../middleware/Context";
 
 export enum ClassType {
   Lecture = "Lecture",
@@ -85,15 +87,9 @@ export abstract class BaseGroup extends BaseEntity {
 @ChildEntity(GroupType.Course)
 @ObjectType()
 export class CourseGroup extends BaseGroup {
-  @OneToOne(() => CourseGroupPair, (p) => p.group, { eager: true })
-  coursePairs: CourseGroupPair;
-
-  @Field(() => String)
-  name(): string {
-    // TODO
-    return "CHANGEME";
-    // return this.coursePairs.course.name;
-  }
+  // @OneToOne(() => CourseGroupPair, (p) => p.group, { eager: true })
+  @OneToOne(() => CourseGroupPair, (p) => p.group)
+  coursePair: Promise<CourseGroupPair>;
 }
 
 @ChildEntity(GroupType.Class)

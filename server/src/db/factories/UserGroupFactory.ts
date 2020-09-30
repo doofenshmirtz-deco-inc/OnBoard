@@ -1,10 +1,10 @@
-import Faker from "faker";
 import { define, factory } from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import {
   BaseGroup,
   GroupType,
   CourseGroup,
   ClassGroup,
+  DMGroup,
 } from "../../models/UserGroup";
 import { User } from "../../models/User";
 import { Timetable } from "../../models/Timetable";
@@ -16,7 +16,6 @@ type Users = {
 };
 
 define(CourseGroup, async (faker, context?: Users) => {
-  console.log("course");
   const group = new CourseGroup();
   group.setUsers(context?.users);
   return group;
@@ -27,5 +26,12 @@ define(ClassGroup, async (faker, context?: Users) => {
   group.setUsers(context?.users);
   group.name = faker.lorem.words(2) + " Class Group";
 
+  return group;
+});
+
+define(DMGroup, async (faker, context?: Users) => {
+  if (!context) throw new Error("Context must be defined");
+  const group = DMGroup.create();
+  group.users = Promise.resolve(context.users);
   return group;
 });

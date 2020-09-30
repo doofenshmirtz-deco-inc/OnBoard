@@ -25,7 +25,6 @@ registerEnumType(CourseRole, {
 export class CourseGroupPair extends BaseEntity {
   @ManyToOne(() => Course, (c) => c.groupPairs, {
     primary: true,
-    //cascade: true,
   })
   @JoinColumn()
   course: Course;
@@ -33,7 +32,7 @@ export class CourseGroupPair extends BaseEntity {
   @PrimaryColumn({ type: "enum", enum: CourseRole })
   role: CourseRole;
 
-  @OneToOne(() => CourseGroup, (g) => g.coursePairs)
+  @OneToOne(() => CourseGroup, (g) => g.coursePair)
   @JoinColumn()
   group: CourseGroup;
 }

@@ -1,9 +1,8 @@
-import Faker from "faker";
 import { define, factory } from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import { User } from "../../models/User";
 import { Timetable } from "../../models/Timetable";
 
-define(Timetable, (faker: typeof Faker) => {
+define(Timetable, (faker) => {
   const timetable = new Timetable();
 
   timetable.name = faker.lorem.words();
