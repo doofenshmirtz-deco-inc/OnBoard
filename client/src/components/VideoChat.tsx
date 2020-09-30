@@ -47,7 +47,7 @@ export default (props: Props) => {
         displayName={data.me.name}
         roomName={props.name}
         password={props.password}
-        domain="localhost:8443"
+        domain={process.env.REACT_APP_JITSI_DOMAIN}
         loadingComponent={() => <LoadingPage />}
         onAPILoad={(api) => handleAIP(api, history)}
       />
