@@ -28,13 +28,13 @@ const ADD_MESSAGE = gql`
 `;
 
 // the subscription should run for all groups at all times
-const MESSAGES_SUBSCRIPTION = gql`
-  subscription OnMessageSent($groupId: ID!) {
-    newMessages(groupID: $groupId) {
-      text
-    }
-  }
-`;
+// const MESSAGES_SUBSCRIPTION = gql`
+//   subscription OnMessageSent($groupId: ID!) {
+//     newMessages(groupID: $groupId) {
+//       text
+//     }
+//   }
+// `;
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -85,7 +85,7 @@ const sendMessage = (
   setMessageSent: any,
   props: any
 ) => {
-  if (send == "") {
+  if (send === "") {
     return;
   }
 
@@ -126,7 +126,7 @@ const handleKeyPress = (
   setMessageSent: any,
   props: any
 ) => {
-  if (event.key == "Enter") {
+  if (event.key === "Enter") {
     sendMessage(send, messages, setMessages, setMessageSent, props);
   }
 };
@@ -135,7 +135,7 @@ const mapMessages = (data: MyMessages, myId: string) => {
   return data.getMessages.map((msg) => {
     return {
       text: msg.text,
-      direction: msg.user.id == myId ? "right" : "left",
+      direction: msg.user.id === myId ? "right" : "left",
       sender: msg.user.name,
     };
   });
@@ -158,22 +158,28 @@ const MessageBox = (props: any) => {
     variables: { groupId: props.id },
   });
 
-  useEffect(() => {
-    subscribeToMore<OnMessageSent>({
-      document: MESSAGES_SUBSCRIPTION,
-      variables: { groupId: props.id },
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData.data) {
-          return prev;
-        }
+  // useEffect(() => {
+  //   subscribeToMore<OnMessageSent>({
+  //     document: MESSAGES_SUBSCRIPTION,
+  //     variables: { groupId: props.id },
+  //     updateQuery: (prev, { subscriptionData }) => {
+  //       if (!subscriptionData.data) {
+  //         return prev;
+  //       }
 
-        const newMessage = subscriptionData.data.newMessages;
-        return Object.assign({}, prev, {
-          getMessages: [newMessage, ...messages],
-        });
-      },
-    });
-  });
+  //       const newMessage = {
+  //         text: subscriptionData.data.newMessages.text,
+  //         direction: "left",
+  //         sender: props.id
+  //       };
+
+  //       // console.log(newMessage);
+  //       return Object.assign({}, prev, {
+  //         getMessages: [newMessage, ...messages],
+  //       });
+  //     },
+  //   });
+  // });
 
   const [sendToServer] = useMutation(ADD_MESSAGE);
 
@@ -186,18 +192,21 @@ const MessageBox = (props: any) => {
     return <LoadingPage />;
   }
 
-  const maps = mapMessages(data, props.myId);
-  const chatBubbles = maps.map((obj: any, i: number = 0) => (
+  if (messages.length !== data.getMessages.length) {
+    setMessages(mapMessages(data, props.myId));
+  }
+
+  const chatBubbles = messages.map((obj: any, i: number = 0) => (
     <div
       className={`${classes.bubbleContainer} ${
-        obj.direction == "left" ? classes.left : classes.right
+        obj.direction === "left" ? classes.left : classes.right
       }`}
       key={i}
     >
       <div
         key={i++}
         className={`${classes.bubble} ${
-          obj.direction == "left" ? classes.other : classes.me
+          obj.direction === "left" ? classes.other : classes.me
         }`}
       >
         <div>{obj.text}</div>

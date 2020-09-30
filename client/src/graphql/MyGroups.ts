@@ -7,28 +7,60 @@
 // GraphQL query operation: MyGroups
 // ====================================================
 
+export interface MyGroups_me_groups_DMGroup_users {
+  __typename: "User";
+  id: string;
+  name: string;
+  avatar: string;
+}
+
 export interface MyGroups_me_groups_DMGroup {
   __typename: "DMGroup";
   id: string;
   name: string;
+  users: MyGroups_me_groups_DMGroup_users[];
+}
+
+export interface MyGroups_me_groups_ClassGroup_users {
+  __typename: "User";
+  id: string;
+  name: string;
+  avatar: string;
 }
 
 export interface MyGroups_me_groups_ClassGroup {
   __typename: "ClassGroup";
   id: string;
   name: string;
+  users: MyGroups_me_groups_ClassGroup_users[];
+}
+
+export interface MyGroups_me_groups_CourseGroup_users {
+  __typename: "User";
+  id: string;
+  name: string;
+  avatar: string;
 }
 
 export interface MyGroups_me_groups_CourseGroup {
   __typename: "CourseGroup";
   id: string;
   name: string;
+  users: MyGroups_me_groups_CourseGroup_users[];
+}
+
+export interface MyGroups_me_groups_StudyGroup_users {
+  __typename: "User";
+  id: string;
+  name: string;
+  avatar: string;
 }
 
 export interface MyGroups_me_groups_StudyGroup {
   __typename: "StudyGroup";
   id: string;
   name: string;
+  users: MyGroups_me_groups_StudyGroup_users[];
 }
 
 export type MyGroups_me_groups =

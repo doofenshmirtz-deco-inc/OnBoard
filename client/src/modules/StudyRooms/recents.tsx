@@ -6,6 +6,8 @@ import { gql, useQuery } from "@apollo/client";
 import { MyGroups } from "../../graphql/MyGroups";
 import { LoadingPage } from "../../components/LoadingPage";
 import { MeId } from "../../graphql/MeId";
+import { OnMessageSent } from "../../graphql/OnMessageSent";
+import { MyMessages } from "../../graphql/MyMessages";
 
 const GROUPS_QUERY = gql`
   query MyGroups {
@@ -14,18 +16,38 @@ const GROUPS_QUERY = gql`
         ... on DMGroup {
           id
           name
+          users {
+            id
+            name
+            avatar
+          }
         }
         ... on ClassGroup {
           id
           name
+          users {
+            id
+            name
+            avatar
+          }
         }
         ... on CourseGroup {
           id
           name
+          users {
+            id
+            name
+            avatar
+          }
         }
         ... on StudyGroup {
           id
           name
+          users {
+            id
+            name
+            avatar
+          }
         }
       }
     }
@@ -36,6 +58,20 @@ const ME_QUERY = gql`
   query MeId {
     me {
       id
+    }
+  }
+`;
+
+const MESSAGES_SUBSCRIPTION = gql`
+  subscription OnMessageSent($uid: ID!) {
+    newMessages(uid: $uid) {
+      text
+      group {
+        id
+      }
+      user {
+        id
+      }
     }
   }
 `;
@@ -54,7 +90,7 @@ const Recents = () => {
     name: "",
   });
 
-  const [messages, setMessages] = useState(new Object());
+  const [messages, setMessages] = useState([{}]);
   const [contacts, setContacts] = useState([{}]);
 
   const handleClick = (item: any) => {
@@ -68,26 +104,58 @@ const Recents = () => {
   // get my id
   const me = useQuery<MeId>(ME_QUERY);
 
+  // useEffect(() => {
+  //   subscribeToMore<OnMessageSent>({
+  //     document: MESSAGES_SUBSCRIPTION,
+  //     variables: { groupId: props.id },
+  //     updateQuery: (prev, { subscriptionData }) => {
+  //       if (!subscriptionData.data) {
+  //         return prev;
+  //       }
+
+  //       const newMessage = {
+  //         text: subscriptionData.data.newMessages.text,
+  //         direction: "left",
+  //         sender: props.id
+  //       };
+
+  //       // console.log(newMessage);
+  //       return Object.assign({}, prev, {
+  //         getMessages: [newMessage, ...messages],
+  //       });
+  //     },
+  //   });
+  // });
+
   // TODO: somehow fix this dodgy AF code???????
   if (
     loading ||
+    console.log("BITCH WHAT THE FUCK 1") ||
     !data ||
+    console.log("BITCH WHAT THE FUCK 2") ||
     !data.me ||
+    console.log("BITCH WHAT THE FUCK 3") ||
     !data.me.groups ||
+    console.log("BITCH WHAT THE FUCK 3") ||
     !me.data ||
+    console.log("BITCH WHAT THE FUCK 4") ||
     !me.data.me
   ) {
+    console.log(data);
     return <LoadingPage />;
   }
 
   const myGroups = data.me.groups.map((group: any) => {
     return {
       id: parseInt(group.id, 10),
-      name: `${group.name}-${group.id}`,
+      name: group.name,
+      group: group.users.length > 2,
+      users: group.users,
     };
   });
 
-  if (contacts.length != myGroups.length) {
+  console.log(myGroups);
+  if (contacts.length !== myGroups.length) {
     setContacts(myGroups);
   }
 

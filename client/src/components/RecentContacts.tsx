@@ -63,7 +63,14 @@ const RecentContacts = (props: any) => {
             }}
             className={classes.contact}
           >
-            <ContactCard key={item.id} contact={item} buttonsOff={true} />
+            <ContactCard
+              key={item.id}
+              name={item.name}
+              contact={item.users[0]}
+              buttonsOff={true}
+              group={item.group}
+              contact2={item.users[1]}
+            />
           </Button>
         ) : null
       )}
