@@ -37,7 +37,8 @@ services:
     networks:
       - onboard-network
       - meet.jitsi
-
+    external_links:
+      - onboard-server:onboard-server-x
 
 networks:
   onboard-network:

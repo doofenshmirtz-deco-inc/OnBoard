@@ -5,7 +5,11 @@
 
 
 onboard.doofenshmirtz.xyz, localhost {
-    reverse_proxy onboard-server:5000
+    reverse_proxy onboard-server-x:5000
+}
+
+onboard.doofenshmirtz.xyz:443, localhost:443 {
+    reverse_proxy onboard-server-x:5000
 }
 
 # very strange that these don't use the defined ports...
