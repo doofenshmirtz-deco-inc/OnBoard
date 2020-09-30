@@ -13,7 +13,6 @@ import {
 } from "type-graphql";
 import { User } from "../models/User";
 import { PaginationArgs, getOrder } from "./Types";
-import { isAuth } from "../middleware/isAuth";
 import { Context } from "../middleware/Context";
 import {
   BaseGroup,

@@ -8,7 +8,6 @@ import {
   Authorized,
 } from "type-graphql";
 import { PaginationArgs, getOrder } from "./Types";
-import { isAuth } from "../middleware/isAuth";
 import { Course } from "../models/Course";
 
 @Resolver((of) => Course)

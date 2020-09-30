@@ -13,12 +13,10 @@ import {
   Authorized,
 } from "type-graphql";
 import { User } from "../models/User";
-import { isAuth } from "../middleware/isAuth";
 import { Context } from "../middleware/Context";
 import { Message, MessageInput } from "../models/Message";
 import { BaseGroup } from "../models/UserGroup";
 import { Subscriptions } from "./Subscriptions";
-import { isAuthSub } from "../middleware/isAuthSub";
 
 @Resolver((of) => Message)
 export class MessageResolver {
