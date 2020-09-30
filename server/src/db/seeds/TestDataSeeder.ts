@@ -62,8 +62,9 @@ const generateDMs = async (users: User[]) => {
   );
 
   //groups.forEach((group) => factory(Message)({ group: group }).createMany(1));
+};
 
- const generateTestClass = async (
+const generateTestClass = async (
   context: { name: string; type: ClassType; course: Course },
   userContext: { users: User[] }
 ) => {
