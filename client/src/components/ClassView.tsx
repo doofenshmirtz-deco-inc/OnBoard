@@ -86,10 +86,10 @@ let tabPages: MenuBarComponent[] = [
   },
   {
     name: "Learning Resources",
-    path: "resources",
+    path: "resources/",
     content: <ResourceFolder />,
   },
-  { name: "Assessment", path: "assessment", content: <p>Assessment</p> },
+  { name: "Assessment", path: "assessment/", content: <p>Assessment</p> },
   { name: "Course Staff", path: "staff", content: <p>Staff</p> },
   {
     name: "Course Profile (ECP)",
@@ -102,6 +102,7 @@ const COURSE_INFO = gql`
   query GetClassInfo {
     me {
       courses {
+        colour
         course {
           id
           name

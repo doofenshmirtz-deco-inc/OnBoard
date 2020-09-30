@@ -50,7 +50,7 @@ define(Course, async (faker, context?: CourseFactoryContext) => {
   */
 
   const page = new FolderNode();
-  page.title = `${course.code}: ${course.name}`;
+  page.title = `${course.code}`;
   await page.save();
   course.coursePage = page;
 
@@ -75,6 +75,16 @@ define(Course, async (faker, context?: CourseFactoryContext) => {
   subfolder.title = `Tutorial`;
   subfolder.parent = Promise.resolve(folder);
   await subfolder.save();
+
+  const subfolder2 = new FolderNode();
+  subfolder2.title = "Subfolder 1";
+  subfolder2.parent = Promise.resolve(subfolder);
+  await subfolder2.save();
+
+  const subfolder3 = new FolderNode();
+  subfolder3.title = "Subfolder 2";
+  subfolder3.parent = Promise.resolve(subfolder2);
+  await subfolder3.save();
 
   const folderText = new TextNode();
   folderText.title = "Week 1 content";

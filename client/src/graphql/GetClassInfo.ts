@@ -20,6 +20,7 @@ export interface GetClassInfo_me_courses_course {
 
 export interface GetClassInfo_me_courses {
   __typename: "CourseColor";
+  colour: string;
   course: GetClassInfo_me_courses_course;
 }
 
