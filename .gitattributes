@@ -1,3 +1,0 @@
-server/.npmrc filter=git-crypt diff=git-crypt
-server/TOKEN.txt filter=git-crypt diff=git-crypt
-
