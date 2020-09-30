@@ -47,10 +47,10 @@ jobs:
     - name: Install dependencies on server
       working-directory: server
       run: |
-        yarn
-        yarn db:start
-        sudo docker ps
-        yarn db:test:create
+    #   yarn
+    #   yarn db:start
+    #   sudo docker ps
+    #   yarn db:test:create
       env:
         NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -63,7 +63,7 @@ jobs:
     - name: Run prettier check on server
       working-directory: server
       run: |
-        yarn pretty:check
+    #   yarn pretty:check
 
 
     - name: Install dependencies on client
