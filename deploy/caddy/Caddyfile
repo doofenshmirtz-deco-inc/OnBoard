@@ -2,15 +2,22 @@
     http_port 18000
 }
 
-localhost {
+
+
+onboard.doofenshmirtz.xyz, localhost {
     reverse_proxy onboard-server:5000
 }
 
-localhost:18443 {
-    reverse_proxy web:8443
+# very strange that these don't use the defined ports...
+onboard.doofenshmirtz.xyz:18443, localhost:18443 {
+    reverse_proxy web:443 {
+        transport http {
+            tls
+            tls_insecure_skip_verify
+        }
+    }
 }
-
-localhost:18000 {
-    reverse_proxy web:8000
+onboard.doofenshmirtz.xyz:18000, localhost:18000 {
+    reverse_proxy web:80
 }
 

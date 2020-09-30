@@ -23,3 +23,5 @@ yarn run docker:up
 cd -
 
 docker-compose up -d --build
+
+docker system prune -f
