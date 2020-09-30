@@ -72,37 +72,37 @@ export default class TestDataSeeder implements Seeder {
     }).create();
 
     const perry = await factory(User)({
-      ui: "perry",
+      uid: "perry",
       name: "Perry the Platypus",
     }).create();
 
     const tom = await factory(User)({
-      ui: "tom",
+      uid: "tom",
       name: "Tom Cranitch",
     }).create();
 
     const kenton = await factory(User)({
-      ui: "kenton",
+      uid: "kenton",
       name: "Kenton Lam",
     }).create();
 
     const matt = await factory(User)({
-      ui: "matt",
+      uid: "matt",
       name: "Matthew Low",
     }).create();
 
     const james = await factory(User)({
-      ui: "james",
+      uid: "james",
       name: "James Dearlove",
     }).create();
 
     const sanni = await factory(User)({
-      ui: "sanni",
+      uid: "sanni",
       name: "Sanni Bosamia",
     }).create();
 
     const nat = await factory(User)({
-      ui: "nat",
+      uid: "nat",
       name: "Natalie Hong",
     }).create();
 
@@ -138,7 +138,7 @@ export default class TestDataSeeder implements Seeder {
 
     const edis = await factory(Course)({
       code: "EDIS3801",
-      name: "Evil Design Inventing Studio 3 - Build",
+      name: "Evil Design Inventing Studio 3 - Buidld",
       semester: Semesters.One,
       level: CourseLevel.Undergrad,
       year: 2018,
