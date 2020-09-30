@@ -10,6 +10,7 @@ import {
   Root,
   ArgsType,
   ID,
+  Authorized,
 } from "type-graphql";
 import { User } from "../models/User";
 import { isAuth } from "../middleware/isAuth";
@@ -22,7 +23,7 @@ import { isAuthSub } from "../middleware/isAuthSub";
 @Resolver((of) => Message)
 export class MessageResolver {
   @Mutation((type) => Message)
-  @UseMiddleware(isAuth)
+  @Authorized()
   async addMessage(@Arg("message") message: MessageInput, @Ctx() ctx: Context) {
     let group = await BaseGroup.findOne({ id: message.groupID });
 
@@ -43,7 +44,7 @@ export class MessageResolver {
   }
 
   @Query((type) => [Message])
-  @UseMiddleware(isAuth)
+  @Authorized()
   async getMessages(
     @Arg("groupID", () => ID) groupID: number,
     @Ctx() ctx: Context
@@ -71,7 +72,7 @@ export class MessageResolver {
       );
     },
   })
-  // @UseMiddleware(isAuthSub)
+  @Authorized()
   async newMessages(
     @Root() message: Message,
     @Arg("uid", () => ID) uid: number

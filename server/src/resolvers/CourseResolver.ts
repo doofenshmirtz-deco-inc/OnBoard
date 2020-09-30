@@ -1,4 +1,12 @@
-import { Resolver, Query, Args, Arg, ID, UseMiddleware } from "type-graphql";
+import {
+  Resolver,
+  Query,
+  Args,
+  Arg,
+  ID,
+  UseMiddleware,
+  Authorized,
+} from "type-graphql";
 import { PaginationArgs, getOrder } from "./Types";
 import { isAuth } from "../middleware/isAuth";
 import { Course } from "../models/Course";
@@ -6,7 +14,7 @@ import { Course } from "../models/Course";
 @Resolver((of) => Course)
 export class CourseResolver {
   @Query(() => [Course])
-  @UseMiddleware(isAuth)
+  @Authorized()
   async courses(@Args() pag: PaginationArgs) {
     return (
       await Course.findAndCount({
@@ -18,7 +26,7 @@ export class CourseResolver {
   }
 
   @Query(() => Course)
-  @UseMiddleware(isAuth)
+  @Authorized()
   async course(@Arg("courseID", () => ID) courseID: number) {
     return await Course.findOne({ id: courseID });
   }

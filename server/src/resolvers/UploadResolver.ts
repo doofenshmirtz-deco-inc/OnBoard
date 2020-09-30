@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Int, Arg } from "type-graphql";
+import { Resolver, Mutation, Int, Arg, Authorized } from "type-graphql";
 import { ReadStream } from "typeorm/platform/PlatformTools";
 import { createWriteStream, mkdirSync } from "fs";
 import { FileUpload, GraphQLUpload } from "graphql-upload";
@@ -23,6 +23,7 @@ export const createUploadPath = (filename: string) => {
 @Resolver()
 export class UploadResolver {
   @Mutation(() => String)
+  @Authorized()
   async singleUpload(
     @Arg("file", () => GraphQLUpload) file: Promise<FileUpload>
   ) {
