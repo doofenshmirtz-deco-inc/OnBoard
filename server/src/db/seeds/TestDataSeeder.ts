@@ -16,7 +16,6 @@ import {
 } from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
 import { CourseRole, CourseGroupPair } from "../../models/CourseGroupPair";
-import Faker from "faker";
 import { Timetable } from "../../models/Timetable";
 import { Message } from "../../models/Message";
 import Faker from "faker";
@@ -144,7 +143,6 @@ export default class TestDataSeeder implements Seeder {
     }).create();
 
     generateDMs([heinz, perry, tom, kenton, matt, james, sanni, nat]);
-    // generateDMs([heinz, perry]);
 
     const secr = await factory(Course)({
       code: "SECR1000",
@@ -235,7 +233,7 @@ export default class TestDataSeeder implements Seeder {
       {
         name: "Bruh",
         type: ClassType.Lecture,
-        course: math1071,
+        course: secr,
       },
       {
         users: [heinz],
@@ -246,7 +244,7 @@ export default class TestDataSeeder implements Seeder {
       {
         name: "Bruh2",
         type: ClassType.Lecture,
-        course: csse2310,
+        course: secr,
       },
       {
         users: [heinz],
@@ -255,14 +253,14 @@ export default class TestDataSeeder implements Seeder {
 
     const timetable = await generateTestTimetable({
       duration: 60,
-      name: math1071.name,
+      name: secr.name,
       times: [new Date(Date.now()), new Date(Date.now() + 1000 * 60 * 60 * 24)],
       classGroup: classGroup,
     });
 
     const timetable2 = await generateTestTimetable({
       duration: 120,
-      name: csse2310.name,
+      name: secr.name,
       times: [new Date(Date.now()), new Date(Date.now() + 1000 * 60 * 60 * 24)],
       classGroup: classGroup2,
     });
