@@ -1,0 +1,16 @@
+{
+    http_port 18000
+}
+
+localhost {
+    reverse_proxy onboard-server:5000
+}
+
+localhost:18443 {
+    reverse_proxy web:8443
+}
+
+localhost:18000 {
+    reverse_proxy web:8000
+}
+

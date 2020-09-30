@@ -8,7 +8,7 @@ services:
     ports:
       - "5000:5000"
     networks:
-      - onboard-network 
+      - onboard-network
     volumes:
       - client-build:/usr/src/client/build
   onboard-client:
@@ -17,6 +17,25 @@ services:
       - onboard-network 
     volumes:
       - client-build:/usr/src/client/build
+  caddy:
+    image: caddy:2.1.1
+    restart: unless-stopped
+    depends_on:
+      - onboard-client
+      - onboard-server
+    ports:
+      - "80:80"
+      - "443:443"
+      - "18443:8443" # jitsi http
+      - "18000:8000" # jitsi https
+      # - "5000:5000" # onboard server
+    volumes:
+      - ./deploy/caddy/Caddyfile:/etc/caddy/Caddyfile
+      # - $PWD/site:/srv
+      - ./deploy/caddy/data:/data
+      - ./deploy/caddy/data:/config
+    networks:
+      - onboard-network
 
 
 networks:
