@@ -14,7 +14,13 @@ import { User } from "../models/User";
 import { PaginationArgs, getOrder } from "./Types";
 import { isAuth } from "../middleware/isAuth";
 import { Context } from "../middleware/Context";
-import { BaseGroup, ClassGroup, GroupType, CourseGroup, DMGroup } from "../models/UserGroup";
+import {
+  BaseGroup,
+  ClassGroup,
+  GroupType,
+  CourseGroup,
+  DMGroup,
+} from "../models/UserGroup";
 import { Timetable } from "../models/Timetable";
 import { CourseGroupPair } from "../models/CourseGroupPair";
 
@@ -41,7 +47,7 @@ export class UserGroupResolver {
   }
 
   @FieldResolver((type) => [User])
-  @UseMiddleware(isAuth)
+  // @UseMiddleware(isAuth)
   async users(@Root() group: BaseGroup, @Ctx() ctx: Context) {
     /* TODO need to decide how to handle permissions
     const user = await User.findOne({ where: { id: ctx.payload?.uid } });
@@ -62,10 +68,7 @@ export class UserGroupResolver {
     }
     return null;
   }
-}
 
-@Resolver(() => DMGroup)
-export class DMGroupResolver {
   @FieldResolver(() => String)
   async name(@Root() group: BaseGroup, @Ctx() ctx: Context) {
     if (!ctx.payload) throw new Error("User must be authenticated");

@@ -19,6 +19,7 @@ type AuthToken {
 type BaseGroup {
   id: ID!
   lastActive: DateTime!
+  name: String!
   timetable: Timetable
   users: [User!]!
 }
@@ -53,6 +54,7 @@ type CourseColor {
 type CourseGroup {
   id: ID!
   lastActive: DateTime!
+  name: String!
   timetable: Timetable
   users: [User!]!
 }
@@ -118,6 +120,7 @@ type Query {
   getMessages(groupID: ID!): [Message!]!
   getTestingToken(testUID: String = "test-uid"): AuthToken!
   me: User
+  node(id: Float!): Node
   user(id: String!): User
   userGroup(id: String!): BaseGroup
   userGroups(limit: Int = 10, order: String, orderBy: String, skip: Int = 0): [BaseGroup!]!
@@ -139,7 +142,7 @@ type StudyGroup {
 }
 
 type Subscription {
-  newMessages(groupID: ID!): Message!
+  newMessages(uid: ID!): Message!
 }
 
 type TextNode {
