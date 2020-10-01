@@ -172,7 +172,7 @@ const Recents = () => {
             contacts={contacts}
             setContacts={setContacts}
             newMessage={newMessage}
-            setNewMessage={() => setNewMessage}
+            setNewMessage={setNewMessage}
             myId={uid}
             id={selected.id}
             name={selected.name}
