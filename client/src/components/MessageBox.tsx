@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { Button, makeStyles, TextField } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { LoadingPage } from "./LoadingPage";
 import { MyMessages } from "../graphql/MyMessages";
-import { OnMessageSent } from "../graphql/OnMessageSent";
+import ChatMessage from "./ChatMessage";
+import Message from "./Message";
 
 const MESSAGES_QUERY = gql`
   query MyMessages($groupId: ID!) {
@@ -27,16 +28,9 @@ const ADD_MESSAGE = gql`
   }
 `;
 
-// the subscription should run for all groups at all times
-// const MESSAGES_SUBSCRIPTION = gql`
-//   subscription OnMessageSent($groupId: ID!) {
-//     newMessages(groupID: $groupId) {
-//       text
-//     }
-//   }
-// `;
+// TODO: interfaces for types
 
-const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles((theme) => ({
   container: {
     width: "100%",
     paddingLeft: "2%",
@@ -78,72 +72,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const sendMessage = (
-  send: string,
-  messages: any[],
-  setMessages: any,
-  setMessageSent: any,
-  props: any
-) => {
-  if (send === "") {
-    return;
-  }
-
-  messages.push({
-    message: send,
-    direction: "right",
-    sender: props.myId,
-  });
-
-  setMessages(messages);
-  setMessageSent("");
-
-  // TODO: probably change this to a splay tree or something?
-  const contacts: any[] = props.contacts;
-  let index = -1;
-  for (let i = 0; i < contacts.length; i++) {
-    if (contacts[i].id === props.id) {
-      index = i;
-      break;
-    }
-  }
-
-  let newContacts: any[] = [contacts[index]];
-  for (let i = 0; i < contacts.length; i++) {
-    if (i !== index) {
-      newContacts.push(contacts[i]);
-    }
-  }
-
-  props.setContacts(newContacts);
-};
-
-const handleKeyPress = (
-  event: any,
-  send: string,
-  messages: any[],
-  setMessages: any,
-  setMessageSent: any,
-  props: any
-) => {
-  if (event.key === "Enter") {
-    sendMessage(send, messages, setMessages, setMessageSent, props);
-  }
-};
-
 const mapMessages = (data: MyMessages, myId: string) => {
   return data.getMessages.map((msg) => {
     return {
       text: msg.text,
       direction: msg.user.id === myId ? "right" : "left",
-      sender: msg.user.name,
-    };
+      sender: msg.user.id,
+      // TODO: change groupId
+      groupId: 0
+    } as ChatMessage;
   });
 };
 
 const MessageBox = (props: any) => {
   const [message, setMessageSent] = useState("");
-  const [messages, setMessages] = useState([{}]);
+  const [messages, setMessages] = useState(new Map<number, JSX.Element[]>());
+  const updateMap = (k: number, v: any) => {
+    setMessages(new Map(messages.set(k, v)));
+  }
+
   const classes = useStyles();
 
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
@@ -153,33 +100,6 @@ const MessageBox = (props: any) => {
       messagesEndRef.current.scrollIntoView({ behavior: "auto" });
     }
   });
-
-  const { subscribeToMore } = useQuery(MESSAGES_QUERY, {
-    variables: { groupId: props.id },
-  });
-
-  // useEffect(() => {
-  //   subscribeToMore<OnMessageSent>({
-  //     document: MESSAGES_SUBSCRIPTION,
-  //     variables: { groupId: props.id },
-  //     updateQuery: (prev, { subscriptionData }) => {
-  //       if (!subscriptionData.data) {
-  //         return prev;
-  //       }
-
-  //       const newMessage = {
-  //         text: subscriptionData.data.newMessages.text,
-  //         direction: "left",
-  //         sender: props.id
-  //       };
-
-  //       // console.log(newMessage);
-  //       return Object.assign({}, prev, {
-  //         getMessages: [newMessage, ...messages],
-  //       });
-  //     },
-  //   });
-  // });
 
   const [sendToServer] = useMutation(ADD_MESSAGE);
 
@@ -192,27 +112,62 @@ const MessageBox = (props: any) => {
     return <LoadingPage />;
   }
 
-  if (messages.length !== data.getMessages.length) {
-    setMessages(mapMessages(data, props.myId));
+  const send = (message: string) => {
+    if (message === "") {
+      return;
+    }
+
+    const newMessage = {
+      text: message,
+      direction: "right",
+      sender: props.myId,
+    };
+
+    setMessageSent("");
+
+    // TODO: probably change this to a splay tree or something?
+    const contacts: any[] = props.contacts;
+    let index = -1;
+    for (let i = 0; i < contacts.length; i++) {
+      if (contacts[i].id === props.id) {
+        index = i;
+        break;
+      }
+    }
+
+    let newContacts: any[] = [contacts[index]];
+    for (let i = 0; i < contacts.length; i++) {
+      if (i !== index) {
+        newContacts.push(contacts[i]);
+      }
+    }
+
+    props.setContacts(newContacts);
+    console.log(newContacts);
+
+    sendToServer({
+      variables: {
+        send: message,
+        groupId: props.id,
+      },
+    });
+  };
+
+  let chatBubbles = data.getMessages.map((obj: any, i: number) => (
+    <Message direction={obj.user.id === props.id ? "right" : "left"} text={obj.text} key={i} />
+  ));
+  
+  if (!messages.has(props.id)) {
+    updateMap(props.id, chatBubbles);
   }
 
-  const chatBubbles = messages.map((obj: any, i: number = 0) => (
-    <div
-      className={`${classes.bubbleContainer} ${
-        obj.direction === "left" ? classes.left : classes.right
-      }`}
-      key={i}
-    >
-      <div
-        key={i++}
-        className={`${classes.bubble} ${
-          obj.direction === "left" ? classes.other : classes.me
-        }`}
-      >
-        <div>{obj.text}</div>
-      </div>
-    </div>
-  ));
+  // console.log(props.newMessage);
+  if (props.newMessage.groupId === props.id) {
+    console.log("messagebox says hi 2");
+    chatBubbles.push(<Message direction={props.newMessage.direction} text={props.newMessage.text} />);
+    updateMap(props.id, chatBubbles);
+    props.setNewMessage({} as ChatMessage);
+  }
 
   return (
     <div className={classes.container}>
@@ -220,7 +175,7 @@ const MessageBox = (props: any) => {
         {props.name} <VideocamIcon />
       </h1>
       <div className={classes.messagingContainer}>
-        {chatBubbles}
+        {messages.get(props.id)}
         <div ref={messagesEndRef} />
       </div>
       <TextField
@@ -233,35 +188,12 @@ const MessageBox = (props: any) => {
         onChange={(e) => setMessageSent(e.target.value)}
         onKeyPress={(e) => {
           if (e.key === "Enter") {
-            handleKeyPress(
-              e,
-              message,
-              messages,
-              setMessages,
-              setMessageSent,
-              props
-            );
-            sendToServer({
-              variables: {
-                send: message,
-                groupId: props.id,
-              },
-            });
+            send(message);
           }
         }}
         InputProps={{
           endAdornment: (
-            <Button
-              onClick={() =>
-                sendMessage(
-                  message,
-                  messages,
-                  setMessages,
-                  setMessageSent,
-                  props
-                )
-              }
-            >
+            <Button onClick={() => send(message)}>
               <SendIcon />
             </Button>
           ),

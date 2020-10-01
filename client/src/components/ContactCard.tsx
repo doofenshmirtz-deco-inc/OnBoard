@@ -43,14 +43,16 @@ export default function ContactCard(props: any) {
   }
 
   const avatar = (
-    <AvatarGroup max={2}>
+    <AvatarGroup className={classes.noBorder} max={3}>
       <Avatar
+        className={classes.noBorder}
         aria-label="contact"
         alt={props.contact.name}
         src={props.contact.avatar}
       />
       {props.group ? (
         <Avatar
+          className={classes.noBorder}
           aria-label="contact"
           alt={props.contact2.name}
           src={props.contact2.avatar}

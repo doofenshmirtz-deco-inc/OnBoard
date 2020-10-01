@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import MessageBox from "../../components/MessageBox";
 import RecentContacts from "../../components/RecentContacts";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery, useSubscription } from "@apollo/client";
 import { MyGroups } from "../../graphql/MyGroups";
 import { LoadingPage } from "../../components/LoadingPage";
 import { MeId } from "../../graphql/MeId";
 import { OnMessageSent } from "../../graphql/OnMessageSent";
 import { MyMessages } from "../../graphql/MyMessages";
+import NewMessage from "../../components/NewMessage";
+import ChatMessage from "../../components/ChatMessage";
 
 const GROUPS_QUERY = gql`
   query MyGroups {
@@ -90,8 +92,9 @@ const Recents = () => {
     name: "",
   });
 
-  const [messages, setMessages] = useState([{}]);
   const [contacts, setContacts] = useState([{}]);
+  const [uid, setUID] = useState("");
+  const [newMessage, setNewMessage] = useState({} as ChatMessage);
 
   const handleClick = (item: any) => {
     setSelectedState(item);
@@ -104,44 +107,19 @@ const Recents = () => {
   // get my id
   const me = useQuery<MeId>(ME_QUERY);
 
-  // useEffect(() => {
-  //   subscribeToMore<OnMessageSent>({
-  //     document: MESSAGES_SUBSCRIPTION,
-  //     variables: { groupId: props.id },
-  //     updateQuery: (prev, { subscriptionData }) => {
-  //       if (!subscriptionData.data) {
-  //         return prev;
-  //       }
+  const subscription = useSubscription(MESSAGES_SUBSCRIPTION, {
+    variables: { uid: uid },
+  });
 
-  //       const newMessage = {
-  //         text: subscriptionData.data.newMessages.text,
-  //         direction: "left",
-  //         sender: props.id
-  //       };
-
-  //       // console.log(newMessage);
-  //       return Object.assign({}, prev, {
-  //         getMessages: [newMessage, ...messages],
-  //       });
-  //     },
-  //   });
-  // });
-
-  // TODO: somehow fix this dodgy AF code???????
+  // TODO: probs fix this dodgy code?
   if (
     loading ||
-    console.log("BITCH WHAT THE FUCK 1") ||
     !data ||
-    console.log("BITCH WHAT THE FUCK 2") ||
     !data.me ||
-    console.log("BITCH WHAT THE FUCK 3") ||
     !data.me.groups ||
-    console.log("BITCH WHAT THE FUCK 3") ||
     !me.data ||
-    console.log("BITCH WHAT THE FUCK 4") ||
     !me.data.me
   ) {
-    console.log(data);
     return <LoadingPage />;
   }
 
@@ -154,29 +132,53 @@ const Recents = () => {
     };
   });
 
-  console.log(myGroups);
   if (contacts.length !== myGroups.length) {
     setContacts(myGroups);
   }
 
+  if (uid === "") {
+    setUID(me.data.me.id);
+  }
+
+  if (subscription && subscription.data && subscription.data.newMessages && !newMessage.text) {
+    const message = subscription?.data?.newMessages;
+    const newMsg: ChatMessage = {
+      text: message?.text,
+      sender: message?.user.id,
+      direction: message?.user.id === uid ? "right" : "left",
+      groupId: parseInt(message?.group.id, 10)
+    };
+
+    console.log(newMsg);
+    if (newMsg.sender !== uid) {
+      setNewMessage(newMsg);
+      // console.log("hi")
+      // console.log(newMsg);
+    }
+  }
+
   return (
-    <div className={classes.root}>
-      <RecentContacts
-        contacts={contacts}
-        handleClick={handleClick}
-        selected={selected}
-      />
-      {selected.id === "" ? (
-        <div />
-      ) : (
-        <MessageBox
+    <div>
+      <div className={classes.root}>
+        <RecentContacts
           contacts={contacts}
-          setContacts={setContacts}
-          myId={me.data.me.id}
-          id={selected.id}
-          name={selected.name}
+          handleClick={handleClick}
+          selected={selected}
         />
-      )}
+        {selected.id === "" ? (
+          <div />
+        ) : (
+          <MessageBox
+            contacts={contacts}
+            setContacts={setContacts}
+            newMessage={newMessage}
+            setNewMessage={() => setNewMessage}
+            myId={uid}
+            id={selected.id}
+            name={selected.name}
+          />
+        )}
+      </div>
     </div>
   );
 };

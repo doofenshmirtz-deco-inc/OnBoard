@@ -70,6 +70,7 @@ const RecentContacts = (props: any) => {
               buttonsOff={true}
               group={item.group}
               contact2={item.users[1]}
+              contacts={item.users}
             />
           </Button>
         ) : null
