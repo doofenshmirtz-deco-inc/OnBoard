@@ -52,6 +52,7 @@ const RecentContacts = (props: any) => {
       {Object.values(props.contacts).map((item: any) =>
         item?.name?.toLowerCase?.().includes?.(searchTerm.toLowerCase()) ? (
           <Button
+            key={item.id}
             color="primary"
             disableElevation
             style={{
