@@ -130,14 +130,14 @@ const MessageBox = (props: MessageBoxProps) => {
   const [sendToServer] = useMutation(ADD_MESSAGE);
 
   // get my messages for a specific contact group.
-  const { data, loading } = useQuery<MyMessages>(MESSAGES_QUERY, {
+  const { data, loading, refetch } = useQuery<MyMessages>(MESSAGES_QUERY, {
     variables: { groupId: props.id },
   });
 
   // subscription handler to add a new received message.
   const handleNewMessage = useCallback((options: OnSubscriptionDataOptions<OnMessageReceived>) => {
     const newMessage = options.subscriptionData.data?.newMessages;
-    // console.log(options.subscriptionData.data);
+    console.log(options.subscriptionData.data);
     
     if (newMessage) {
       setNewMessages([...newMessages, newMessage]);
@@ -146,9 +146,9 @@ const MessageBox = (props: MessageBoxProps) => {
   }, [newMessages]);
 
   // subscribe to incoming messages with the above handler.
-  useSubscription<OnMessageReceived>(MESSAGES_SUBSCRIPTION, {
+  const {data: subData} = useSubscription<OnMessageReceived>(MESSAGES_SUBSCRIPTION, {
     variables: { uid: props.uid },
-    onSubscriptionData: handleNewMessage
+    onSubscriptionData: handleNewMessage,
   });
 
   // when data or newMessages changes, update chatBubbles.
@@ -171,6 +171,12 @@ const MessageBox = (props: MessageBoxProps) => {
     setChatBubbles(newChatBubbles);
 
   }, [data, newMessages, props.uid]);
+
+  // reset cached messages when group id changes.
+  useEffect(() => {
+    refetch();
+    setNewMessages([]);
+  }, [props.id]);
 
   if (!data || loading) {
     return <LoadingPage />;
