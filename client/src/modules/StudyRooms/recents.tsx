@@ -1,15 +1,11 @@
-import React, { useState, useMemo, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import MessageBox from "../../components/MessageBox";
 import RecentContacts from "../../components/RecentContacts";
-import { gql, useQuery, useSubscription } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import { MyGroups } from "../../graphql/MyGroups";
 import { LoadingPage } from "../../components/LoadingPage";
 import { MeId } from "../../graphql/MeId";
-import { OnMessageSent } from "../../graphql/OnMessageSent";
-import { MyMessages } from "../../graphql/MyMessages";
-import NewMessage from "../../components/NewMessage";
-import ChatMessage from "../../components/ChatMessage";
 
 const GROUPS_QUERY = gql`
   query MyGroups {
