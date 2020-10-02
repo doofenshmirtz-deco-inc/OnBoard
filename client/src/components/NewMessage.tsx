@@ -32,7 +32,7 @@ const NewMessage = (props: any) => {
     text: message.text,
     sender: message.user.id,
     direction: message.user.id === props.uid ? "right" : "left",
-    groupId: message.group.id
+    groupId: message.group.id,
   };
 
   if (newMsg.sender !== props.uid) {
@@ -40,12 +40,7 @@ const NewMessage = (props: any) => {
   }
 
   console.log("hello");
-  return (
-    <Message
-      text={message.text}
-      direction={newMsg.direction}
-    />
-  );
+  return <Message text={message.text} direction={newMsg.direction} />;
 };
 
 export default NewMessage;

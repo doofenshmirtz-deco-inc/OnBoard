@@ -1,13 +1,27 @@
-import React, { useState, useLayoutEffect, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useLayoutEffect,
+  useEffect,
+  useCallback,
+} from "react";
 import { Button, makeStyles, TextField } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import VideocamIcon from "@material-ui/icons/Videocam";
-import { gql, OnSubscriptionDataOptions, useMutation, useQuery, useSubscription } from "@apollo/client";
+import {
+  gql,
+  OnSubscriptionDataOptions,
+  useMutation,
+  useQuery,
+  useSubscription,
+} from "@apollo/client";
 import { LoadingPage } from "./LoadingPage";
 import { MyMessages } from "../graphql/MyMessages";
 import ChatMessage from "./ChatMessage";
 import Message from "./Message";
-import { OnMessageReceived, OnMessageReceived_newMessages } from "../graphql/OnMessageReceived";
+import {
+  OnMessageReceived,
+  OnMessageReceived_newMessages,
+} from "../graphql/OnMessageReceived";
 
 const MESSAGES_QUERY = gql`
   query MyMessages($groupId: ID!) {
@@ -94,21 +108,19 @@ const mapMessages = (data: MyMessages, myId: string) => {
       direction: msg.user.id === myId ? "right" : "left",
       sender: msg.user.id,
       // TODO: change groupId
-      groupId: 0
+      groupId: 0,
     } as ChatMessage;
   });
 };
 
-
 export type MessageBoxProps = {
-  uid: string, // uid of this user.
-  id: string, // group id of chat.
-  name: string, // name of chat.
-  onNewMessage?: () => any, // to be called when new message is received.
-}
+  uid: string; // uid of this user.
+  id: string; // group id of chat.
+  name: string; // name of chat.
+  onNewMessage?: () => any; // to be called when new message is received.
+};
 
 const MessageBox = (props: MessageBoxProps) => {
-
   const classes = useStyles();
 
   // current message being typed in text box.
@@ -116,7 +128,9 @@ const MessageBox = (props: MessageBoxProps) => {
   // all chat messages as Message elements.
   const [chatBubbles, setChatBubbles] = useState([] as JSX.Element[]);
   // new messages obtained via subscription.
-  const [newMessages, setNewMessages] = useState([] as OnMessageReceived_newMessages[]);
+  const [newMessages, setNewMessages] = useState(
+    [] as OnMessageReceived_newMessages[]
+  );
 
   // reference to end of messages, to scroll to bottom on new message.
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
@@ -135,41 +149,54 @@ const MessageBox = (props: MessageBoxProps) => {
   });
 
   // subscription handler to add a new received message.
-  const handleNewMessage = useCallback((options: OnSubscriptionDataOptions<OnMessageReceived>) => {
-    const newMessage = options.subscriptionData.data?.newMessages;
-    console.log(options.subscriptionData.data);
-    
-    if (newMessage) {
-      setNewMessages([...newMessages, newMessage]);
-      props.onNewMessage?.();
-    }
-  }, [newMessages]);
+  const handleNewMessage = useCallback(
+    (options: OnSubscriptionDataOptions<OnMessageReceived>) => {
+      const newMessage = options.subscriptionData.data?.newMessages;
+      console.log(options.subscriptionData.data);
+
+      if (newMessage) {
+        setNewMessages([...newMessages, newMessage]);
+        props.onNewMessage?.();
+      }
+    },
+    [newMessages]
+  );
 
   // subscribe to incoming messages with the above handler.
-  const {data: subData} = useSubscription<OnMessageReceived>(MESSAGES_SUBSCRIPTION, {
-    variables: { uid: props.uid },
-    onSubscriptionData: handleNewMessage,
-  });
+  const { data: subData } = useSubscription<OnMessageReceived>(
+    MESSAGES_SUBSCRIPTION,
+    {
+      variables: { uid: props.uid },
+      onSubscriptionData: handleNewMessage,
+    }
+  );
 
   // when data or newMessages changes, update chatBubbles.
   useEffect(() => {
-    if (!data)
-      return;
-    
-    const newChatBubbles = data?.getMessages?.map((obj, i) => (
-      <Message direction={obj.user.id === props.uid ? "right" : "left"} text={obj.text} key={i} />
-    )) ?? [];
+    if (!data) return;
+
+    const newChatBubbles =
+      data?.getMessages?.map((obj, i) => (
+        <Message
+          direction={obj.user.id === props.uid ? "right" : "left"}
+          text={obj.text}
+          key={i}
+        />
+      )) ?? [];
     newChatBubbles.reverse(); // reverse so newer messages are at bottom.
     const numChatBubbles = newChatBubbles.length;
 
     newMessages.forEach((m, i) => {
       newChatBubbles.push(
-        <Message direction={m.user.id === props.uid ? "right" : "left"} text={m.text} key={100*numChatBubbles + i}/>
+        <Message
+          direction={m.user.id === props.uid ? "right" : "left"}
+          text={m.text}
+          key={100 * numChatBubbles + i}
+        />
       );
     });
 
     setChatBubbles(newChatBubbles);
-
   }, [data, newMessages, props.uid]);
 
   // reset cached messages when group id changes.
@@ -196,7 +223,7 @@ const MessageBox = (props: MessageBoxProps) => {
       },
     });
   };
-  
+
   return (
     <div className={classes.container}>
       <h1>

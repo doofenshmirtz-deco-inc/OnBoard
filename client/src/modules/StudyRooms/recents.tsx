@@ -73,14 +73,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 type Contact = {
-  id: string,
-  name: string,
-  group: boolean,
-  users: any[],
-}
+  id: string;
+  name: string;
+  group: boolean;
+  users: any[];
+};
 
 const Recents = () => {
-
   const classes = useStyles();
 
   // currently selected contact id and name.
@@ -100,15 +99,15 @@ const Recents = () => {
   // callback handler to bump the currently selected group to the top of the list.
   // passed to message box so it can be called when a new message is received.
   const bumpSelectedContact = useCallback(() => {
-    const selectedContacts = contacts.filter(c => c.id == selected.id);
-    const notSelectedContacts = contacts.filter(c => c.id != selected.id);
+    const selectedContacts = contacts.filter((c) => c.id == selected.id);
+    const notSelectedContacts = contacts.filter((c) => c.id != selected.id);
     setContacts([...selectedContacts, ...notSelectedContacts]);
   }, [selected]);
   // TODO: probably sort contacts initially as well. will need to sort server-side or return times in query.
 
   // get my recently contacted groups
   const { data, loading } = useQuery<MyGroups>(GROUPS_QUERY);
-  // get my id. 
+  // get my id.
   // TODO: pass uid as prop?
   const { data: me, loading: meLoading } = useQuery<MeId>(ME_QUERY);
   const uid = me?.me?.id;
@@ -124,15 +123,10 @@ const Recents = () => {
       };
     });
 
-    if (myGroups)
-      setContacts(myGroups); // FIXME: resets order...
+    if (myGroups) setContacts(myGroups); // FIXME: resets order...
   }, [data]);
 
-  if (
-    loading || meLoading ||
-    !data?.me?.groups ||
-    !uid
-  ) {
+  if (loading || meLoading || !data?.me?.groups || !uid) {
     return <LoadingPage />;
   }
 
