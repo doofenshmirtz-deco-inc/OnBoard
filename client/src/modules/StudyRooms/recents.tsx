@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import MessageBox from "../../components/MessageBox";
 import RecentContacts from "../../components/RecentContacts";
@@ -64,20 +64,6 @@ const ME_QUERY = gql`
   }
 `;
 
-const MESSAGES_SUBSCRIPTION = gql`
-  subscription OnMessageSent($uid: ID!) {
-    newMessages(uid: $uid) {
-      text
-      group {
-        id
-      }
-      user {
-        id
-      }
-    }
-  }
-`;
-
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 3,
@@ -86,76 +72,71 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+type Contact = {
+  id: string,
+  name: string,
+  group: boolean,
+  users: any[],
+}
+
 const Recents = () => {
+
+  const classes = useStyles();
+
+  // currently selected contact id and name.
   const [selected, setSelectedState] = useState({
     id: "",
     name: "",
   });
 
-  const [contacts, setContacts] = useState([{}]);
-  const [uid, setUID] = useState("");
-  const [newMessage, setNewMessage] = useState({} as ChatMessage);
+  // list of contacts/groups, sorted by recency.
+  const [contacts, setContacts] = useState([{}] as Contact[]);
 
+  // handles a click on a contact/group by selecting that contact.
   const handleClick = (item: any) => {
     setSelectedState(item);
   };
 
-  const classes = useStyles();
+  // callback handler to bump the currently selected group to the top of the list.
+  // passed to message box so it can be called when a new message is received.
+  const bumpSelectedContact = useCallback(() => {
+    const selectedContacts = contacts.filter(c => c.id == selected.id);
+    const notSelectedContacts = contacts.filter(c => c.id != selected.id);
+    setContacts([...selectedContacts, ...notSelectedContacts]);
+  }, [selected]);
+  // TODO: probably sort contacts initially as well. will need to sort server-side or return times in query.
 
-  // get my recently contacted
+  // get my recently contacted groups
   const { data, loading } = useQuery<MyGroups>(GROUPS_QUERY);
-  // get my id
-  const me = useQuery<MeId>(ME_QUERY);
+  // get my id. 
+  // TODO: pass uid as prop?
+  const { data: me, loading: meLoading } = useQuery<MeId>(ME_QUERY);
+  const uid = me?.me?.id;
 
-  const subscription = useSubscription(MESSAGES_SUBSCRIPTION, {
-    variables: { uid: uid },
-  });
+  // run when data from groups query is obtained.
+  useEffect(() => {
+    const myGroups = data?.me?.groups?.map((group: any) => {
+      return {
+        id: group.id,
+        name: group.name,
+        group: group.users.length > 2,
+        users: group.users,
+      };
+    });
 
-  // TODO: probs fix this dodgy code?
+    if (myGroups)
+      setContacts(myGroups); // FIXME: resets order...
+  }, [data]);
+
   if (
-    loading ||
-    !data ||
-    !data.me ||
-    !data.me.groups ||
-    !me.data ||
-    !me.data.me
+    loading || meLoading ||
+    !data?.me?.groups ||
+    !uid
   ) {
     return <LoadingPage />;
   }
 
-  const myGroups = data.me.groups.map((group: any) => {
-    return {
-      id: parseInt(group.id, 10),
-      name: group.name,
-      group: group.users.length > 2,
-      users: group.users,
-    };
-  });
-
-  if (contacts.length !== myGroups.length) {
-    setContacts(myGroups);
-  }
-
-  if (uid === "") {
-    setUID(me.data.me.id);
-  }
-
-  if (subscription && subscription.data && subscription.data.newMessages && !newMessage.text) {
-    const message = subscription?.data?.newMessages;
-    const newMsg: ChatMessage = {
-      text: message?.text,
-      sender: message?.user.id,
-      direction: message?.user.id === uid ? "right" : "left",
-      groupId: parseInt(message?.group.id, 10)
-    };
-
-    console.log(newMsg);
-    if (newMsg.sender !== uid) {
-      setNewMessage(newMsg);
-      // console.log("hi")
-      // console.log(newMsg);
-    }
-  }
+  // TODO: NEED some way of updating messages in background. service/react context?
 
   return (
     <div>
@@ -169,13 +150,10 @@ const Recents = () => {
           <div />
         ) : (
           <MessageBox
-            contacts={contacts}
-            setContacts={setContacts}
-            newMessage={newMessage}
-            setNewMessage={setNewMessage}
-            myId={uid}
+            uid={uid}
             id={selected.id}
             name={selected.name}
+            onNewMessage={bumpSelectedContact}
           />
         )}
       </div>

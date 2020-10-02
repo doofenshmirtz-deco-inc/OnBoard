@@ -50,7 +50,7 @@ const RecentContacts = (props: any) => {
         }}
       />
       {Object.values(props.contacts).map((item: any) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ? (
+        item?.name?.toLowerCase?.().includes?.(searchTerm.toLowerCase()) ? (
           <Button
             color="primary"
             disableElevation
