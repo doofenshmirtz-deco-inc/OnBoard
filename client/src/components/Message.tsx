@@ -28,7 +28,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Message = (props: any) => {
+export type MessageProps = {
+  direction: "left" | "right";
+  text: string;
+};
+
+const Message = (props: MessageProps) => {
   const classes = useStyles();
 
   return (

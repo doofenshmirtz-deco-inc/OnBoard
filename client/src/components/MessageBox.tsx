@@ -1,12 +1,27 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, {
+  useState,
+  useLayoutEffect,
+  useEffect,
+  useCallback,
+} from "react";
 import { Button, makeStyles, TextField } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import VideocamIcon from "@material-ui/icons/Videocam";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import {
+  gql,
+  OnSubscriptionDataOptions,
+  useMutation,
+  useQuery,
+  useSubscription,
+} from "@apollo/client";
 import { LoadingPage } from "./LoadingPage";
 import { MyMessages } from "../graphql/MyMessages";
 import ChatMessage from "./ChatMessage";
 import Message from "./Message";
+import {
+  OnMessageReceived,
+  OnMessageReceived_newMessages,
+} from "../graphql/OnMessageReceived";
 
 const MESSAGES_QUERY = gql`
   query MyMessages($groupId: ID!) {
@@ -16,6 +31,10 @@ const MESSAGES_QUERY = gql`
         id
         name
       }
+      group {
+        id
+      }
+      createdAt
     }
   }
 `;
@@ -28,9 +47,24 @@ const ADD_MESSAGE = gql`
   }
 `;
 
+const MESSAGES_SUBSCRIPTION = gql`
+  subscription OnMessageReceived($uid: ID!) {
+    newMessages(uid: $uid) {
+      text
+      group {
+        id
+      }
+      user {
+        id
+      }
+      createdAt
+    }
+  }
+`;
+
 // TODO: interfaces for types
 
-export const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     width: "100%",
     paddingLeft: "2%",
@@ -72,78 +106,117 @@ export const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const mapMessages = (data: MyMessages, myId: string) => {
-  return data.getMessages.map((msg) => {
-    return {
-      text: msg.text,
-      direction: msg.user.id === myId ? "right" : "left",
-      sender: msg.user.id,
-      // TODO: change groupId
-      groupId: 0
-    } as ChatMessage;
-  });
+// note that this takes an OnMessageReceived_newMessages, but the queries are
+// written such that MyMessages_getMessages has the exact same type.
+const toChatMessage = (
+  data: OnMessageReceived_newMessages,
+  uid: string
+): ChatMessage => {
+  return {
+    sender: data.user.id,
+    text: data.text,
+    direction: data.user.id === uid ? "right" : "left",
+    groupId: data.group.id,
+    createdAt: new Date(data.createdAt),
+  };
 };
 
-const MessageBox = (props: any) => {
-  const [message, setMessageSent] = useState("");
-  const [messages, setMessages] = useState(new Map<number, JSX.Element[]>());
-  const updateMap = (k: number, v: any) => {
-    setMessages(new Map(messages.set(k, v)));
-  }
+const renderChatMessage = (message: ChatMessage) => {
+  const key = `${message.createdAt}-${message.sender}-${message.groupId}`;
+  return (
+    <Message
+      key={key}
+      direction={message.direction}
+      text={message.text}
+    ></Message>
+  );
+};
 
+export type MessageBoxProps = {
+  uid: string; // uid of this user.
+  id: string; // group id of chat.
+  name: string; // name of chat.
+  onSentMessage?: () => any; // to be called when new message is received.
+};
+
+const MessageBox = (props: MessageBoxProps) => {
   const classes = useStyles();
 
-  const messagesEndRef = React.useRef<HTMLDivElement>(null);
+  // current message being typed in text box.
+  const [messageInput, setMessageInput] = useState("");
+  // existing chat messages as ChatMessage items.
+  const [oldMessages, setOldMessages] = useState([] as ChatMessage[]);
+  // new messages obtained via subscription.
+  const [newMessages, setNewMessages] = useState([] as ChatMessage[]);
 
+  // reference to end of messages, to scroll to bottom on new message.
+  const messagesEndRef = React.useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     if (messagesEndRef.current !== null) {
       messagesEndRef.current.scrollIntoView({ behavior: "auto" });
     }
   });
 
+  // mutation to send a new message to the server.
   const [sendToServer] = useMutation(ADD_MESSAGE);
 
-  // get my messages for a specific contact
-  const { data } = useQuery<MyMessages>(MESSAGES_QUERY, {
+  // get my messages for a specific contact group.
+  const { data, loading, refetch } = useQuery<MyMessages>(MESSAGES_QUERY, {
     variables: { groupId: props.id },
   });
 
-  if (!data) {
+  // subscription handler to add a new received message.
+  const handleNewMessage = useCallback(
+    (options: OnSubscriptionDataOptions<OnMessageReceived>) => {
+      const data = options.subscriptionData.data?.newMessages;
+      // console.log(options.subscriptionData.data);
+
+      if (data) {
+        if (data.group.id !== props.id) return; // not the selected group
+        setNewMessages([...newMessages, toChatMessage(data, props.uid)]);
+      }
+    },
+    [newMessages, props.uid]
+  );
+
+  // subscribe to incoming messages with the above handler.
+  const { data: subData } = useSubscription<OnMessageReceived>(
+    MESSAGES_SUBSCRIPTION,
+    {
+      variables: { uid: props.uid },
+      onSubscriptionData: handleNewMessage,
+    }
+  );
+
+  // when data changes, update oldMessages.
+  useEffect(() => {
+    if (!data) return;
+
+    const oldMessages: ChatMessage[] =
+      data?.getMessages?.map((x) => toChatMessage(x, props.uid)) ?? [];
+
+    oldMessages.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+
+    setOldMessages(oldMessages);
+  }, [data, props.uid]);
+
+  // reset cached messages when group id changes.
+  useEffect(() => {
+    refetch();
+    setNewMessages([]);
+  }, [props.id]);
+
+  if (!data || loading) {
     return <LoadingPage />;
   }
 
-  const send = (message: string) => {
+  const sendMessage = (message: string) => {
     if (message === "") {
       return;
     }
 
-    const newMessage = {
-      text: message,
-      direction: "right",
-      sender: props.myId,
-    };
-
-    setMessageSent("");
-
-    // TODO: probably change this to a splay tree or something?
-    const contacts: any[] = props.contacts;
-    let index = -1;
-    for (let i = 0; i < contacts.length; i++) {
-      if (contacts[i].id === props.id) {
-        index = i;
-        break;
-      }
-    }
-
-    let newContacts: any[] = [contacts[index]];
-    for (let i = 0; i < contacts.length; i++) {
-      if (i !== index) {
-        newContacts.push(contacts[i]);
-      }
-    }
-
-    props.setContacts(newContacts);
-    console.log(newContacts);
+    setMessageInput("");
+    props.onSentMessage?.();
 
     sendToServer({
       variables: {
@@ -153,29 +226,14 @@ const MessageBox = (props: any) => {
     });
   };
 
-  let chatBubbles = data.getMessages.map((obj: any, i: number) => (
-    <Message direction={obj.user.id === props.id ? "right" : "left"} text={obj.text} key={i} />
-  ));
-  
-  if (!messages.has(props.id)) {
-    updateMap(props.id, chatBubbles);
-  }
-
-  // console.log(props.newMessage);
-  if (props.newMessage.groupId === props.id) {
-    console.log("messagebox says hi 2");
-    chatBubbles.push(<Message direction={props.newMessage.direction} text={props.newMessage.text} />);
-    updateMap(props.id, chatBubbles);
-    props.setNewMessage({} as ChatMessage);
-  }
-
   return (
     <div className={classes.container}>
       <h1>
         {props.name} <VideocamIcon />
       </h1>
       <div className={classes.messagingContainer}>
-        {messages.get(props.id)}
+        {oldMessages.map(renderChatMessage)}
+        {newMessages.map(renderChatMessage)}
         <div ref={messagesEndRef} />
       </div>
       <TextField
@@ -184,16 +242,16 @@ const MessageBox = (props: any) => {
         variant="outlined"
         id="message-send"
         label="Send message"
-        value={message}
-        onChange={(e) => setMessageSent(e.target.value)}
+        value={messageInput}
+        onChange={(e) => setMessageInput(e.target.value)}
         onKeyPress={(e) => {
           if (e.key === "Enter") {
-            send(message);
+            sendMessage(messageInput);
           }
         }}
         InputProps={{
           endAdornment: (
-            <Button onClick={() => send(message)}>
+            <Button onClick={() => sendMessage(messageInput)}>
               <SendIcon />
             </Button>
           ),
