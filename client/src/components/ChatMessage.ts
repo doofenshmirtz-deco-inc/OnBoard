@@ -1,8 +1,9 @@
 interface ChatMessage {
   text: string;
   sender: string;
-  direction: string;
-  groupId: number;
+  direction: "left" | "right";
+  groupId: string;
+  createdAt: Date;
 }
 
 export default ChatMessage;

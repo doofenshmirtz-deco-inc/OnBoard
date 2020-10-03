@@ -143,7 +143,7 @@ const Recents = () => {
             uid={uid}
             id={selected.id}
             name={selected.name}
-            onNewMessage={bumpSelectedContact}
+            onSentMessage={bumpSelectedContact}
           />
         )}
       </div>

@@ -22,6 +22,7 @@ export interface OnMessageReceived_newMessages {
   text: string;
   group: OnMessageReceived_newMessages_group;
   user: OnMessageReceived_newMessages_user;
+  createdAt: any;
 }
 
 export interface OnMessageReceived {
