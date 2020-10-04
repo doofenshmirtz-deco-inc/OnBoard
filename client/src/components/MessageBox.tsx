@@ -3,6 +3,8 @@ import React, {
   useLayoutEffect,
   useEffect,
   useCallback,
+  SetStateAction,
+  Dispatch,
 } from "react";
 import { Button, makeStyles, TextField } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
@@ -22,6 +24,7 @@ import {
   OnMessageReceived,
   OnMessageReceived_newMessages,
 } from "../graphql/OnMessageReceived";
+import { Contact } from "../modules/StudyRooms/recents";
 
 const MESSAGES_QUERY = gql`
   query MyMessages($groupId: ID!) {
@@ -124,11 +127,7 @@ const toChatMessage = (
 const renderChatMessage = (message: ChatMessage) => {
   const key = `${message.createdAt}-${message.sender}-${message.groupId}`;
   return (
-    <Message
-      key={key}
-      direction={message.direction}
-      text={message.text}
-    ></Message>
+    <Message key={key} direction={message.direction} text={message.text} />
   );
 };
 
@@ -137,8 +136,11 @@ export type MessageBoxProps = {
   id: string; // group id of chat.
   name: string; // name of chat.
   onSentMessage?: () => any; // to be called when new message is received.
+  contacts: Contact[]; // all the contacts
+  setContacts: Dispatch<SetStateAction<Contact[]>>; // setContacts from parent (recents.tsx)
 };
 
+// TODO: clear input message when changing contact
 const MessageBox = (props: MessageBoxProps) => {
   const classes = useStyles();
 
@@ -165,14 +167,32 @@ const MessageBox = (props: MessageBoxProps) => {
     variables: { groupId: props.id },
   });
 
+  // FIXME: i feel like this is dodgy :/
+  let contact = props.contacts.filter((c) => c.id === props.id)[0];
+  if (!contact.readStatus) {
+    contact.readStatus = true;
+    props.setContacts([
+      contact,
+      ...props.contacts.filter((c) => c.id !== props.id),
+    ]);
+  }
+
   // subscription handler to add a new received message.
   const handleNewMessage = useCallback(
     (options: OnSubscriptionDataOptions<OnMessageReceived>) => {
       const data = options.subscriptionData.data?.newMessages;
-      // console.log(options.subscriptionData.data);
 
       if (data) {
-        if (data.group.id !== props.id) return; // not the selected group
+        if (data.group.id !== props.id) {
+          // FIXME: i feel like this is dodgy :/ (perhaps abstract to a function?)
+          let contact = props.contacts.filter((c) => c.id === data.group.id)[0];
+          contact.readStatus = false;
+          props.setContacts([
+            contact,
+            ...props.contacts.filter((c) => c.id !== data.group.id),
+          ]);
+          return; // not the selected group
+        }
         setNewMessages([...newMessages, toChatMessage(data, props.uid)]);
       }
     },

@@ -22,6 +22,15 @@ const useStyles = makeStyles((theme: Theme) =>
     cardBackground: {
       backgroundColor: "transparent",
     },
+    // TODO: change this so that it's maybe something different for new messages, idk, testing might help with this
+    newMessage: {
+      fontWeight: "bold",
+      backgroundColor: theme.palette.secondary.main,
+    },
+    read: {
+      fontWeight: "normal",
+      backgroundColor: "transparent",
+    },
   })
 );
 
@@ -64,6 +73,7 @@ export default function ContactCard(props: any) {
   return (
     <Card className={classes.cardBackground}>
       <CardHeader
+        className={props.readStatus ? classes.read : classes.newMessage}
         avatar={avatar}
         action={action}
         title={props.name}

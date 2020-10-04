@@ -68,11 +68,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type Contact = {
+export type Contact = {
   id: string;
   name: string;
   group: boolean;
   users: any[];
+  readStatus: boolean;
 };
 
 const Recents = () => {
@@ -95,8 +96,8 @@ const Recents = () => {
   // callback handler to bump the currently selected group to the top of the list.
   // passed to message box so it can be called when a new message is received.
   const bumpSelectedContact = useCallback(() => {
-    const selectedContacts = contacts.filter((c) => c.id == selected.id);
-    const notSelectedContacts = contacts.filter((c) => c.id != selected.id);
+    const selectedContacts = contacts.filter((c) => c.id === selected.id);
+    const notSelectedContacts = contacts.filter((c) => c.id !== selected.id);
     setContacts([...selectedContacts, ...notSelectedContacts]);
   }, [selected]);
   // TODO: probably sort contacts initially as well. will need to sort server-side or return times in query.
@@ -116,6 +117,7 @@ const Recents = () => {
         name: group.name,
         group: group.users.length > 2,
         users: group.users,
+        readStatus: true,
       };
     });
 
@@ -128,6 +130,7 @@ const Recents = () => {
 
   // TODO: NEED some way of updating messages in background. service/react context?
 
+  console.log(contacts);
   return (
     <div>
       <div className={classes.root}>
@@ -143,6 +146,8 @@ const Recents = () => {
             uid={uid}
             id={selected.id}
             name={selected.name}
+            contacts={contacts}
+            setContacts={setContacts}
             onSentMessage={bumpSelectedContact}
           />
         )}

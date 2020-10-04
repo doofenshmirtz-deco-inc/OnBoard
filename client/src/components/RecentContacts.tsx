@@ -67,6 +67,7 @@ const RecentContacts = (props: any) => {
             <ContactCard
               key={item.id}
               name={item.name}
+              readStatus={item.readStatus}
               contact={item.users[0]}
               buttonsOff={true}
               group={item.group}
