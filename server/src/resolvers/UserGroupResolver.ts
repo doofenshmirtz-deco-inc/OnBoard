@@ -59,7 +59,6 @@ export class UserGroupResolver {
   }
 
   @FieldResolver(() => Timetable, { nullable: true })
-  @UseMiddleware(isAuth)
   async timetable(@Root() group: BaseGroup, @Ctx() ctx: Context) {
     if (group.groupType == GroupType.Class) {
       const classGroup = group as ClassGroup;
