@@ -51,9 +51,9 @@
     "typescript": "^3.9.7"
   },
   "nodemonConfig": {
-	  "env": {
-		  "NODE_ENV": "development"
-	  }
+    "env": {
+      "NODE_ENV": "development"
+    }
   },
   "resolutions": {
     "**/**/fs-capacitor": "^6.2.0",
