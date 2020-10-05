@@ -8,7 +8,11 @@ FROM node:12.13.0
 WORKDIR /usr/src/client
 
 COPY package.json ./
+COPY yarn.lock ./
+RUN yarn
+
 COPY tsconfig.json ./
 COPY ./src ./src
 COPY ./public ./public
-RUN yarn && yarn build
+COPY .env* ./
+RUN yarn build
