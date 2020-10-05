@@ -9,8 +9,6 @@ import firebase from "firebase/app";
 import { CourseResolver } from "./resolvers/CourseResolver";
 import { UserGroupResolver } from "./resolvers/UserGroupResolver";
 import { MessageResolver } from "./resolvers/MessageResolver";
-import { SubscriptionServer } from "subscriptions-transport-ws";
-import { execute, subscribe, GraphQLScalarType } from "graphql";
 import { createServer } from "http";
 import { AppPubSub } from "./resolvers/AppPubSub";
 import {
@@ -24,6 +22,7 @@ import {
 } from "./resolvers/UploadResolver";
 import { graphqlUploadExpress, GraphQLUpload } from "graphql-upload";
 import path from "path";
+import { authChecker } from "./middleware/authChecker";
 
 async function main() {
   const port = 5000;
@@ -62,6 +61,7 @@ async function main() {
     ],
     emitSchemaFile: true,
     pubSub: AppPubSub,
+    authChecker: authChecker,
   });
 
   const app = express();

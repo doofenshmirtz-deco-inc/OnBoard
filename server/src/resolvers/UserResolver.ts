@@ -9,10 +9,10 @@ import {
   Ctx,
   FieldResolver,
   Root,
+  Authorized,
 } from "type-graphql";
 import { User } from "../models/User";
 import { PaginationArgs, getOrder } from "./Types";
-import { isAuth } from "../middleware/isAuth";
 import { Context } from "../middleware/Context";
 import { BaseGroup, GroupType, CourseGroup, Group } from "../models/UserGroup";
 import { Course, CourseColor, CourseColours } from "../models/Course";
@@ -21,7 +21,7 @@ import { CourseRole, CourseGroupPair } from "../models/CourseGroupPair";
 @Resolver((of) => User)
 export class UserResolver {
   @Query(() => [User])
-  @UseMiddleware(isAuth)
+  @Authorized()
   async users(@Args() pag: PaginationArgs) {
     return (
       await User.findAndCount({
@@ -33,6 +33,7 @@ export class UserResolver {
   }
 
   @Query(() => User, { nullable: true })
+  @Authorized()
   async user(@Arg("id", () => String) id: String): Promise<User | undefined> {
     return User.findOne({
       where: { id },
@@ -40,7 +41,7 @@ export class UserResolver {
   }
 
   @Query(() => User, { nullable: true })
-  @UseMiddleware(isAuth)
+  @Authorized()
   async me(@Ctx() ctx: Context) {
     // TODO sort groups by most recent message
     return User.findOne({
@@ -49,6 +50,7 @@ export class UserResolver {
   }
 
   @FieldResolver((type) => [Group])
+  @Authorized()
   async groups(
     @Root() user: User,
     @Arg("role", () => CourseRole, { nullable: true }) role: CourseRole | null
@@ -59,6 +61,7 @@ export class UserResolver {
   }
 
   @FieldResolver(() => [CourseColor])
+  @Authorized()
   async courses(
     @Root() user: User,
     @Arg("role", () => CourseRole, { nullable: true }) role: CourseRole | null
