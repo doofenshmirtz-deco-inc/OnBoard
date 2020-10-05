@@ -28,7 +28,7 @@ const handleAIP = (api: any, history: any) => {
 };
 
 interface Props {
-  name: string;
+  name: string; // Name must not have any spaces
   password: string;
 }
 
@@ -45,9 +45,9 @@ export default (props: Props) => {
         config={config}
         containerStyle={style}
         displayName={data.me.name}
-        roomName={props.name}
+        roomName={props.name.replace(" ", "")}
         password={props.password}
-        domain="localhost:8443"
+        domain={process.env.REACT_APP_JITSI_DOMAIN}
         loadingComponent={() => <LoadingPage />}
         onAPILoad={(api) => handleAIP(api, history)}
       />

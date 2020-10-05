@@ -9,10 +9,10 @@ import {
   Ctx,
   FieldResolver,
   Root,
+  Authorized,
 } from "type-graphql";
 import { User } from "../models/User";
 import { PaginationArgs, getOrder } from "./Types";
-import { isAuth } from "../middleware/isAuth";
 import { Context } from "../middleware/Context";
 import {
   BaseGroup,
@@ -27,7 +27,7 @@ import { CourseGroupPair } from "../models/CourseGroupPair";
 @Resolver((of) => BaseGroup)
 export class UserGroupResolver {
   @Query(() => [BaseGroup])
-  @UseMiddleware(isAuth)
+  @Authorized()
   async userGroups(@Args() pag: PaginationArgs) {
     return (
       await BaseGroup.findAndCount({
@@ -39,7 +39,7 @@ export class UserGroupResolver {
   }
 
   @Query(() => BaseGroup, { nullable: true })
-  @UseMiddleware(isAuth)
+  @Authorized()
   async userGroup(@Arg("id", () => String) id: String) {
     return BaseGroup.findOne({
       where: { id },
@@ -47,7 +47,6 @@ export class UserGroupResolver {
   }
 
   @FieldResolver((type) => [User])
-  // @UseMiddleware(isAuth)
   async users(@Root() group: BaseGroup, @Ctx() ctx: Context) {
     /* TODO need to decide how to handle permissions
     const user = await User.findOne({ where: { id: ctx.payload?.uid } });
@@ -60,7 +59,6 @@ export class UserGroupResolver {
   }
 
   @FieldResolver(() => Timetable, { nullable: true })
-  @UseMiddleware(isAuth)
   async timetable(@Root() group: BaseGroup, @Ctx() ctx: Context) {
     if (group.groupType == GroupType.Class) {
       const classGroup = group as ClassGroup;
