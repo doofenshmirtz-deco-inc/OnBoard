@@ -24,6 +24,11 @@ const ME = gql`
 `;
 
 const handleAIP = (api: any, history: any, password: string) => {
+  api.on("participantRoleChanged", (event: any) => {
+    if (event.role === "moderator") {
+      api.executeCommand("password", password);
+    }
+  });
   api.on("passwordRequired", () => api.executeCommand("password", password));
   api.on("readyToClose", () => history.push("/"));
 };
@@ -34,7 +39,7 @@ interface Props {
 }
 
 export default (props: Props) => {
-  const { loading, error, data } = useQuery<ME_VIDEO>(ME);
+  const { data } = useQuery<ME_VIDEO>(ME);
 
   const history = useHistory();
 
@@ -47,7 +52,6 @@ export default (props: Props) => {
         containerStyle={style}
         displayName={data.me.name}
         roomName={props.name.replace(" ", "")}
-        password={props.password}
         domain={process.env.REACT_APP_JITSI_DOMAIN}
         loadingComponent={() => <LoadingPage />}
         onAPILoad={(api) => handleAIP(api, history, props.password)}
