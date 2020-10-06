@@ -9,7 +9,7 @@ import { useHistory } from "react-router";
 import VideoChat from "../../components/VideoChat";
 
 const VideoChatPage = () => {
-  return <VideoChat name="Room Name" password="asdf1234" />;
+  return <VideoChat name="room" password="asdf1234" />;
 };
 
 export default {

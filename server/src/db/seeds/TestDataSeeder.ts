@@ -141,7 +141,7 @@ export default class TestDataSeeder implements Seeder {
 
     const edis = await factory(Course)({
       code: "EDIS3801",
-      name: "Evil Design Inventing Studio 3 - Buidld",
+      name: "Evil Design Inventing Studio 3 - Build",
       semester: Semesters.One,
       level: CourseLevel.Undergrad,
       year: 2018,

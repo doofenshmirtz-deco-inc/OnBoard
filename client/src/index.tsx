@@ -12,7 +12,7 @@ import firebase from "firebase";
 import { getMainDefinition } from "@apollo/client/utilities";
 
 const httpLink = (createUploadLink({
-  uri: "http://localhost:5000/graphql",
+  uri: process.env.REACT_APP_GRAPHQL_URL,
   headers: {
     "keep-alive": "true",
   },
@@ -29,7 +29,7 @@ const authLink = setContext(async (_, { headers }) => {
 });
 
 const wsLink = new WebSocketLink({
-  uri: "ws://localhost:5000/graphql",
+  uri: process.env.REACT_APP_GRAPHQL_WS!,
   options: {
     reconnect: true,
   },

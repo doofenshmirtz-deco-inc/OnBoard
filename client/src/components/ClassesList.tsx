@@ -8,6 +8,7 @@ import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import { useQuery, gql } from "@apollo/client";
 import { MyClasses } from "../graphql/MyClasses";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,6 +26,7 @@ const GET_CLASSES = gql`
         course {
           name
           code
+          id
         }
       }
     }
@@ -42,7 +44,12 @@ export default function ContactList() {
     ) : (
       <List>
         {data.me.courses.map((item: any, index: number) => (
-          <ListItem button key={index}>
+          <ListItem
+            button
+            key={index}
+            component={Link}
+            to={"/classes/" + item.course.id}
+          >
             <ListItemIcon>
               <svg width={20} height={20}>
                 <circle cx={10} cy={10} r={10} fill={item.colour}></circle>

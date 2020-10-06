@@ -1,0 +1,21 @@
+onboard.doofenshmirtz.xyz, localhost {
+    reverse_proxy onboard-server:5000
+}
+
+onboard.doofenshmirtz.xyz:443, localhost:443 {
+    reverse_proxy onboard-server:5000
+}
+
+# very strange that these don't use the defined ports...
+onboard.doofenshmirtz.xyz:18443, localhost:18443 {
+    reverse_proxy web:443 {
+        transport http {
+            tls
+            tls_insecure_skip_verify
+        }
+    }
+}
+http://onboard.doofenshmirtz.xyz:18000, http://localhost:18000 {
+    reverse_proxy web:80
+}
+

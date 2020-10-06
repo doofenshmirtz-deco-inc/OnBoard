@@ -16,6 +16,7 @@ export interface MyAnnouncements_me_courses_course_announcements {
 
 export interface MyAnnouncements_me_courses_course {
   __typename: "Course";
+  id: string;
   announcements: MyAnnouncements_me_courses_course_announcements[] | null;
 }
 

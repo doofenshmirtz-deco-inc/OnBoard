@@ -11,6 +11,7 @@ export interface MyClasses_me_courses_course {
   __typename: "Course";
   name: string;
   code: string;
+  id: string;
 }
 
 export interface MyClasses_me_courses {
