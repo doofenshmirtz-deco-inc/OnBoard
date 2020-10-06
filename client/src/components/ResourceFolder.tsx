@@ -21,12 +21,18 @@ import {
 import Typography from "@material-ui/core/Typography";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: "100%",
-      maxWidth: 500,
+      flexGrow: 1,
+    },
+    paper: {
+      padding: theme.spacing(2),
+      color: theme.palette.text.secondary,
     },
   })
 );
@@ -101,9 +107,9 @@ const GET_NODE = gql`
   }
 `;
 
-function FolderItem(item: any) {
+function FolderItem(item: any, index: number) {
   return (
-    <ListItem button component={RouterLink} to={`${item.id}`}>
+    <ListItem button key={index} component={RouterLink} to={`${item.id}`}>
       <ListItemAvatar>
         <Avatar>
           <FolderIcon />
@@ -114,9 +120,9 @@ function FolderItem(item: any) {
   );
 }
 
-function TextItem(item: any) {
+function TextItem(item: any, index: number) {
   return (
-    <ListItem button>
+    <ListItem button key={index} component={RouterLink} to={`${item.id}`}>
       <ListItemAvatar>
         <Avatar>
           <DescriptionIcon />
@@ -127,9 +133,9 @@ function TextItem(item: any) {
   );
 }
 
-function HeadingItem(item: any) {
+function HeadingItem(item: any, index: number) {
   return (
-    <ListItem button>
+    <ListItem button key={index} component={RouterLink} to={`${item.id}`}>
       <ListItemAvatar>
         <Avatar>
           <DescriptionIcon />
@@ -194,11 +200,11 @@ function NodeDirectory(props: {
         <List className={classes.root}>
           {data?.node?.children.map((item, index) => {
             if (item.__typename === "TextNode") {
-              return TextItem(item);
+              return TextItem(item, index);
             } else if (item.__typename === "HeadingNode") {
-              return HeadingItem(item);
+              return HeadingItem(item, index);
             } else if (item.__typename === "FolderNode") {
-              return FolderItem(item);
+              return FolderItem(item, index);
             }
           })}
         </List>
@@ -208,25 +214,71 @@ function NodeDirectory(props: {
   return <></>;
 }
 
+function NodeContent(props: { courseId?: string; nodeId?: string }) {
+  const classes = useStyles();
+  let { nodeId } = useParams<NodeProps>();
+
+  const { loading, data, error } = useQuery<GetNode>(GET_NODE, {
+    variables: {
+      nodeID: props.nodeId ? parseInt(props.nodeId) : parseInt(nodeId),
+    },
+  });
+
+  if (data?.node?.__typename === "TextNode") {
+    return (
+      <Paper className={classes.paper}>
+        <h1>{data.node?.title}</h1>
+        <p>{data.node?.text}</p>
+      </Paper>
+    );
+  }
+
+  if (data?.node?.__typename === "FolderNode") {
+    return (
+      <Paper className={classes.paper}>
+        <h1>{data.node?.title}</h1>
+        <h3>Folder</h3>
+      </Paper>
+    );
+  }
+
+  return <></>;
+}
+
 export default function ResourceFolder(props: { courseId?: string }) {
   const classes = useStyles();
 
   const { loading, data, error } = useQuery<GetRootCoursePage>(ROOT_FOLDER, {
     variables: { courseID: props.courseId },
   });
-
   let { url } = useRouteMatch();
 
   return loading ? (
     <LinearProgress />
   ) : (
-    <Switch>
-      <Route path={`${url}/:nodeId`}>
-        <NodeDirectory {...props} />
-      </Route>
-      <Route path="/">
-        <NodeDirectory nodeId={data?.course.coursePage.id} {...props} />
-      </Route>
-    </Switch>
+    <div className={classes.root}>
+      <Switch>
+        <Route path={`${url}/:nodeId`}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
+              <NodeDirectory {...props} />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <NodeContent {...props} />
+            </Grid>
+          </Grid>
+        </Route>
+        <Route path="/">
+          <Grid container spacing={3}>
+            <Grid item xs={6} sm={6}>
+              <NodeDirectory nodeId={data?.course.coursePage.id} {...props} />
+            </Grid>
+            <Grid item xs={6} sm={6}>
+              <NodeContent nodeId={data?.course.coursePage.id} {...props} />
+            </Grid>
+          </Grid>
+        </Route>
+      </Switch>
+    </div>
   );
 }

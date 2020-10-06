@@ -58,13 +58,13 @@ function a11yProps(index: any) {
 
 function classNotFound() {
   return (
-    <div>
+    <>
       <h1>Well, that didn't work</h1>
       <p>
         The class you were looking for was not found or you don't have access to
         view it.
       </p>
-    </div>
+    </>
   );
 }
 
@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 let tabPages: MenuBarComponent[] = [
   {
     name: "Announcements",
-    path: "announcements",
+    path: "announcements/",
     content: <Announcements isDashboard={false} />,
   },
   {
@@ -90,10 +90,10 @@ let tabPages: MenuBarComponent[] = [
     content: <ResourceFolder />,
   },
   { name: "Assessment", path: "assessment/", content: <p>Assessment</p> },
-  { name: "Course Staff", path: "staff", content: <p>Staff</p> },
+  { name: "Course Staff", path: "staff/", content: <p>Staff</p> },
   {
     name: "Course Profile (ECP)",
-    path: "profile",
+    path: "profile/",
     content: <p>Course Profile (ECP)</p>,
   },
 ];
@@ -145,7 +145,7 @@ export default function ClassView() {
       </h2>
       <AppBar position="static">
         <Tabs
-          value={location.pathname}
+          value={location.pathname.split("/", 4).join("/").concat("/")}
           indicatorColor="secondary"
           variant="scrollable"
           scrollButtons="auto"
