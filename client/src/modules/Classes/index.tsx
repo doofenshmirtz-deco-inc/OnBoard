@@ -1,13 +1,30 @@
 import React from "react";
 import ClassIcon from "@material-ui/icons/Class";
-import ClassesTabs from "../../components/ClassesTabs";
+import ClassesList from "../../components/ClassesList";
+import ClassesTabs from "../../components/ClassView";
+import { Route, Switch, useRouteMatch } from "react-router-dom";
 
-const Classes = () => (
-  <>
-    <h1>My Classes</h1>
-    <ClassesTabs />
-  </>
-);
+// const Classes = (props: RouteComponentProps) => (
+//   <>
+
+//   </>
+// );
+
+function Classes() {
+  let { url } = useRouteMatch();
+
+  return (
+    <Switch>
+      <Route path={`${url}/:classId`}>
+        <ClassesTabs />
+      </Route>
+      <Route path="/">
+        <h1>My Classes</h1>
+        <ClassesList />
+      </Route>
+    </Switch>
+  );
+}
 
 export default {
   routeProps: {
