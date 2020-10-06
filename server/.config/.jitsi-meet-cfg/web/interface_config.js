@@ -128,7 +128,7 @@ var interfaceConfig = {
    *
    * @type {boolean}
    */
-  MOBILE_APP_PROMO: true,
+  MOBILE_APP_PROMO: false,
 
   NATIVE_APP_NAME: "Jitsi Meet",
 

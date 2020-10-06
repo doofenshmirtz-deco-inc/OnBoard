@@ -123,6 +123,7 @@ dist
 .config/.jitsi-meet-cfg/transcripts
 .config/.jitsi-meet-cfg/web/*
 !.config/.jitsi-meet-cfg/web/interface_config.js
+!.config/.jitsi-meet-cfg/web/config.js
 
 
 .npmrc
