@@ -147,6 +147,8 @@ export default function MiniDrawer() {
 
   const { data } = useQuery<Me>(meQuery);
 
+  console.log(data?.me?.avatar);
+
   return (
     <div className={classes.root}>
       <CssBaseline />
