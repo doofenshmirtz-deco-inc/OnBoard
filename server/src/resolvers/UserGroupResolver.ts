@@ -21,7 +21,6 @@ import {
   CourseGroup,
   DMGroup,
 } from "../models/UserGroup";
-import { Timetable } from "../models/Timetable";
 import { CourseGroupPair } from "../models/CourseGroupPair";
 
 @Resolver((of) => BaseGroup)
@@ -56,15 +55,6 @@ export class UserGroupResolver {
 
     const users = await group.users;
     return users;
-  }
-
-  @FieldResolver(() => Timetable, { nullable: true })
-  async timetable(@Root() group: BaseGroup, @Ctx() ctx: Context) {
-    if (group.groupType == GroupType.Class) {
-      const classGroup = group as ClassGroup;
-      return await classGroup.timetable;
-    }
-    return null;
   }
 
   @FieldResolver(() => String)

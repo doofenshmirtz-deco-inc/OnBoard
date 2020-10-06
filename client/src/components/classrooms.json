@@ -1,0 +1,14 @@
+[
+    {
+      "title": "CSSE2010 Lecture",
+      "roomSize": "50"
+    },
+    {
+      "title": "DECO2800 Tutorial 1",
+      "roomSize": "20"
+    },
+    {
+      "title": "Something else",
+      "roomSize": "001"
+    }
+  ]

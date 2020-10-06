@@ -1,51 +1,45 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-
-import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
-import Button from "@material-ui/core/Button";
+import AvatarGroup from "@material-ui/lab/AvatarGroup";
 
 import { red } from "@material-ui/core/colors";
 import MessageIcon from "@material-ui/icons/Message";
 import CallIcon from "@material-ui/icons/Call";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     avatar: {
       backgroundColor: red[500],
     },
+    noBorder: {
+      border: "none",
+    },
+    cardBackground: {
+      backgroundColor: "transparent",
+    },
+    // TODO: change this so that it's maybe something different for new messages, idk, testing might help with this
+    newMessage: {
+      fontWeight: "bold",
+      backgroundColor: theme.palette.secondary.main,
+    },
+    read: {
+      fontWeight: "normal",
+      backgroundColor: "transparent",
+    },
   })
 );
 
 export default function ContactCard(props: any) {
   const classes = useStyles();
+  let buttons, action;
 
-  return (
-    <Card>
-      <CardHeader
-        avatar={
-          <Avatar
-            aria-label="contact"
-            className={classes.avatar}
-            src={props.contact.avatar}
-          >
-            {props.contact.name[0]}
-          </Avatar>
-        }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
-        title={props.contact.name}
-        subheader={props.contact.role}
-      />
+  if (!props.buttonsOff) {
+    buttons = (
       <CardActions>
         <IconButton aria-label="call">
           <CallIcon />
@@ -54,6 +48,38 @@ export default function ContactCard(props: any) {
           <MessageIcon />
         </IconButton>
       </CardActions>
+    );
+  }
+
+  const avatar = (
+    <AvatarGroup className={classes.noBorder} max={3}>
+      <Avatar
+        className={classes.noBorder}
+        aria-label="contact"
+        alt={props.contact.name}
+        src={props.contact.avatar}
+      />
+      {props.group ? (
+        <Avatar
+          className={classes.noBorder}
+          aria-label="contact"
+          alt={props.contact2.name}
+          src={props.contact2.avatar}
+        />
+      ) : null}
+    </AvatarGroup>
+  );
+
+  return (
+    <Card className={classes.cardBackground}>
+      <CardHeader
+        className={props.readStatus ? classes.read : classes.newMessage}
+        avatar={avatar}
+        action={action}
+        title={props.name}
+        subheader={props.contact.role}
+      />
+      {buttons}
     </Card>
   );
 }

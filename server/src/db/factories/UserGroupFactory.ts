@@ -5,9 +5,9 @@ import {
   CourseGroup,
   ClassGroup,
   DMGroup,
+  ClassType,
 } from "../../models/UserGroup";
 import { User } from "../../models/User";
-import { Timetable } from "../../models/Timetable";
 import { Course } from "../../models/Course";
 import { CourseRole } from "../../models/CourseGroupPair";
 
@@ -34,4 +34,31 @@ define(DMGroup, async (faker, context?: Users) => {
   const group = DMGroup.create();
   group.users = Promise.resolve(context.users);
   return group;
+});
+
+define(ClassGroup, async (
+  faker,
+  ctx?: {
+    course: Course;
+    users: User[];
+    name: string;
+    type: ClassType;
+    duration?: number;
+    times?: Date[];
+  }
+) => {
+  if (!ctx) throw new Error("Class seeder requires course");
+  const classGroup = ClassGroup.create({
+    name: ctx.name,
+    type: ctx.type,
+    course: ctx.course,
+    times: ctx.times
+      ? ctx.times
+      : [new Date(Date.now()), new Date(Date.now() + 1000 * 60 * 60 * 24)],
+    duration: ctx.duration ? ctx.duration : 60,
+  }).save();
+
+  (await classGroup).setUsers(ctx.users);
+
+  return await classGroup;
 });
