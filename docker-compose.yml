@@ -41,7 +41,8 @@ services:
 
 networks:
   onboard-network:
-    name: onboard-network
+    external:
+      name: server_onboard-network
   meet.jitsi:
     external:
       name: meet.jitsi
