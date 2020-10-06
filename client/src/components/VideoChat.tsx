@@ -23,7 +23,8 @@ const ME = gql`
   }
 `;
 
-const handleAIP = (api: any, history: any) => {
+const handleAIP = (api: any, history: any, password: string) => {
+  api.on("passwordRequired", () => api.executeCommand("password", password));
   api.on("readyToClose", () => history.push("/"));
 };
 
@@ -49,7 +50,7 @@ export default (props: Props) => {
         password={props.password}
         domain={process.env.REACT_APP_JITSI_DOMAIN}
         loadingComponent={() => <LoadingPage />}
-        onAPILoad={(api) => handleAIP(api, history)}
+        onAPILoad={(api) => handleAIP(api, history, props.password)}
       />
     </>
   ) : (
