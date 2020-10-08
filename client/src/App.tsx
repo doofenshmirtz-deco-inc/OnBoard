@@ -50,7 +50,44 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const theme = createMuiTheme({
+const darkMode = createMuiTheme({
+  // Disable shadows
+  // shadows: Array(25).fill("none") as Shadows,
+  typography: {
+    fontFamily: [
+      "myriad-pro",
+      "-apple-system",
+      "BlinkMacSystemFont",
+      '"Segoe UI"',
+      "Roboto",
+      '"Helvetica Neue"',
+      "Arial",
+      "sans-serif",
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(","),
+    body1: {
+      fontWeight: "inherit", // omg don't change this took me FOREVER TO FIND - nat
+      fontSize: "inherit",
+    },
+  },
+  palette: {
+    primary: {
+      main: "#a84832",
+      contrastText: "#ffffff",
+      light: "#a84832",
+    },
+    background :{
+      paper: "#a84832"
+    },
+    secondary: {
+      main: "#EEEFFF",
+    },
+  },
+});
+
+const lightMode = createMuiTheme({
   // Disable shadows
   // shadows: Array(25).fill("none") as Shadows,
   typography: {
@@ -84,8 +121,23 @@ const theme = createMuiTheme({
   },
 });
 
+
+
 export default function App() {
   const classes = useStyles();
+
+  const [theme, setTheme] = React.useState(darkMode);
+  const [themeName, setThemeName] = React.useState("light")
+
+  const toggleTheme = () => {
+    if (themeName === "light") {
+      setThemeName("dark");
+      setTheme(darkMode); 
+    } else {
+      setThemeName("light");
+      setTheme(lightMode);
+    }
+  };
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -112,7 +164,7 @@ export default function App() {
 
     return (
       <>
-        <Sidebar />
+        <Sidebar toggleTheme={toggleTheme}/>
         <main className={classes.content}>
           <div className={classes.toolbar} />
           {modules.map((module) => (

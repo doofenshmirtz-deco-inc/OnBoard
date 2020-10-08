@@ -30,7 +30,7 @@ const GET_CALENDAR = gql`
 `;
 
 const defaultProps = {
-  bgcolor: "background.paper",
+  bgcolor: "theme.palette.background.paper",
   m: 1,
   borderColor: "text.primary",
 };
@@ -85,7 +85,7 @@ export default function MyCal() {
           style={{ height: 446 }}
           eventPropGetter={(event, start, end, isSelected) => {
             let newStyle = {
-              backgroundColor: "#6B2BC6",
+              backgroundColor: "theme.palette.background.paper",
               color: "white",
               borderRadius: "0px",
               border: "none",

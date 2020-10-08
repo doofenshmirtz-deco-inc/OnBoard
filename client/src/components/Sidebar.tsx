@@ -20,12 +20,15 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import modules from "../modules";
+import Button from '@material-ui/core/Button';
 import { NavLink } from "react-router-dom";
 import * as firebase from "firebase";
 import { Icon, Avatar } from "@material-ui/core";
 import { Lock, ExitToApp } from "@material-ui/icons";
 import { useQuery, gql } from "@apollo/client";
 import { Me } from "../graphql/Me";
+import Brightness3Icon from '@material-ui/icons/Brightness3';
+import WbSunnyIcon from '@material-ui/icons/WbSunny';
 
 const drawerWidth = 240;
 
@@ -34,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
     gutters: theme.mixins.gutters(),
     root: {
       display: "flex",
+      backgroundColor: theme.palette.background.paper
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
@@ -129,7 +133,7 @@ const meQuery = gql`
   }
 `;
 
-export default function MiniDrawer() {
+export default function MiniDrawer(props: any) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -140,6 +144,13 @@ export default function MiniDrawer() {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const [viewingMode, setMode] = React.useState(<Brightness3Icon/>)
+
+  const toggleViewingMode = () => {
+    props.toggleTheme();
+    viewingMode.type.displayName === "Brightness3Icon"? setMode(<WbSunnyIcon/>): setMode(<Brightness3Icon/>);
   };
 
   const { data } = useQuery<Me>(meQuery);
@@ -174,6 +185,9 @@ export default function MiniDrawer() {
               alt="Profile Picture"
               src={data && data.me ? data.me.avatar : ""}
             />
+            <IconButton aria-label="nightmode-toggle" style={{"color":"white"}} onClick={toggleViewingMode}>
+              {viewingMode}
+            </IconButton>
           </div>
         </Toolbar>
       </AppBar>
