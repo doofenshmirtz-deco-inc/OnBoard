@@ -106,6 +106,7 @@ input MessageInput {
 
 type Mutation {
   addMessage(message: MessageInput!): Message!
+  joinStudyGroup: StudyGroup!
   singleUpload(file: Upload!): String!
 }
 
