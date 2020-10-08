@@ -65,8 +65,10 @@ async function main() {
   });
 
   const app = express();
-  if (process.env.NODE_ENV !== "development")
+  if (process.env.NODE_ENV !== "development") {
+    app.use(express.static("../client/build"));
     app.use('*', express.static("../client/build"));
+  }
   const apolloServer = new ApolloServer({
     schema,
     context: ({ req, res, connection }) => ({ req, res, connection }),
