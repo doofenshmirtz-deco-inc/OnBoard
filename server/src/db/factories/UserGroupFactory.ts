@@ -59,6 +59,7 @@ define(ClassGroup, async (
 define(StudyGroup, async (faker, ctx?: Users) => {
   const group = await StudyGroup.create({
     name: faker.lorem.words(3),
+    isPublic: faker.random.boolean(),
   }).save();
 
   if (ctx) group.setUsers(ctx.users);
