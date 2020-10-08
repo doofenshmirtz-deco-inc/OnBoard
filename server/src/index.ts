@@ -66,7 +66,7 @@ async function main() {
 
   const app = express();
   if (process.env.NODE_ENV !== "development")
-    app.use(express.static("/usr/src/client/build"));
+    app.use('*', express.static("../client/build"));
   const apolloServer = new ApolloServer({
     schema,
     context: ({ req, res, connection }) => ({ req, res, connection }),
@@ -74,7 +74,6 @@ async function main() {
   });
 
   app.use(UPLOAD_URL_ROOT, express.static(UPLOAD_PATH_ROOT));
-  app.use(express.static(path.join(process.cwd(), "../client/build")));
 
   app.use(graphqlUploadExpress());
   apolloServer.applyMiddleware({ app });
