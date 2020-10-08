@@ -14,6 +14,7 @@ import MeetingRoom from "../../components/MeetingRoom";
 import { Switch, Route, useRouteMatch, useParams } from "react-router";
 import VideoChat from "../../components/VideoChat";
 import MessageBox from "../../components/MessageBox";
+import { Grid } from "@material-ui/core";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -88,8 +89,14 @@ const StudyRooms = () => {
       <h1>Study Rooms</h1>
       <Switch>
         <Route path={`${url}/:groupID`}>
-          <VideoChat />
-          <MessageBox />
+          <Grid container>
+            <Grid item xs={12} md={9}>
+              <VideoChat />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <MessageBox />
+            </Grid>
+          </Grid>
         </Route>
         <Route path="/">
           <AppBar position="static">
