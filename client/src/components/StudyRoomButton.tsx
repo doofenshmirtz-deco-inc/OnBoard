@@ -92,6 +92,8 @@ export default function StudyRoomButton(props: any) {
               margin: "0.5em",
               padding: "0.25em",
               textTransform: "none",
+              color: "green",
+              border: "1px solid green"
             }}
             onClick={handleOpen}
           >

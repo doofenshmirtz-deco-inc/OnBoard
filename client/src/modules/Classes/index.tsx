@@ -19,7 +19,6 @@ function Classes() {
         <ClassesTabs />
       </Route>
       <Route path="/">
-        <h1>My Classes</h1>
         <ClassesList />
       </Route>
     </Switch>

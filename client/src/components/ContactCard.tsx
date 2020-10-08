@@ -20,7 +20,8 @@ const useStyles = makeStyles((theme: Theme) =>
       border: "none",
     },
     cardBackground: {
-      backgroundColor: "transparent",
+      backgroundColor: theme.palette.secondary.light,
+      color: theme.palette.secondary.dark,
     },
     // TODO: change this so that it's maybe something different for new messages, idk, testing might help with this
     newMessage: {

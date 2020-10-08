@@ -21,6 +21,7 @@ const Explore = (props: any) => {
       fontSize: "1.75rem",
       alignContent: "center",
       marginRight: "10%",
+      color: theme.palette.primary.dark,
     },
     button: {
       margin: theme.spacing(1),

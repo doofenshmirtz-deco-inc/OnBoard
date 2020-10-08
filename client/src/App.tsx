@@ -6,7 +6,7 @@ import {
   Theme,
   createStyles,
   ThemeProvider,
-  createMuiTheme,
+  createMuiTheme
 } from "@material-ui/core/styles";
 
 import modules from "./modules";
@@ -68,16 +68,24 @@ const darkMode = createMuiTheme({
       '"Segoe UI Symbol"',
     ].join(","),
     body1: {
-      fontWeight: "inherit", // omg don't change this took me FOREVER TO FIND - nat
+      fontWeight: "inherit",
       fontSize: "inherit",
     },
   },
   palette: {
-    type: 'dark',
     primary: {
-      main: "#5c5c5c",
-      contrastText: "#FFFFFF",
-    }
+      main: "#303030",
+      contrastText: "#d1d1d1",
+      dark: "#FAFAFA"//"#ff5c8f", for debugging
+    },
+    background :{
+      paper: "#636363",
+      default: "#3d3d3d"
+    },
+    secondary: {
+      main: "#595959",
+      contrastText: "#242424"
+    },
   },
 });
 
@@ -99,7 +107,7 @@ const lightMode = createMuiTheme({
       '"Segoe UI Symbol"',
     ].join(","),
     body1: {
-      fontWeight: "inherit", // omg don't change this took me FOREVER TO FIND - nat
+      fontWeight: "inherit", 
       fontSize: "inherit",
     },
   },
@@ -107,10 +115,14 @@ const lightMode = createMuiTheme({
     primary: {
       main: "#0B3954",
       contrastText: "#BFD7EA",
-      light: "#FAFAFA",
+      dark: "#1c1c1c",
+    },
+    background :{
+      default:"#ffffff"
     },
     secondary: {
-      main: "#BFD7EA",
+      contrastText: "#BFD7EA",
+      main: "#d7eff5"
     },
   },
 });
@@ -118,19 +130,13 @@ const lightMode = createMuiTheme({
 
 
 export default function App() {
+  const [dark, setDark] = React.useState(false);
   const classes = useStyles();
 
-  const [theme, setTheme] = React.useState(darkMode);
-  const [themeName, setThemeName] = React.useState("light")
+  const appliedTheme = createMuiTheme(dark ? darkMode : lightMode)
 
   const toggleTheme = () => {
-    if (themeName === "light") {
-      setThemeName("dark");
-      setTheme(darkMode); 
-    } else {
-      setThemeName("light");
-      setTheme(lightMode);
-    }
+    setDark(dark => !dark);
   };
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -171,9 +177,9 @@ export default function App() {
 
   return (
     <Router>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={appliedTheme}>
         <div className={classes.root}>
-          <CssBaseline />
+          <CssBaseline/>
           {screen()}
         </div>
       </ThemeProvider>

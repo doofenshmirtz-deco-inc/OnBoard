@@ -24,9 +24,12 @@ const RecentContacts = (props: any) => {
       textTransform: "none",
       textAlign: "left",
       padding: "0",
+      margin: "2px",
+      backgroundColor: theme.palette.primary.light
     },
     searchBar: {
       width: "100%",
+      color: theme.palette.primary.dark,
       margin: "0",
     },
   }));

@@ -33,6 +33,7 @@ const defaultProps = {
   bgcolor: "theme.palette.background.paper",
   m: 1,
   borderColor: "text.primary",
+  height: 446
 };
 
 export default function MyCal() {
@@ -82,13 +83,14 @@ export default function MyCal() {
           defaultView={"work_week"}
           views={["month", "work_week"]}
           endAccessor="end"
-          style={{ height: 446 }}
+          style={{  }}
           eventPropGetter={(event, start, end, isSelected) => {
             let newStyle = {
-              backgroundColor: "theme.palette.background.paper",
               color: "white",
               borderRadius: "0px",
               border: "none",
+              backgroundColor: "red",
+              bgcolor: "blue"
             };
 
             return {

@@ -102,7 +102,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-start",
   },
   me: {
-    backgroundColor: "#c9c9c9",
+    backgroundColor: theme.palette.primary.main,
   },
   other: {
     backgroundColor: theme.palette.secondary.main,

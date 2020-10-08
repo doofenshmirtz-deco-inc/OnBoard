@@ -15,7 +15,7 @@ const sharedStyles = makeStyles((theme: Theme) =>
     enrolledClass: {
       // height: 300, // Subject to change
       minWidth: 250,
-      border: "1px solid black",
+      border: `1px solid ${theme.palette.primary.dark}`,
       overflow: "hidden",
     },
     classBody: {
@@ -45,11 +45,12 @@ const dashboardStyles = makeStyles((theme: Theme) =>
     root: {
       backgroundColor: theme.palette.background.paper,
       overflow: "hidden",
-      border: "1px solid black",
+      border: `1px solid ${theme.palette.primary.dark}`,
       height: "100%",
       display: "flex",
       flexFlow: "column",
       padding: theme.spacing(2),
+      color: theme.palette.primary.dark
     },
     classList: {
       overflow: "auto",
@@ -95,7 +96,7 @@ const getDescription = (announcement: any, isDashboard: boolean) => {
     text = announcement.announcement.html.substring(0, CHARACTER_LIMIT) + "...";
   }
 
-  return <span>{TextToLinks(text, announcement.colour)}</span>;
+  return <span style={{"color": "grey"}}>{TextToLinks(text, announcement.colour)}</span>;
 };
 
 /* Render a single announcement button. Haha any go brr */

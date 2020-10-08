@@ -5,6 +5,7 @@ const useStyles = makeStyles((theme) => ({
   bubbleContainer: {
     width: "100%",
     display: "flex",
+    color:theme.palette.primary.contrastText
   },
   bubble: {
     borderRadius: "20px",
@@ -21,10 +22,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-start",
   },
   me: {
-    backgroundColor: "#c9c9c9",
+    backgroundColor: theme.palette.primary.main,
   },
   other: {
     backgroundColor: theme.palette.secondary.main,
+    color: "black"
   },
 }));
 

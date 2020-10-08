@@ -65,6 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 3,
     backgroundColor: theme.palette.background.paper,
     display: "flex",
+    height: "100%",
   },
 }));
 

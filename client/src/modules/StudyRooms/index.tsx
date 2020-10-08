@@ -1,6 +1,6 @@
 import React from "react";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -49,10 +49,11 @@ const StudyRooms = () => {
   const useStyles = makeStyles((theme: Theme) => ({
     root: {
       flexGrow: 1,
-      backgroundColor: theme.palette.background.paper,
+      color: theme.palette.primary.dark
     },
     tabs: {
       textTransform: "none",
+      color: theme.palette.primary.dark,
     },
   }));
 
@@ -78,7 +79,6 @@ const StudyRooms = () => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <h1>Messaging</h1>
       <AppBar position="static">
         <Tabs
           value={value}
