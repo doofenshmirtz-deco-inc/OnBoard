@@ -120,8 +120,8 @@ type Query {
   me: User
   node(id: Float!): Node
   user(id: String!): User
-  userGroup(id: String!): BaseGroup
-  userGroups(limit: Int = 10, order: String, orderBy: String, skip: Int = 0): [BaseGroup!]!
+  userGroup(id: String!): Group
+  userGroups: [Group!]!
   users(limit: Int = 10, order: String, orderBy: String, skip: Int = 0): [User!]!
 }
 

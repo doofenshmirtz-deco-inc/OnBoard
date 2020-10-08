@@ -10,6 +10,12 @@ import {
   Typography,
 } from "@material-ui/core";
 
+interface Props {
+  name: string;
+  handleClickOpen: Function;
+  roomSize: number;
+}
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -30,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function StudyRoomButton(props: any) {
+export default function StudyRoomButton(props: Props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
@@ -55,9 +61,9 @@ export default function StudyRoomButton(props: any) {
     <ListItem alignItems="center" divider={true} className={classes.root}>
       <ListItemIcon className={classes.icon}>
         <PersonIcon />
-        {props.room.roomSize}
+        {props.roomSize}
       </ListItemIcon>
-      <ListItemText className={classes.itemText} primary={props.room.title} />
+      <ListItemText className={classes.itemText} primary={props.name} />
       <Button
         variant="contained"
         color="primary"

@@ -24,7 +24,7 @@ import {
   OnMessageReceived,
   OnMessageReceived_newMessages,
 } from "../graphql/OnMessageReceived";
-import { Contact } from "../modules/StudyRooms/recents";
+import { Contact } from "../modules/StudyRooms/Recents";
 
 const MESSAGES_QUERY = gql`
   query MyMessages($groupId: ID!) {

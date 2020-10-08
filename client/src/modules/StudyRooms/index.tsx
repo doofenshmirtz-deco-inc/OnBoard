@@ -6,10 +6,10 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import Recents from "./recents";
-import Explore from "./explore";
-import openRooms from "../../components/openRooms.json";
-import classrooms from "../../components/classrooms.json";
+import Recents from "./Recents";
+import Explore from "./Explore";
+import openRooms from "./openRooms.json";
+import classrooms from "./classrooms.json";
 import MeetingRoom from "../../components/MeetingRoom";
 
 interface TabPanelProps {
@@ -95,21 +95,10 @@ const StudyRooms = () => {
         <Recents />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Explore
-          handleClose={handleClose}
-          handleClickOpen={handleClickOpen}
-          openRooms={openRooms}
-          exploreTab={true}
-          label={"Search For Open Meeting Rooms"}
-        />
+        <Explore isExplore={true} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Explore
-          handleClose={handleClose}
-          handleClickOpen={handleClickOpen}
-          openRooms={classrooms}
-          label={"Search For Class Meeting Rooms"}
-        />
+        <Explore isExplore={false} />
       </TabPanel>
       <MeetingRoom open={open} handleClose={handleClose} title={meetingName} />
     </div>

@@ -20,24 +20,19 @@ import {
   GroupType,
   CourseGroup,
   DMGroup,
+  Group,
 } from "../models/UserGroup";
 import { CourseGroupPair } from "../models/CourseGroupPair";
 
 @Resolver((of) => BaseGroup)
 export class UserGroupResolver {
-  @Query(() => [BaseGroup])
+  @Query(() => [Group])
   @Authorized()
-  async userGroups(@Args() pag: PaginationArgs) {
-    return (
-      await BaseGroup.findAndCount({
-        order: getOrder(pag),
-        take: pag.limit,
-        skip: pag.skip,
-      })
-    )[0];
+  async userGroups() {
+    return await BaseGroup.find();
   }
 
-  @Query(() => BaseGroup, { nullable: true })
+  @Query(() => Group, { nullable: true })
   @Authorized()
   async userGroup(@Arg("id", () => String) id: String) {
     return BaseGroup.findOne({
