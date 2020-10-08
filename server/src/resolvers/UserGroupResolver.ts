@@ -87,13 +87,12 @@ export class UserGroupResolver {
     uids.push(ctx.payload.uid);
     const users = await User.findByIds(uids);
 
-    const group = await StudyGroup.create({
+    const group = StudyGroup.create({
       name,
       isPublic,
-    }).save();
+    });
 
-    group.setUsers(users);
-
-    return group;
+    await group.setUsers(users);
+    return await group.save();
   }
 }
