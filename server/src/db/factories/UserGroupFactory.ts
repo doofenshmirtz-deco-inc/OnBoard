@@ -6,6 +6,7 @@ import {
   ClassGroup,
   DMGroup,
   ClassType,
+  StudyGroup,
 } from "../../models/UserGroup";
 import { User } from "../../models/User";
 import { Course } from "../../models/Course";
@@ -18,14 +19,6 @@ type Users = {
 define(CourseGroup, async (faker, context?: Users) => {
   const group = new CourseGroup();
   group.setUsers(context?.users);
-  return group;
-});
-
-define(ClassGroup, async (faker, context?: Users) => {
-  const group = new ClassGroup();
-  group.setUsers(context?.users);
-  group.name = faker.lorem.words(2) + " Class Group";
-
   return group;
 });
 
@@ -61,4 +54,15 @@ define(ClassGroup, async (
   (await classGroup).setUsers(ctx.users);
 
   return await classGroup;
+});
+
+define(StudyGroup, async (faker, ctx?: Users) => {
+  const group = await StudyGroup.create({
+    name: faker.lorem.words(3),
+    isPublic: faker.random.boolean(),
+  }).save();
+
+  if (ctx) group.setUsers(ctx.users);
+
+  return group;
 });

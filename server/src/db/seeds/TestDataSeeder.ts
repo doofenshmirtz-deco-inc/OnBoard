@@ -13,6 +13,7 @@ import {
   DMGroup,
   ClassGroup,
   ClassType,
+  StudyGroup,
 } from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
 import { CourseRole, CourseGroupPair } from "../../models/CourseGroupPair";
@@ -211,5 +212,10 @@ export default class TestDataSeeder implements Seeder {
       users: [heinz],
       duration: 120,
     }).create();
+
+    await factory(StudyGroup)().createMany(10);
+    await factory(StudyGroup)({
+      users: [heinz, perry, tom, james, sanni, kenton, matt, nat],
+    }).createMany(10);
   }
 }

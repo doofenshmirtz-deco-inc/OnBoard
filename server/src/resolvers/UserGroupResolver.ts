@@ -10,6 +10,7 @@ import {
   FieldResolver,
   Root,
   Authorized,
+  Mutation,
 } from "type-graphql";
 import { User } from "../models/User";
 import { PaginationArgs, getOrder } from "./Types";
@@ -20,6 +21,7 @@ import {
   GroupType,
   CourseGroup,
   DMGroup,
+  StudyGroup,
 } from "../models/UserGroup";
 import { CourseGroupPair } from "../models/CourseGroupPair";
 
@@ -71,5 +73,26 @@ export class UserGroupResolver {
       const cgp = await query.getOne();
       return `${cgp?.course.code}: ${cgp?.course.name}`;
     }
+  }
+
+  @Mutation(() => StudyGroup)
+  @Authorized()
+  async addStudyGroup(
+    @Arg("groupName") name: string,
+    @Arg("isPublic") isPublic: boolean,
+    @Arg("uids", () => [String]) uids: string[],
+    @Ctx() ctx: Context
+  ) {
+    if (!ctx.payload) throw new Error("Invalid user");
+    uids.push(ctx.payload.uid);
+    const users = await User.findByIds(uids);
+
+    const group = StudyGroup.create({
+      name,
+      isPublic,
+    });
+
+    await group.setUsers(users);
+    return await group.save();
   }
 }
