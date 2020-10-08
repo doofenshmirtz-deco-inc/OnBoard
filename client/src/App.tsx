@@ -73,17 +73,11 @@ const darkMode = createMuiTheme({
     },
   },
   palette: {
+    type: 'dark',
     primary: {
-      main: "#a84832",
-      contrastText: "#ffffff",
-      light: "#a84832",
-    },
-    background :{
-      paper: "#a84832"
-    },
-    secondary: {
-      main: "#EEEFFF",
-    },
+      main: "#5c5c5c",
+      contrastText: "#FFFFFF",
+    }
   },
 });
 
