@@ -18,6 +18,7 @@ export interface Classes_me_groups_ClassGroup_users {
 
 export interface Classes_me_groups_ClassGroup {
   __typename: "ClassGroup";
+  id: string;
   name: string;
   users: Classes_me_groups_ClassGroup_users[];
 }

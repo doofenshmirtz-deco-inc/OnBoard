@@ -7,23 +7,18 @@
 // GraphQL query operation: StudyRooms
 // ====================================================
 
-export interface StudyRooms_userGroups_ClassGroup {
-  __typename: "ClassGroup" | "CourseGroup" | "DMGroup";
-}
-
-export interface StudyRooms_userGroups_StudyGroup_users {
+export interface StudyRooms_studyRooms_users {
   __typename: "User";
   id: string;
 }
 
-export interface StudyRooms_userGroups_StudyGroup {
+export interface StudyRooms_studyRooms {
   __typename: "StudyGroup";
+  id: string;
   name: string;
-  users: StudyRooms_userGroups_StudyGroup_users[];
+  users: StudyRooms_studyRooms_users[];
 }
 
-export type StudyRooms_userGroups = StudyRooms_userGroups_ClassGroup | StudyRooms_userGroups_StudyGroup;
-
 export interface StudyRooms {
-  userGroups: StudyRooms_userGroups[];
+  studyRooms: StudyRooms_studyRooms[] | null;
 }

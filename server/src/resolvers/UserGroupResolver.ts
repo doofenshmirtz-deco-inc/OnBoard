@@ -34,12 +34,22 @@ export class UserGroupResolver {
     return await BaseGroup.find();
   }
 
-  @Query(() => Group, { nullable: true })
+  @Query(() => BaseGroup, { nullable: true })
   @Authorized()
-  async userGroup(@Arg("id", () => String) id: String) {
-    return BaseGroup.findOne({
+  async userGroup(@Arg("id", () => ID) id: String) {
+    const group = BaseGroup.findOne({
       where: { id },
     });
+
+    console.log(await group);
+
+    return group;
+  }
+
+  @Query(() => [StudyGroup], { nullable: true })
+  @Authorized()
+  async studyRooms() {
+    return StudyGroup.find({ where: { isPublic: true } });
   }
 
   @FieldResolver((type) => [User])
@@ -68,12 +78,15 @@ export class UserGroupResolver {
       const cgp = await query.getOne();
       return `${cgp?.course.code}: ${cgp?.course.name}`;
     }
+    if (group instanceof StudyGroup || group instanceof ClassGroup)
+      return group.name;
   }
 
   @Mutation(() => StudyGroup)
   @Authorized()
-  async joinStudyGroup(@Root() group: StudyGroup) {
-    if (!group.isPublic) throw new Error("Group is not public");
+  async joinStudyGroup(@Arg("groupID", () => ID) groupID: number) {
+    const group = await StudyGroup.findOne({ id: groupID });
+    if (!group || !group.isPublic) throw new Error("Group is not public");
 
     return group;
   }

@@ -11,6 +11,9 @@ import Explore from "./Explore";
 import openRooms from "./openRooms.json";
 import classrooms from "./classrooms.json";
 import MeetingRoom from "../../components/MeetingRoom";
+import { Switch, Route, useRouteMatch, useParams } from "react-router";
+import VideoChat from "../../components/VideoChat";
+import MessageBox from "../../components/MessageBox";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -50,6 +53,7 @@ const StudyRooms = () => {
     root: {
       flexGrow: 1,
       backgroundColor: theme.palette.background.paper,
+      height: "100%",
     },
     tabs: {
       textTransform: "none",
@@ -76,31 +80,46 @@ const StudyRooms = () => {
   };
 
   const classes = useStyles();
+
+  let { url } = useRouteMatch();
+
   return (
     <div className={classes.root}>
-      <h1>Messaging</h1>
-      <AppBar position="static">
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="simple tabs example"
-          variant="fullWidth"
-        >
-          <Tab className={classes.tabs} label="Recents" {...a11yProps(0)} />
-          <Tab className={classes.tabs} label="Explore" {...a11yProps(1)} />
-          <Tab className={classes.tabs} label="Classes" {...a11yProps(2)} />
-        </Tabs>
-      </AppBar>
-      <TabPanel value={value} index={0}>
-        <Recents />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <Explore isExplore={true} />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <Explore isExplore={false} />
-      </TabPanel>
-      <MeetingRoom open={open} handleClose={handleClose} title={meetingName} />
+      <h1>Study Rooms</h1>
+      <Switch>
+        <Route path={`${url}/:groupID`}>
+          <VideoChat />
+          <MessageBox />
+        </Route>
+        <Route path="/">
+          <AppBar position="static">
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="simple tabs example"
+              variant="fullWidth"
+            >
+              <Tab className={classes.tabs} label="Recents" {...a11yProps(0)} />
+              <Tab className={classes.tabs} label="Explore" {...a11yProps(1)} />
+              <Tab className={classes.tabs} label="Classes" {...a11yProps(2)} />
+            </Tabs>
+          </AppBar>
+          <TabPanel value={value} index={0}>
+            <Recents />
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <Explore isExplore={true} />
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <Explore isExplore={false} />
+          </TabPanel>
+          <MeetingRoom
+            open={open}
+            handleClose={handleClose}
+            title={meetingName}
+          />
+        </Route>
+      </Switch>
     </div>
   );
 };

@@ -79,7 +79,9 @@ export abstract class BaseGroup extends BaseEntity {
     this.lastActive = new Date();
   }
 
+  @Column()
   @Generated("uuid")
+  @Field()
   meetingPassword: string;
 }
 

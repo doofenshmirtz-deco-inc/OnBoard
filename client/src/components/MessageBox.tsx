@@ -25,6 +25,8 @@ import {
   OnMessageReceived_newMessages,
 } from "../graphql/OnMessageReceived";
 import { Contact } from "../modules/StudyRooms/Recents";
+import * as firebase from "firebase";
+import { useParams } from "react-router";
 
 const MESSAGES_QUERY = gql`
   query MyMessages($groupId: ID!) {
@@ -132,17 +134,21 @@ const renderChatMessage = (message: ChatMessage) => {
 };
 
 export type MessageBoxProps = {
-  uid: string; // uid of this user.
-  id: string; // group id of chat.
-  name: string; // name of chat.
+  id?: string; // group id of chat.
+  name?: string; // name of group
   onSentMessage?: () => any; // to be called when new message is received.
-  contacts: Contact[]; // all the contacts
-  setContacts: Dispatch<SetStateAction<Contact[]>>; // setContacts from parent (recents.tsx)
+  contacts?: Contact[]; // all the contacts
+  setContacts?: Dispatch<SetStateAction<Contact[]>>; // setContacts from parent (recents.tsx)
 };
 
 // TODO: clear input message when changing contact
 const MessageBox = (props: MessageBoxProps) => {
   const classes = useStyles();
+
+  const { groupID } = useParams();
+
+  const uid = firebase.auth().currentUser?.uid;
+  const id = props.id ? props.id : groupID;
 
   // current message being typed in text box.
   const [messageInput, setMessageInput] = useState("");
@@ -162,19 +168,24 @@ const MessageBox = (props: MessageBoxProps) => {
   // mutation to send a new message to the server.
   const [sendToServer] = useMutation(ADD_MESSAGE);
 
+  console.log(id);
+
   // get my messages for a specific contact group.
   const { data, loading, refetch } = useQuery<MyMessages>(MESSAGES_QUERY, {
-    variables: { groupId: props.id },
+    variables: { groupId: id },
   });
 
   // FIXME: i feel like this is dodgy :/
-  let contact = props.contacts.filter((c) => c.id === props.id)[0];
-  if (!contact.readStatus) {
+  let contact = props.contacts
+    ? props.contacts.filter((c) => c.id === id)[0]
+    : null;
+  if (contact && !contact.readStatus) {
     contact.readStatus = true;
-    props.setContacts([
-      contact,
-      ...props.contacts.filter((c) => c.id !== props.id),
-    ]);
+    if (props.setContacts)
+      props.setContacts([
+        contact,
+        ...props.contacts!.filter((c) => c.id !== id),
+      ]);
   }
 
   // subscription handler to add a new received message.
@@ -183,27 +194,28 @@ const MessageBox = (props: MessageBoxProps) => {
       const data = options.subscriptionData.data?.newMessages;
 
       if (data) {
-        if (data.group.id !== props.id) {
+        if (data.group.id !== id && props.contacts) {
           // FIXME: i feel like this is dodgy :/ (perhaps abstract to a function?)
           let contact = props.contacts.filter((c) => c.id === data.group.id)[0];
           contact.readStatus = false;
-          props.setContacts([
-            contact,
-            ...props.contacts.filter((c) => c.id !== data.group.id),
-          ]);
+          if (props.setContacts)
+            props.setContacts([
+              contact,
+              ...props.contacts.filter((c) => c.id !== data.group.id),
+            ]);
           return; // not the selected group
         }
-        setNewMessages([...newMessages, toChatMessage(data, props.uid)]);
+        setNewMessages([...newMessages, toChatMessage(data, uid!)]);
       }
     },
-    [newMessages, props.uid]
+    [newMessages, uid]
   );
 
   // subscribe to incoming messages with the above handler.
   const { data: subData } = useSubscription<OnMessageReceived>(
     MESSAGES_SUBSCRIPTION,
     {
-      variables: { uid: props.uid },
+      variables: { uid },
       onSubscriptionData: handleNewMessage,
     }
   );
@@ -213,18 +225,18 @@ const MessageBox = (props: MessageBoxProps) => {
     if (!data) return;
 
     const oldMessages: ChatMessage[] =
-      data?.getMessages?.map((x) => toChatMessage(x, props.uid)) ?? [];
+      data?.getMessages?.map((x) => toChatMessage(x, uid!)) ?? [];
 
     oldMessages.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
 
     setOldMessages(oldMessages);
-  }, [data, props.uid]);
+  }, [data, uid]);
 
   // reset cached messages when group id changes.
   useEffect(() => {
     refetch();
     setNewMessages([]);
-  }, [props.id]);
+  }, [id]);
 
   if (!data || loading) {
     return <LoadingPage />;
@@ -241,16 +253,20 @@ const MessageBox = (props: MessageBoxProps) => {
     sendToServer({
       variables: {
         send: message,
-        groupId: props.id,
+        groupId: id,
       },
     });
   };
 
   return (
     <div className={classes.container}>
-      <h1>
-        {props.name} <VideocamIcon />
-      </h1>
+      {props.name ? (
+        <h1>
+          {props.name} <VideocamIcon />
+        </h1>
+      ) : (
+        <> </>
+      )}
       <div className={classes.messagingContainer}>
         {oldMessages.map(renderChatMessage)}
         {newMessages.map(renderChatMessage)}

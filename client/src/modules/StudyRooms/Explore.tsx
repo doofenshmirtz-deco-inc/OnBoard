@@ -7,13 +7,14 @@ import SearchIcon from "@material-ui/icons/Search";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import AddIcon from "@material-ui/icons/Add";
 import Button from "@material-ui/core/Button";
-import { gql, useQuery } from "@apollo/client";
-import {
-  StudyRooms,
-  StudyRooms_userGroups_StudyGroup,
-} from "../../graphql/StudyRooms";
+import { gql, useQuery, useMutation } from "@apollo/client";
+import { StudyRooms, StudyRooms_studyRooms } from "../../graphql/StudyRooms";
 import { LoadingPage } from "../../components/LoadingPage";
 import { Classes, Classes_me_groups_ClassGroup } from "../../graphql/Classes";
+import {
+  JoinStudyGroup,
+  JoinStudyGroupVariables,
+} from "../../graphql/JoinStudyGroup";
 
 interface Props {
   isExplore: boolean;
@@ -21,13 +22,11 @@ interface Props {
 
 const exploreQuery = gql`
   query StudyRooms {
-    userGroups {
-      ... on StudyGroup {
+    studyRooms {
+      id
+      name
+      users {
         id
-        name
-        users {
-          id
-        }
       }
     }
   }
@@ -45,6 +44,14 @@ const classesQuery = gql`
           }
         }
       }
+    }
+  }
+`;
+
+const joinStudyGroupMutation = gql`
+  mutation JoinStudyGroup($id: ID!) {
+    joinStudyGroup(groupID: $id) {
+      id
     }
   }
 `;
@@ -78,13 +85,27 @@ const Explore = (props: Props) => {
     skip: props.isExplore,
   });
 
+  const [expJoinMutation] = useMutation<
+    JoinStudyGroup,
+    JoinStudyGroupVariables
+  >(joinStudyGroupMutation, {
+    onCompleted({ joinStudyGroup }) {
+      console.log(joinStudyGroup.id);
+    },
+  });
+
   const rooms = props.isExplore
-    ? expData.data?.userGroups.filter(
+    ? expData.data?.studyRooms?.filter(
         (item) => item.__typename === "StudyGroup"
       )
     : classData.data?.me?.groups.filter(
         (item) => item.__typename === "ClassGroup"
       );
+
+  const handleCLick = (id: string) => {
+    if (props.isExplore) expJoinMutation({ variables: { id } });
+    else console.log("TODO");
+  };
 
   if (!rooms) return <LoadingPage />;
 
@@ -121,11 +142,11 @@ const Explore = (props: Props) => {
       </div>
 
       {(rooms as Array<
-        Classes_me_groups_ClassGroup | StudyRooms_userGroups_StudyGroup
+        Classes_me_groups_ClassGroup | StudyRooms_studyRooms
       >).map((item) =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase()) ? (
           <StudyRoomButton
-            handleClickOpen={() => console.log("TODO")}
+            handleClickOpen={() => handleCLick(item.id)}
             name={item.name}
             roomSize={item.users.length}
           />

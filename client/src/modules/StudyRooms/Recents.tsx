@@ -143,7 +143,6 @@ const Recents = () => {
           <div />
         ) : (
           <MessageBox
-            uid={uid}
             id={selected.id}
             name={selected.name}
             contacts={contacts}
