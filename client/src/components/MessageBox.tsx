@@ -235,6 +235,14 @@ const MessageBox = (props: MessageBoxProps) => {
       return;
     }
 
+    setNewMessages([...newMessages, {
+      text: message,
+      sender: props.uid,
+      direction: "right",
+      groupId: props.id,
+      createdAt: new Date()
+    }]);
+    
     setMessageInput("");
     props.onSentMessage?.();
 
