@@ -73,8 +73,29 @@ export class UserGroupResolver {
   @Mutation(() => StudyGroup)
   @Authorized()
   async joinStudyGroup(@Root() group: StudyGroup) {
-    if (!group.) ;
+    if (!group.isPublic) throw new Error("Group is not public");
 
     return group;
+  }
+
+  @Mutation(() => StudyGroup)
+  @Authorized()
+  async addStudyGroup(
+    @Arg("groupName") name: string,
+    @Arg("isPublic") isPublic: boolean,
+    @Arg("uids", () => [String]) uids: string[],
+    @Ctx() ctx: Context
+  ) {
+    if (!ctx.payload) throw new Error("Invalid user");
+    uids.push(ctx.payload.uid);
+    const users = await User.findByIds(uids);
+
+    const group = StudyGroup.create({
+      name,
+      isPublic,
+    });
+
+    await group.setUsers(users);
+    return await group.save();
   }
 }

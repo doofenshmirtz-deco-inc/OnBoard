@@ -214,5 +214,9 @@ export default class TestDataSeeder implements Seeder {
     }).create();
 
     await factory(StudyGroup)().createMany(10);
+
+    await factory(StudyGroup)({
+      users: [heinz, perry, tom, james, sanni, kenton, matt, nat],
+    }).createMany(10);
   }
 }

@@ -121,6 +121,10 @@ export class StudyGroup extends BaseGroup {
   @Column()
   @Field()
   name: string;
+
+  @Column()
+  @Field()
+  isPublic: boolean;
 }
 
 @ChildEntity(GroupType.DirectMessage)

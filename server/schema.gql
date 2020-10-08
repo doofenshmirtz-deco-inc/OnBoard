@@ -106,6 +106,7 @@ input MessageInput {
 
 type Mutation {
   addMessage(message: MessageInput!): Message!
+  addStudyGroup(groupName: String!, isPublic: Boolean!, uids: [String!]!): StudyGroup!
   joinStudyGroup: StudyGroup!
   singleUpload(file: Upload!): String!
 }
@@ -134,6 +135,7 @@ enum Semesters {
 
 type StudyGroup {
   id: ID!
+  isPublic: Boolean!
   lastActive: DateTime!
   name: String!
   users: [User!]!
