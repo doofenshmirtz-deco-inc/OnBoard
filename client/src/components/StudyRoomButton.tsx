@@ -21,15 +21,8 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: "100%",
-      // height: "10vh",
-    },
-    itemText: {
-      //fontSize: "1.5vw",
     },
     joinButton: {
-      // height: "85%",
-      // width: "20%",
-      // borderRadius: "0px",
       [theme.breakpoints.up("md")]: {
         textAlign: "center",
       },
@@ -73,7 +66,7 @@ export default function StudyRoomButton(props: Props) {
             <PersonIcon />
             {props.roomSize}
           </ListItemIcon>
-          <ListItemText className={classes.itemText} primary={props.name} />
+          <ListItemText primary={props.name} />
         </Grid>
         <Grid item xs={12} md={2} className={classes.joinButton}>
           <Button
