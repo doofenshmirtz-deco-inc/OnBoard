@@ -13,7 +13,8 @@ const config = {
 
 const style = {
   width: "100%",
-  height: "calc(100% - 130px)", // TODO this is hacky (might be able to get rid of this (and the other heigh: 100%) once its in a grid)
+  height: "100%",
+  "font-family": "Times New Roman",
 };
 
 interface Params {
@@ -38,14 +39,14 @@ const QueryGroup = gql`
   }
 `;
 
-const handleAIP = (api: any, history: any, password: string) => {
+const handleAIP = (api: any, history: any, password: string, id: string) => {
   api.on("participantRoleChanged", (event: any) => {
     if (event.role === "moderator") {
       api.executeCommand("password", password);
     }
   });
   api.on("passwordRequired", () => api.executeCommand("password", password));
-  api.on("readyToClose", () => history.push("/"));
+  api.on("readyToClose", () => history.push("/study-rooms/recents/" + id));
 };
 
 export default () => {
@@ -65,7 +66,12 @@ export default () => {
         domain={process.env.REACT_APP_JITSI_DOMAIN}
         loadingComponent={() => <LoadingPage />}
         onAPILoad={(api) =>
-          handleAIP(api, history, data.userGroup!.meetingPassword)
+          handleAIP(
+            api,
+            history,
+            data.userGroup!.meetingPassword,
+            data.userGroup!.id
+          )
         }
       />
     </>

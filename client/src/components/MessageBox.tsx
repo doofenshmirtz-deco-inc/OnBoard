@@ -6,7 +6,7 @@ import React, {
   SetStateAction,
   Dispatch,
 } from "react";
-import { Button, makeStyles, TextField } from "@material-ui/core";
+import { Button, makeStyles, TextField, IconButton } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import {
@@ -26,7 +26,7 @@ import {
 } from "../graphql/OnMessageReceived";
 import { Contact } from "../modules/StudyRooms/Recents";
 import * as firebase from "firebase";
-import { useParams } from "react-router";
+import { useParams, useHistory } from "react-router";
 
 const MESSAGES_QUERY = gql`
   query MyMessages($groupId: ID!) {
@@ -69,48 +69,6 @@ const MESSAGES_SUBSCRIPTION = gql`
 
 // TODO: interfaces for types
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    width: "100%",
-    paddingLeft: "2%",
-    height: "69vh",
-    overflowY: "hidden",
-  },
-  messagingContainer: {
-    overflowY: "scroll",
-    height: "75%",
-  },
-  sendBar: {
-    width: "100%",
-    position: "relative",
-    bottom: "0",
-  },
-  bubbleContainer: {
-    width: "100%",
-    display: "flex",
-  },
-  bubble: {
-    borderRadius: "20px",
-    margin: "1px",
-    padding: "10px",
-    display: "inline-block",
-    maxWidth: "40%",
-    marginRight: "10px",
-  },
-  right: {
-    justifyContent: "flex-end",
-  },
-  left: {
-    justifyContent: "flex-start",
-  },
-  me: {
-    backgroundColor: "#c9c9c9",
-  },
-  other: {
-    backgroundColor: theme.palette.secondary.main,
-  },
-}));
-
 // note that this takes an OnMessageReceived_newMessages, but the queries are
 // written such that MyMessages_getMessages has the exact same type.
 const toChatMessage = (
@@ -143,9 +101,52 @@ export type MessageBoxProps = {
 
 // TODO: clear input message when changing contact
 const MessageBox = (props: MessageBoxProps) => {
+  const useStyles = makeStyles((theme) => ({
+    container: {
+      width: "100%",
+      paddingLeft: "2%",
+      height: "69vh",
+      overflowY: "hidden",
+    },
+    messagingContainer: {
+      overflowY: "scroll",
+      height: props.name ? "75%" : "calc(100% - 65px)",
+    },
+    sendBar: {
+      width: "100%",
+      position: "relative",
+      bottom: "0",
+    },
+    bubbleContainer: {
+      width: "100%",
+      display: "flex",
+    },
+    bubble: {
+      borderRadius: "20px",
+      margin: "1px",
+      padding: "10px",
+      display: "inline-block",
+      maxWidth: "40%",
+      marginRight: "10px",
+    },
+    right: {
+      justifyContent: "flex-end",
+    },
+    left: {
+      justifyContent: "flex-start",
+    },
+    me: {
+      backgroundColor: "#c9c9c9",
+    },
+    other: {
+      backgroundColor: theme.palette.secondary.main,
+    },
+  }));
+
   const classes = useStyles();
 
   const { groupID } = useParams();
+  const history = useHistory();
 
   const uid = firebase.auth().currentUser?.uid;
   const id = props.id ? props.id : groupID;
@@ -273,7 +274,12 @@ const MessageBox = (props: MessageBoxProps) => {
     <div className={classes.container}>
       {props.name ? (
         <h1>
-          {props.name} <VideocamIcon />
+          {props.name}{" "}
+          <IconButton
+            onClick={() => history.push("/study-rooms/video/" + props.id)}
+          >
+            <VideocamIcon />
+          </IconButton>
         </h1>
       ) : (
         <> </>

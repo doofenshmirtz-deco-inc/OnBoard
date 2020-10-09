@@ -84,11 +84,19 @@ export class UserGroupResolver {
 
   @Mutation(() => StudyGroup)
   @Authorized()
-  async joinStudyGroup(@Arg("groupID", () => ID) groupID: number) {
+  async joinStudyGroup(
+    @Arg("groupID", () => ID) groupID: number,
+    @Ctx() ctx: Context
+  ) {
     const group = await StudyGroup.findOne({ id: groupID });
     if (!group || !group.isPublic) throw new Error("Group is not public");
+    if (!ctx.payload) throw new Error("Payload required");
 
-    return group;
+    const user = await User.findOne({ id: ctx.payload.uid });
+    if (!user) throw new Error("User not found");
+    (await group.users).push(user);
+
+    return await group.save();
   }
 
   @Mutation(() => StudyGroup)

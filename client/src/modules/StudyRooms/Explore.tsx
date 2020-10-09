@@ -15,6 +15,7 @@ import {
   JoinStudyGroup,
   JoinStudyGroupVariables,
 } from "../../graphql/JoinStudyGroup";
+import { useHistory } from "react-router";
 
 interface Props {
   isExplore: boolean;
@@ -85,12 +86,14 @@ const Explore = (props: Props) => {
     skip: props.isExplore,
   });
 
+  const history = useHistory();
+
   const [expJoinMutation] = useMutation<
     JoinStudyGroup,
     JoinStudyGroupVariables
   >(joinStudyGroupMutation, {
     onCompleted({ joinStudyGroup }) {
-      console.log(joinStudyGroup.id);
+      history.push("/study-rooms/video/" + joinStudyGroup.id);
     },
   });
 
@@ -104,7 +107,7 @@ const Explore = (props: Props) => {
 
   const handleCLick = (id: string) => {
     if (props.isExplore) expJoinMutation({ variables: { id } });
-    else console.log("TODO");
+    else history.push("/study-rooms/video/" + id);
   };
 
   if (!rooms) return <LoadingPage />;
