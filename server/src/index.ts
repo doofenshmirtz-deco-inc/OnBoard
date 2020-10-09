@@ -70,15 +70,15 @@ async function main() {
     context: ({ req, res, connection }) => ({ req, res, connection }),
     uploads: false,
   });
-  
+
   app.use(UPLOAD_URL_ROOT, express.static(UPLOAD_PATH_ROOT));
-  
+
   app.use(graphqlUploadExpress());
   apolloServer.applyMiddleware({ app });
 
   if (process.env.NODE_ENV !== "development") {
-    app.use(express.static('../client/build'));
-    app.use('*', express.static("../client/build"));
+    app.use(express.static("../client/build"));
+    app.use("*", express.static("../client/build"));
   }
 
   const server = createServer(app);
