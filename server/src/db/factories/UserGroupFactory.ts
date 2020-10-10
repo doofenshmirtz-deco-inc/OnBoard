@@ -41,28 +41,36 @@ define(ClassGroup, async (
   }
 ) => {
   if (!ctx) throw new Error("Class seeder requires course");
-  const classGroup = ClassGroup.create({
+  const classGroup = await ClassGroup.create({
     name: ctx.name,
     type: ctx.type,
-    course: ctx.course,
     times: ctx.times
       ? ctx.times
       : [new Date(Date.now()), new Date(Date.now() + 1000 * 60 * 60 * 24)],
     duration: ctx.duration ? ctx.duration : 60,
   }).save();
 
-  (await classGroup).setUsers(ctx.users);
+  classGroup.course = Promise.resolve(ctx.course);
+  classGroup.setUsers(ctx.users);
 
-  return await classGroup;
+  return await classGroup.save();
 });
 
-define(StudyGroup, async (faker, ctx?: Users) => {
+define(StudyGroup, async (
+  faker,
+  ctx?: {
+    users?: User[];
+    name?: string;
+    isPublic?: boolean;
+  }
+) => {
+  if (!ctx) ctx = {};
   const group = await StudyGroup.create({
-    name: faker.lorem.words(3),
-    isPublic: faker.random.boolean(),
+    name: ctx.name || faker.lorem.words(3),
+    isPublic: ctx.isPublic || faker.random.boolean(),
   }).save();
 
-  if (ctx) group.setUsers(ctx.users);
+  if (ctx.users) group.setUsers(ctx.users);
 
   return group;
 });

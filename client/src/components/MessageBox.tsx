@@ -6,7 +6,7 @@ import React, {
   SetStateAction,
   Dispatch,
 } from "react";
-import { Button, makeStyles, TextField } from "@material-ui/core";
+import { Button, makeStyles, TextField, IconButton } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import {
@@ -24,7 +24,9 @@ import {
   OnMessageReceived,
   OnMessageReceived_newMessages,
 } from "../graphql/OnMessageReceived";
-import { Contact } from "../modules/StudyRooms/recents";
+import { Contact } from "../modules/StudyRooms/Recents";
+import * as firebase from "firebase";
+import { useParams, useHistory } from "react-router";
 
 const MESSAGES_QUERY = gql`
   query MyMessages($groupId: ID!) {
@@ -67,48 +69,6 @@ const MESSAGES_SUBSCRIPTION = gql`
 
 // TODO: interfaces for types
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    width: "100%",
-    paddingLeft: "2%",
-    height: "69vh",
-    overflowY: "hidden",
-  },
-  messagingContainer: {
-    overflowY: "scroll",
-    height: "75%",
-  },
-  sendBar: {
-    width: "100%",
-    position: "relative",
-    bottom: "0",
-  },
-  bubbleContainer: {
-    width: "100%",
-    display: "flex",
-  },
-  bubble: {
-    borderRadius: "20px",
-    margin: "1px",
-    padding: "10px",
-    display: "inline-block",
-    maxWidth: "40%",
-    marginRight: "10px",
-  },
-  right: {
-    justifyContent: "flex-end",
-  },
-  left: {
-    justifyContent: "flex-start",
-  },
-  me: {
-    backgroundColor: "#c9c9c9",
-  },
-  other: {
-    backgroundColor: theme.palette.secondary.main,
-  },
-}));
-
 // note that this takes an OnMessageReceived_newMessages, but the queries are
 // written such that MyMessages_getMessages has the exact same type.
 const toChatMessage = (
@@ -132,17 +92,64 @@ const renderChatMessage = (message: ChatMessage) => {
 };
 
 export type MessageBoxProps = {
-  uid: string; // uid of this user.
-  id: string; // group id of chat.
-  name: string; // name of chat.
+  id?: string; // group id of chat.
+  name?: string; // name of group
   onSentMessage?: () => any; // to be called when new message is received.
-  contacts: Contact[]; // all the contacts
-  setContacts: Dispatch<SetStateAction<Contact[]>>; // setContacts from parent (recents.tsx)
+  contacts?: Contact[]; // all the contacts
+  setContacts?: Dispatch<SetStateAction<Contact[]>>; // setContacts from parent (recents.tsx)
 };
 
 // TODO: clear input message when changing contact
 const MessageBox = (props: MessageBoxProps) => {
+  const useStyles = makeStyles((theme) => ({
+    container: {
+      width: "100%",
+      paddingLeft: "2%",
+      height: "69vh",
+      overflowY: "hidden",
+    },
+    messagingContainer: {
+      overflowY: "scroll",
+      height: props.name ? "75%" : "calc(100% - 65px)",
+    },
+    sendBar: {
+      width: "100%",
+      position: "relative",
+      bottom: "0",
+    },
+    bubbleContainer: {
+      width: "100%",
+      display: "flex",
+    },
+    bubble: {
+      borderRadius: "20px",
+      margin: "1px",
+      padding: "10px",
+      display: "inline-block",
+      maxWidth: "40%",
+      marginRight: "10px",
+    },
+    right: {
+      justifyContent: "flex-end",
+    },
+    left: {
+      justifyContent: "flex-start",
+    },
+    me: {
+      backgroundColor: "#c9c9c9",
+    },
+    other: {
+      backgroundColor: theme.palette.secondary.main,
+    },
+  }));
+
   const classes = useStyles();
+
+  const { groupID } = useParams();
+  const history = useHistory();
+
+  const uid = firebase.auth().currentUser?.uid;
+  const id = props.id ? props.id : groupID;
 
   // current message being typed in text box.
   const [messageInput, setMessageInput] = useState("");
@@ -162,19 +169,24 @@ const MessageBox = (props: MessageBoxProps) => {
   // mutation to send a new message to the server.
   const [sendToServer] = useMutation(ADD_MESSAGE);
 
+  console.log(id);
+
   // get my messages for a specific contact group.
   const { data, loading, refetch } = useQuery<MyMessages>(MESSAGES_QUERY, {
-    variables: { groupId: props.id },
+    variables: { groupId: id },
   });
 
   // FIXME: i feel like this is dodgy :/
-  let contact = props.contacts.filter((c) => c.id === props.id)[0];
-  if (!contact.readStatus) {
+  let contact = props.contacts
+    ? props.contacts.filter((c) => c.id === id)[0]
+    : null;
+  if (contact && !contact.readStatus) {
     contact.readStatus = true;
-    props.setContacts([
-      contact,
-      ...props.contacts.filter((c) => c.id !== props.id),
-    ]);
+    if (props.setContacts)
+      props.setContacts([
+        contact,
+        ...props.contacts!.filter((c) => c.id !== id),
+      ]);
   }
 
   // subscription handler to add a new received message.
@@ -183,27 +195,28 @@ const MessageBox = (props: MessageBoxProps) => {
       const data = options.subscriptionData.data?.newMessages;
 
       if (data) {
-        if (data.group.id !== props.id) {
+        if (data.group.id !== id && props.contacts) {
           // FIXME: i feel like this is dodgy :/ (perhaps abstract to a function?)
           let contact = props.contacts.filter((c) => c.id === data.group.id)[0];
           contact.readStatus = false;
-          props.setContacts([
-            contact,
-            ...props.contacts.filter((c) => c.id !== data.group.id),
-          ]);
+          if (props.setContacts)
+            props.setContacts([
+              contact,
+              ...props.contacts.filter((c) => c.id !== data.group.id),
+            ]);
           return; // not the selected group
         }
-        setNewMessages([...newMessages, toChatMessage(data, props.uid)]);
+        setNewMessages([...newMessages, toChatMessage(data, uid!)]);
       }
     },
-    [newMessages, props.uid]
+    [newMessages, uid]
   );
 
   // subscribe to incoming messages with the above handler.
   const { data: subData } = useSubscription<OnMessageReceived>(
     MESSAGES_SUBSCRIPTION,
     {
-      variables: { uid: props.uid },
+      variables: { uid },
       onSubscriptionData: handleNewMessage,
     }
   );
@@ -213,18 +226,18 @@ const MessageBox = (props: MessageBoxProps) => {
     if (!data) return;
 
     const oldMessages: ChatMessage[] =
-      data?.getMessages?.map((x) => toChatMessage(x, props.uid)) ?? [];
+      data?.getMessages?.map((x) => toChatMessage(x, uid!)) ?? [];
 
     oldMessages.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
 
     setOldMessages(oldMessages);
-  }, [data, props.uid]);
+  }, [data, uid]);
 
   // reset cached messages when group id changes.
   useEffect(() => {
     refetch();
     setNewMessages([]);
-  }, [props.id]);
+  }, [id]);
 
   if (!data || loading) {
     return <LoadingPage />;
@@ -235,22 +248,42 @@ const MessageBox = (props: MessageBoxProps) => {
       return;
     }
 
+    setNewMessages([
+      ...newMessages,
+      {
+        text: message,
+        sender: uid!,
+        direction: "right",
+        groupId: id,
+        createdAt: new Date(),
+      },
+    ]);
+
     setMessageInput("");
     props.onSentMessage?.();
 
     sendToServer({
       variables: {
         send: message,
-        groupId: props.id,
+        groupId: id,
       },
     });
   };
 
   return (
     <div className={classes.container}>
-      <h1>
-        {props.name} <VideocamIcon />
-      </h1>
+      {props.name ? (
+        <h1>
+          {props.name}{" "}
+          <IconButton
+            onClick={() => history.push("/study-rooms/video/" + props.id)}
+          >
+            <VideocamIcon />
+          </IconButton>
+        </h1>
+      ) : (
+        <> </>
+      )}
       <div className={classes.messagingContainer}>
         {oldMessages.map(renderChatMessage)}
         {newMessages.map(renderChatMessage)}

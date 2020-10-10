@@ -8,29 +8,36 @@ import {
   ListItemText,
   ListItem,
   Typography,
+  Grid,
 } from "@material-ui/core";
+
+interface Props {
+  name: string;
+  handleClickOpen: Function;
+  roomSize: number;
+}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: "100%",
-      height: "10vh",
-    },
-    itemText: {
-      fontSize: "1.5vw",
     },
     joinButton: {
-      height: "85%",
-      width: "20%",
-      borderRadius: "0px",
+      [theme.breakpoints.up("md")]: {
+        textAlign: "center",
+      },
     },
     icon: {
       color: theme.palette.primary.main,
     },
+    grid: {
+      display: "flex",
+      alignItems: "center",
+    },
   })
 );
 
-export default function StudyRoomButton(props: any) {
+export default function StudyRoomButton(props: Props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
@@ -53,59 +60,65 @@ export default function StudyRoomButton(props: any) {
 
   return (
     <ListItem alignItems="center" divider={true} className={classes.root}>
-      <ListItemIcon className={classes.icon}>
-        <PersonIcon />
-        {props.room.roomSize}
-      </ListItemIcon>
-      <ListItemText className={classes.itemText} primary={props.room.title} />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleClick}
-        className={classes.joinButton}
-      >
-        Join
-      </Button>
-      <Popover
-        style={{
-          textAlign: "center",
-        }}
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-      >
-        Join This Meeting?
-        <Typography>
+      <Grid container>
+        <Grid item xs={12} md={10} className={classes.grid}>
+          <ListItemIcon className={classes.icon}>
+            <PersonIcon />
+            {props.roomSize}
+          </ListItemIcon>
+          <ListItemText primary={props.name} />
+        </Grid>
+        <Grid item xs={12} md={2} className={classes.joinButton}>
           <Button
-            variant="outlined"
+            variant="contained"
             color="primary"
-            style={{
-              margin: "0.5em",
-              padding: "0.25em",
-              textTransform: "none",
-            }}
-            onClick={handleOpen}
+            onClick={handleClick}
+            size="large"
           >
-            Yes
+            Join
           </Button>
-          <Button
-            variant="outlined"
-            style={{ color: "red", margin: "0.5em", border: "1px solid red" }}
-            onClick={handleClose}
-          >
-            No
-          </Button>
-        </Typography>
-      </Popover>
+        </Grid>
+        <Popover
+          style={{
+            textAlign: "center",
+          }}
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+        >
+          Join This Meeting?
+          <Typography>
+            <Button
+              variant="outlined"
+              color="primary"
+              style={{
+                margin: "0.5em",
+                padding: "0.25em",
+                textTransform: "none",
+              }}
+              onClick={handleOpen}
+            >
+              Yes
+            </Button>
+            <Button
+              variant="outlined"
+              style={{ color: "red", margin: "0.5em", border: "1px solid red" }}
+              onClick={handleClose}
+            >
+              No
+            </Button>
+          </Typography>
+        </Popover>
+      </Grid>
     </ListItem>
   );
 }

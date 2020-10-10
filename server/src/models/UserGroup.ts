@@ -79,7 +79,9 @@ export abstract class BaseGroup extends BaseEntity {
     this.lastActive = new Date();
   }
 
+  @Column()
   @Generated("uuid")
+  @Field()
   meetingPassword: string;
 }
 
@@ -95,7 +97,6 @@ export class CourseGroup extends BaseGroup {
 @ObjectType()
 export class ClassGroup extends BaseGroup {
   @Column()
-  @Field()
   name: string;
 
   @Column({ type: "enum", enum: ClassType })
@@ -104,7 +105,7 @@ export class ClassGroup extends BaseGroup {
 
   @ManyToOne(() => Course)
   @Field(() => Course)
-  course: Course;
+  course: Promise<Course>;
 
   @Column("timestamp", { array: true })
   @Field(() => [Date])

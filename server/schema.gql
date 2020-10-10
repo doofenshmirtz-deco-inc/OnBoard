@@ -19,6 +19,7 @@ type AuthToken {
 type BaseGroup {
   id: ID!
   lastActive: DateTime!
+  meetingPassword: String!
   name: String!
   users: [User!]!
 }
@@ -28,6 +29,7 @@ type ClassGroup {
   duration: Float!
   id: ID!
   lastActive: DateTime!
+  meetingPassword: String!
   name: String!
   times: [DateTime!]!
   type: String!
@@ -54,6 +56,7 @@ type CourseColor {
 type CourseGroup {
   id: ID!
   lastActive: DateTime!
+  meetingPassword: String!
   name: String!
   users: [User!]!
 }
@@ -72,6 +75,7 @@ scalar DateTime
 type DMGroup {
   id: ID!
   lastActive: DateTime!
+  meetingPassword: String!
   name: String!
   users: [User!]!
 }
@@ -107,6 +111,7 @@ input MessageInput {
 type Mutation {
   addMessage(message: MessageInput!): Message!
   addStudyGroup(groupName: String!, isPublic: Boolean!, uids: [String!]!): StudyGroup!
+  joinStudyGroup(groupID: ID!): StudyGroup!
   singleUpload(file: Upload!): String!
 }
 
@@ -120,9 +125,10 @@ type Query {
   getTestingToken(testUID: String = "test-uid"): AuthToken!
   me: User
   node(id: Float!): Node
+  studyRooms: [StudyGroup!]
   user(id: String!): User
-  userGroup(id: String!): BaseGroup
-  userGroups(limit: Int = 10, order: String, orderBy: String, skip: Int = 0): [BaseGroup!]!
+  userGroup(id: ID!): BaseGroup
+  userGroups: [Group!]!
   users(limit: Int = 10, order: String, orderBy: String, skip: Int = 0): [User!]!
 }
 
@@ -136,6 +142,7 @@ type StudyGroup {
   id: ID!
   isPublic: Boolean!
   lastActive: DateTime!
+  meetingPassword: String!
   name: String!
   users: [User!]!
 }
