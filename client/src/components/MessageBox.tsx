@@ -167,8 +167,6 @@ const MessageBox = (props: MessageBoxProps) => {
   // mutation to send a new message to the server.
   const [sendToServer] = useMutation(ADD_MESSAGE);
 
-  console.log(id);
-
   // get my messages for a specific contact group.
   const { data, loading, refetch } = useQuery<MyMessages>(MESSAGES_QUERY, {
     variables: { groupId: id },

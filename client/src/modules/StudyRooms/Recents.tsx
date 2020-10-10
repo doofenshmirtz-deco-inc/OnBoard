@@ -130,7 +130,6 @@ const Recents = () => {
   }, [data]);
 
   useEffect(() => {
-    console.log(contacts);
     if (params.messageID && contacts) {
       const selectedContact = contacts.filter(
         (c) => c.id === params.messageID
