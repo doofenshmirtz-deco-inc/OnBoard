@@ -28,6 +28,7 @@ const RecentContacts = (props: any) => {
     searchBar: {
       width: "100%",
       margin: "0",
+      paddingLeft: 10,
     },
   }));
 

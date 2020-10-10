@@ -70,6 +70,7 @@ const Explore = (props: Props) => {
       fontSize: "1.75rem",
       alignContent: "center",
       marginRight: "10%",
+      marginLeft: 15,
     },
     button: {
       margin: theme.spacing(1),

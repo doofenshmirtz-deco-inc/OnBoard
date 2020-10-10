@@ -146,7 +146,6 @@ const Recents = () => {
 
   // TODO: NEED some way of updating messages in background. service/react context?
 
-  console.log(contacts);
   return (
     <div>
       <div className={classes.root}>
