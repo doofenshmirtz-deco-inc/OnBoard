@@ -67,8 +67,6 @@ const MESSAGES_SUBSCRIPTION = gql`
   }
 `;
 
-// TODO: interfaces for types
-
 // note that this takes an OnMessageReceived_newMessages, but the queries are
 // written such that MyMessages_getMessages has the exact same type.
 const toChatMessage = (
