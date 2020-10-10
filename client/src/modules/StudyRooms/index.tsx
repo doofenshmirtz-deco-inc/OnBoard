@@ -59,7 +59,9 @@ const StudyRooms = () => {
           <AppBar position="static">
             <Tabs
               value={
-                history.location.pathname.match(/\/study-rooms\/[a-z]+/)![0]
+                (history.location.pathname.match(/\/study-rooms\/[a-z]+/) || [
+                  "/study-rooms/recents",
+                ])[0]
               }
               onChange={handleChange}
               aria-label="simple tabs example"
