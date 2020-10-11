@@ -23,7 +23,9 @@ export interface Contacts_me_groups_DMGroup {
   users: Contacts_me_groups_DMGroup_users[];
 }
 
-export type Contacts_me_groups = Contacts_me_groups_ClassGroup | Contacts_me_groups_DMGroup;
+export type Contacts_me_groups =
+  | Contacts_me_groups_ClassGroup
+  | Contacts_me_groups_DMGroup;
 
 export interface Contacts_me {
   __typename: "User";
