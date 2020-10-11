@@ -79,7 +79,7 @@ export class UserGroupResolver {
       return `${cgp?.course.code}: ${cgp?.course.name}`;
     }
     if (group instanceof ClassGroup)
-      return (await group.course).code + ": " + group.name;
+      return (await group.course).code + " - " + group.name;
     if (group instanceof StudyGroup) return group.name;
   }
 
