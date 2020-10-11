@@ -92,11 +92,7 @@ const joinStudyGroupMutation = gql`
 `;
 
 const addStudyGroup = gql`
-  mutation AddStudyGroup(
-    $uids: [String!]!
-    $isPublic: Boolean!
-    $groupName: String!
-  ) {
+  mutation AddStudyGroup($uids: [String!]!, $isPublic: Boolean!, $groupName: String!) {
     addStudyGroup(uids: $uids, isPublic: $isPublic, groupName: $groupName) {
       id
     }
@@ -156,11 +152,9 @@ const PopUp = (props: any) => {
   const handleCreate = () => {
     let uids = selectedContacts.map((c: any) => c.users.slice(-1)[0].id);
     uids.push(uid);
-    createStudyRoom({
-      variables: { uids: uids, groupName: studyRoomName, isPublic: isPublic },
-    });
+    createStudyRoom({ variables: { uids: uids, groupName: studyRoomName, isPublic: isPublic } });
     handleClose();
-  };
+  }
 
   const classes = useStyles();
 
@@ -216,7 +210,8 @@ const PopUp = (props: any) => {
                   checked={isPublic}
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     setIsPublic(e.target.checked);
-                  }}
+                  }
+                  }
                   name="isPublic"
                   color="primary"
                 />
