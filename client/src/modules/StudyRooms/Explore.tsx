@@ -281,7 +281,7 @@ const Explore = (props: Props) => {
     }
   };
 
-  if (!rooms || !contactsData || !contactsData.data) return <LoadingPage />;
+  if (!rooms || (props.isExplore && (!contactsData || !contactsData.data))) return <LoadingPage />;
 
   return (
     <List className={classes.root}>
