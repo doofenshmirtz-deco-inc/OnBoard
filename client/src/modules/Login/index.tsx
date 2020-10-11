@@ -4,7 +4,7 @@ import { gql, useApolloClient } from "@apollo/client";
 import * as firebase from "firebase";
 import { LoadingPage } from "../../components/LoadingPage";
 import { GetCustomToken } from "../../graphql/GetCustomToken";
-import Alert from '@material-ui/lab/Alert';
+import Alert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,29 +48,34 @@ export const Login = () => {
       .result();
 
     if (!data || !data.getCustomToken.token) return; // TODO actual error handling pls
-    
-    await firebase.auth().signInWithEmailAndPassword(
-      uid + '@doofenshmirtz.xyz', pass
-    ).then(function(user) {
-      firebase.auth().signInWithCustomToken(data.getCustomToken.token);
-    }).catch(function(error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // It's a security thing to not differentiate between missing user and wrong password right?
-      if (errorCode === "auth/wrong-password" || errorCode === "auth/user-not-found") {
-        console.log(errorCode, errorMessage);
-        setIncorrectPwd(true);
-        setLoading(false);
-      // Any other sort of error
-      } else {
-        console.log(errorCode, errorMessage);
-        setErrorPwd(true);
-        setErrorCode(errorCode);
-        setErrorMessage(errorMessage);
-        setLoading(false);
-      }
-    });
+
+    await firebase
+      .auth()
+      .signInWithEmailAndPassword(uid + "@doofenshmirtz.xyz", pass)
+      .then(function (user) {
+        firebase.auth().signInWithCustomToken(data.getCustomToken.token);
+      })
+      .catch(function (error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // It's a security thing to not differentiate between missing user and wrong password right?
+        if (
+          errorCode === "auth/wrong-password" ||
+          errorCode === "auth/user-not-found"
+        ) {
+          console.log(errorCode, errorMessage);
+          setIncorrectPwd(true);
+          setLoading(false);
+          // Any other sort of error
+        } else {
+          console.log(errorCode, errorMessage);
+          setErrorPwd(true);
+          setErrorCode(errorCode);
+          setErrorMessage(errorMessage);
+          setLoading(false);
+        }
+      });
   };
 
   if (loading) return <LoadingPage />;
@@ -79,12 +84,16 @@ export const Login = () => {
     <Grid container direction="column" justify="center" alignItems="center">
       <h1>Welcome to OnBoard</h1>
       <form className={classes.root} onSubmit={submit}>
-        {incorrectPwd && <Alert severity="error">
-          Incorrect username or password. Please try again.
-        </Alert>}
-        {errorPwd && <Alert severity="error">
-          {errorCode}: {errorMessage}
-        </Alert>}
+        {incorrectPwd && (
+          <Alert severity="error">
+            Incorrect username or password. Please try again.
+          </Alert>
+        )}
+        {errorPwd && (
+          <Alert severity="error">
+            {errorCode}: {errorMessage}
+          </Alert>
+        )}
         <TextField
           id="standard-basic"
           label="Username/Email"
@@ -103,4 +112,3 @@ export const Login = () => {
     </Grid>
   );
 };
-
