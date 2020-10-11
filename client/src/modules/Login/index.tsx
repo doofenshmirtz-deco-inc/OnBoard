@@ -52,9 +52,9 @@ export const Login = () => {
     await firebase
       .auth()
       .signInWithEmailAndPassword(uid + "@doofenshmirtz.xyz", pass)
-      .then(function (user) {
-        firebase.auth().signInWithCustomToken(data.getCustomToken.token);
-      })
+      // .then(function (user) {
+      //   firebase.auth().signInWithCustomToken(data.getCustomToken.token);
+      // })
       .catch(function (error) {
         // Handle Errors here.
         var errorCode = error.code;
