@@ -1,9 +1,7 @@
 import React from "react";
 import { TextField, makeStyles, Grid, Button } from "@material-ui/core";
-import { gql, useApolloClient } from "@apollo/client";
 import * as firebase from "firebase";
 import { LoadingPage } from "../../components/LoadingPage";
-import { GetCustomToken } from "../../graphql/GetCustomToken";
 import Alert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
@@ -18,17 +16,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const GET_CUSTOM_TOKEN = gql`
-  query GetCustomToken($uid: String!) {
-    getCustomToken(testUID: $uid) {
-      token
-    }
-  }
-`;
-
 export const Login = () => {
   const classes = useStyles();
-  const client = useApolloClient();
 
   const [uid, setUID] = React.useState("");
   const [pass, setPass] = React.useState("");
@@ -40,21 +29,9 @@ export const Login = () => {
 
   const submit = async () => {
     setLoading(true);
-    const { data } = await client
-      .watchQuery<GetCustomToken>({
-        query: GET_CUSTOM_TOKEN,
-        variables: { uid: uid },
-      })
-      .result();
-
-    if (!data || !data.getCustomToken.token) return; // TODO actual error handling pls
-
     await firebase
       .auth()
       .signInWithEmailAndPassword(uid + "@doofenshmirtz.xyz", pass)
-      // .then(function (user) {
-      //   firebase.auth().signInWithCustomToken(data.getCustomToken.token);
-      // })
       .catch(function (error) {
         // Handle Errors here.
         var errorCode = error.code;
