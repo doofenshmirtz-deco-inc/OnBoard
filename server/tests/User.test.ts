@@ -17,7 +17,6 @@ let userResolver: UserResolver;
 
 beforeAll(async () => {
   connection = await createTestConnection();
-  console.log(connection.name);
   userResolver = new UserResolver();
   await useSeeding();
   await runSeeder(TestDataSeeder);

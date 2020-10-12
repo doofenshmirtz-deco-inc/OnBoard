@@ -29,7 +29,7 @@ const UploadTest = () => {
       {url && (
         <div>
           Uploaded to:{" "}
-          <a href={url} target="_blank">
+          <a href={url} target="_blank" rel="noopener noreferrer">
             {url}
           </a>
         </div>
