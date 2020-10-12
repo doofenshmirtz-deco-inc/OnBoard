@@ -51,6 +51,7 @@ jobs:
         yarn db:start
         sudo docker ps
         yarn db:test:create
+        yarn db:seed
       env:
         NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
