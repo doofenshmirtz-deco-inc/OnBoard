@@ -81,4 +81,5 @@ jobs:
         working-directory: client
         start: yarn start
         wait-on: 'http://localhost:3000'
+        browser: chrome
 
