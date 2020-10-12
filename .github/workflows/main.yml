@@ -78,4 +78,7 @@ jobs:
     - name: Run tests on client
       uses: cypress-io/github-action@v2
       with:
-        project: ./client
+        working-directory: client
+        start: yarn start
+        wait-on: 'http://localhost:3000'
+
