@@ -68,7 +68,7 @@ jobs:
     - name: Start server for client tests
       working-directory: server
       run: |
-        yarn start
+        yarn start &
 
     - name: Install dependencies on client
       working-directory: client
