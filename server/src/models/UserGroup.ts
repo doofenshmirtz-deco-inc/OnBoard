@@ -23,6 +23,7 @@ import {
   createUnionType,
   FieldResolver,
   Ctx,
+  InputType,
 } from "type-graphql";
 import { User } from "./User";
 import { Course } from "./Course";
@@ -136,3 +137,24 @@ export const Group = createUnionType({
   name: "Group",
   types: () => [CourseGroup, ClassGroup, StudyGroup, DMGroup],
 });
+
+@InputType()
+export class ClassGroupInput {
+  @Field(() => [String])
+  uids: string[];
+
+  @Field()
+  name: string;
+
+  @Field()
+  type: ClassType;
+
+  @Field(() => ID)
+  courseID: number;
+
+  @Field(() => [Date])
+  times: Date[];
+
+  @Field()
+  duration: number;
+}
