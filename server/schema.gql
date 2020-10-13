@@ -120,7 +120,6 @@ union Node = FolderNode | HeadingNode | TextNode
 type Query {
   course(courseID: ID!): Course!
   courses(limit: Int = 10, order: String, orderBy: String, skip: Int = 0): [Course!]!
-  getCustomToken(testUID: String = "test-uid"): AuthToken!
   getMessages(groupID: ID!): [Message!]!
   getTestingToken(testUID: String = "test-uid"): AuthToken!
   me: User
