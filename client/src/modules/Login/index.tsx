@@ -75,14 +75,16 @@ export const Login = () => {
           id="standard-basic"
           label="Username/Email"
           onChange={(e) => setUID(e.currentTarget.value)}
+          data-cy="username-field"
         />
         <TextField
           id="standard-input-password"
           label="Password"
           type="password"
           onChange={(e) => setPass(e.currentTarget.value)}
+          data-cy="password-field"
         />
-        <Button color="primary" type="submit">
+        <Button color="primary" type="submit" data-cy="login-button">
           Login
         </Button>
       </form>

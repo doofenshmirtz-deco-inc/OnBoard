@@ -12,9 +12,11 @@ export class AuthResolver {
   async getTestingToken(
     @Arg("testUID", { defaultValue: "test-uid" }) testUID: string
   ): Promise<AuthToken> {
+    if (process.env.NODE_ENV !== "development")
+      throw new Error("Only availible in development");
+    console.log(process.env);
     let customToken = await admin.auth().createCustomToken(testUID);
 
-    // TODO: this is hacky (firebase shouldnt really be on the backend)
     let user = await firebase.auth().signInWithCustomToken(customToken);
     if (!user.user) throw new Error("Invalid user from firebase");
 
