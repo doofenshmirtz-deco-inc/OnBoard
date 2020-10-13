@@ -26,6 +26,6 @@ describe("Sidebar Test", () => {
       .get(".MuiListItemIcon-root")
       .last()
       .click();
-    cy.get("h1").contains("Login");
+    cy.get("h1").contains("Welcome");
   });
 });
