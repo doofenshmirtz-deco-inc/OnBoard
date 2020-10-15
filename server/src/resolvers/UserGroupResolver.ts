@@ -1,11 +1,8 @@
 import {
   Resolver,
   Query,
-  Args,
   Arg,
   ID,
-  Int,
-  UseMiddleware,
   Ctx,
   FieldResolver,
   Root,
@@ -13,7 +10,6 @@ import {
   Mutation,
 } from "type-graphql";
 import { User } from "../models/User";
-import { PaginationArgs, getOrder } from "./Types";
 import { Context } from "../middleware/Context";
 import {
   BaseGroup,
@@ -23,8 +19,10 @@ import {
   DMGroup,
   Group,
   StudyGroup,
+  ClassGroupInput,
 } from "../models/UserGroup";
 import { CourseGroupPair } from "../models/CourseGroupPair";
+import { Course } from "../models/Course";
 
 @Resolver((of) => BaseGroup)
 export class UserGroupResolver {
@@ -118,6 +116,24 @@ export class UserGroupResolver {
     });
 
     await group.setUsers(users);
+    return await group.save();
+  }
+
+  @Mutation(() => ClassGroup)
+  @Authorized()
+  async addClassGroup(@Arg("classData") classData: ClassGroupInput) {
+    const users = User.findByIds(classData.uids);
+    const course = Course.findOne({ id: classData.courseID });
+
+    const group = ClassGroup.create({
+      users,
+      course,
+      name: classData.name,
+      type: classData.type,
+      times: classData.times,
+      duration: classData.duration,
+    });
+
     return await group.save();
   }
 }

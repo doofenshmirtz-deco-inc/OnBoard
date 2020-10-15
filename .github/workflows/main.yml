@@ -47,24 +47,29 @@ jobs:
     - name: Install dependencies on server
       working-directory: server
       run: |
-    #   yarn
-    #   yarn db:start
-    #   sudo docker ps
-    #   yarn db:test:create
+        yarn
+        yarn db:start
+        sudo docker ps
+        yarn db:test:create
+        yarn db:seed
       env:
         NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    # Runs a set of commands using the runners shell
-    # - name: Run tests on server
-    #   working-directory: server
-    #   run: |
-    #     yarn test
 
     - name: Run prettier check on server
       working-directory: server
       run: |
-    #   yarn pretty:check
+        yarn pretty:check
 
+     # Runs a set of commands using the runners shell
+    - name: Run tests on server
+      working-directory: server
+      run: |
+        yarn test
+
+    - name: Start server for client tests
+      working-directory: server
+      run: |
+        yarn start &
 
     - name: Install dependencies on client
       working-directory: client
@@ -75,3 +80,23 @@ jobs:
       working-directory: client
       run: |
         yarn pretty:check
+
+    - name: Run tests on client
+      uses: cypress-io/github-action@v2
+      with:
+        working-directory: client
+        start: yarn start
+        wait-on: 'http://localhost:3000'
+        browser: chrome
+
+    - uses: actions/upload-artifact@v1
+      if: failure()
+      with:
+        name: cypress-screenshots
+        path: client/cypress/screenshots
+
+    - uses: actions/upload-artifact@v1
+      if: failure()
+      with:
+        name: cypress-videos
+        path: client/cypress/videos
