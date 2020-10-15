@@ -5,8 +5,19 @@ import {
   Arg,
   Query,
   Authorized,
+  Mutation,
+  Args,
 } from "type-graphql";
-import { FolderNode, BaseNode, Node } from "../models/CoursePageNode";
+import {
+  FolderNode,
+  BaseNode,
+  Node,
+  FolderNodeInput,
+  BaseNodeInput,
+  HeadingNode,
+  TextNode,
+  TextNodeInput,
+} from "../models/CoursePageNode";
 
 @Resolver(() => FolderNode)
 export class FolderNodeResolver {
@@ -30,5 +41,80 @@ export class NodeResolver {
   async parent(@Root() node: BaseNode) {
     let parent = await node.parent;
     return parent;
+  }
+
+  @Mutation(() => BaseNode)
+  @Authorized()
+  async deleteNode(@Arg("id") id: number) {
+    return await BaseNode.delete({ id });
+  }
+
+  @Mutation(() => FolderNode)
+  @Authorized()
+  async editFolderNode(@Args() data: FolderNodeInput) {
+    const children = BaseNode.findByIds(data.children);
+    const parent = BaseNode.findOne({ id: data.parent });
+
+    if (!data.id)
+      return await FolderNode.create({
+        ...data,
+        children,
+        parent,
+      }).save();
+    else {
+      return await FolderNode.update(
+        { id: data.id },
+        {
+          ...data,
+          children,
+          id: undefined,
+          parent: undefined,
+        }
+      );
+    }
+  }
+
+  @Mutation(() => HeadingNode)
+  @Authorized()
+  async titleNode(@Args() data: BaseNodeInput) {
+    const parent = BaseNode.findOne({ id: data.parent });
+
+    if (!data.id)
+      return await HeadingNode.create({
+        ...data,
+        parent,
+      }).save();
+    else {
+      return await HeadingNode.update(
+        { id: data.id },
+        {
+          ...data,
+          id: undefined,
+          parent: undefined,
+        }
+      );
+    }
+  }
+
+  @Mutation(() => TextNode)
+  @Authorized()
+  async textNode(@Args() data: TextNodeInput) {
+    const parent = BaseNode.findOne({ id: data.parent });
+
+    if (!data.id)
+      return await TextNode.create({
+        ...data,
+        parent,
+      }).save();
+    else {
+      return await TextNode.update(
+        { id: data.id },
+        {
+          ...data,
+          id: undefined,
+          parent: undefined,
+        }
+      );
+    }
   }
 }

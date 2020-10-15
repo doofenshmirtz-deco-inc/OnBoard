@@ -24,6 +24,12 @@ type BaseGroup {
   users: [User!]!
 }
 
+type BaseNode {
+  id: ID!
+  parent: FolderNode
+  title: String!
+}
+
 type ClassGroup {
   course: Course!
   duration: Float!
@@ -111,6 +117,7 @@ input MessageInput {
 type Mutation {
   addMessage(message: MessageInput!): Message!
   addStudyGroup(groupName: String!, isPublic: Boolean!, uids: [String!]!): StudyGroup!
+  deleteNode(id: Float!): BaseNode!
   joinStudyGroup(groupID: ID!): StudyGroup!
   singleUpload(file: Upload!): String!
 }
