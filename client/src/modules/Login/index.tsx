@@ -59,6 +59,7 @@ export const Login = () => {
 
   return (
     <Grid container direction="column" justify="center" alignItems="center">
+      <img src={process.env.PUBLIC_URL + 'logo512.png'} width="100px" />
       <h1>Welcome to OnBoard</h1>
       <form className={classes.root} onSubmit={submit}>
         {incorrectPwd && (
