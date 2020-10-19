@@ -1,9 +1,0 @@
-{
-	"Email": "",
-	"Registration": {
-		"body": {
-			"status": "valid"
-		},
-		"uri": "https://acme-v02.api.letsencrypt.org/acme/acct/98001130"
-	}
-}
