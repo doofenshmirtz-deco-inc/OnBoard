@@ -28,12 +28,20 @@ import { Contact } from "../modules/StudyRooms/Recents";
 import * as firebase from "firebase";
 import { useParams, useHistory } from "react-router";
 import { Messaging } from "../hooks/useMessaging";
+import { useAuthState } from "react-firebase-hooks/auth";
 
-
-const renderChatMessage = (message: ChatMessage) => {
-  const key = `${message.createdAt}-${message.sender}-${message.groupId}`;
+const renderChatMessage = (message: ChatMessage, uid: string) => {
+  // console.log(uid);
+  // console.log(message);
+  const key = `${message.createdAt.getTime()}-${message.sender}-${
+    message.groupId
+  }`;
   return (
-    <Message key={key} direction={message.direction} text={message.text} />
+    <Message
+      key={key}
+      direction={message.sender === uid ? "right" : "left"}
+      text={message.text}
+    />
   );
 };
 
@@ -104,7 +112,7 @@ const MessageBox = (props: MessageBoxProps) => {
 
   // current message being typed in text box.
   const [messageInput, setMessageInput] = useState("");
-  
+
   // reference to end of messages, to scroll to bottom on new message.
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -113,7 +121,7 @@ const MessageBox = (props: MessageBoxProps) => {
     }
   });
 
-  if (!x.groupMessages) {
+  if (!x.groupMessages || !x.username) {
     return <LoadingPage />;
   }
 
@@ -126,8 +134,8 @@ const MessageBox = (props: MessageBoxProps) => {
     props.onSentMessage?.();
 
     x.sendMessage({
-        send: message,
-        groupId: id,
+      send: message,
+      groupId: id,
     });
   };
 
@@ -146,7 +154,7 @@ const MessageBox = (props: MessageBoxProps) => {
         <> </>
       )}
       <div className={classes.messagingContainer}>
-        {x.groupMessages.map(renderChatMessage)}
+        {x.groupMessages.map((y) => renderChatMessage(y, x.username!))}
         <div ref={messagesEndRef} />
       </div>
       <TextField

@@ -10,51 +10,61 @@ import firebase from "firebase";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ChatMessage from "../components/ChatMessage";
 import { MyMessages } from "../graphql/MyMessages";
-import { OnMessageReceived, OnMessageReceived_newMessages } from "../graphql/OnMessageReceived";
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { AddMessage, AddMessageVariables, AddMessage_addMessage } from "../graphql/AddMessage";
-import { MyGroups, MyGroups_me_groups, MyGroups_me_groups_StudyGroup } from "../graphql/MyGroups";
+import {
+  OnMessageReceived,
+  OnMessageReceived_newMessages,
+} from "../graphql/OnMessageReceived";
+import { useAuthState } from "react-firebase-hooks/auth";
+import {
+  AddMessage,
+  AddMessageVariables,
+  AddMessage_addMessage,
+} from "../graphql/AddMessage";
+import {
+  MyGroups,
+  MyGroups_me_groups,
+  MyGroups_me_groups_StudyGroup,
+} from "../graphql/MyGroups";
 import { createContainer } from "unstated-next";
 
-
 const MESSAGES_QUERY = gql`
-query MyMessages($groupId: ID!) {
-  getMessages(groupID: $groupId) {
-    text
-    user {
-      id
-      name
+  query MyMessages($groupId: ID!) {
+    getMessages(groupID: $groupId) {
+      text
+      user {
+        id
+        name
+      }
+      group {
+        id
+      }
+      createdAt
     }
-    group {
-      id
-    }
-    createdAt
   }
-}
 `;
 
 const ADD_MESSAGE = gql`
-mutation AddMessage($send: String!, $groupId: ID!) {
-  addMessage(message: { text: $send, groupID: $groupId }) {
-    id
+  mutation AddMessage($send: String!, $groupId: ID!) {
+    addMessage(message: { text: $send, groupID: $groupId }) {
+      id
+    }
   }
-}
 `;
 
 const MESSAGES_SUBSCRIPTION = gql`
-subscription OnMessageReceived($uid: ID!) {
-  newMessages(uid: $uid) {
-    text
-    group {
-      id
+  subscription OnMessageReceived($uid: ID!) {
+    newMessages(uid: $uid) {
+      text
+      group {
+        id
+      }
+      user {
+        id
+        name
+      }
+      createdAt
     }
-    user {
-      id
-      name
-    }
-    createdAt
   }
-}
 `;
 
 const GROUPS_QUERY = gql`
@@ -64,6 +74,7 @@ const GROUPS_QUERY = gql`
         ... on DMGroup {
           id
           name
+          lastActive
           users {
             id
             name
@@ -73,6 +84,7 @@ const GROUPS_QUERY = gql`
         ... on ClassGroup {
           id
           name
+          lastActive
           users {
             id
             name
@@ -82,6 +94,7 @@ const GROUPS_QUERY = gql`
         ... on CourseGroup {
           id
           name
+          lastActive
           users {
             id
             name
@@ -91,6 +104,7 @@ const GROUPS_QUERY = gql`
         ... on StudyGroup {
           id
           name
+          lastActive
           users {
             id
             name
@@ -117,18 +131,24 @@ const toChatMessage = (
   };
 };
 
-type MessagesObject = {
-  [groupId: string]: ChatMessage[]
-}
+const sortContacts = (a: MyGroups_me_groups, b: MyGroups_me_groups) => {
+  return -(Date.parse(a.lastActive) - Date.parse(b.lastActive));
+};
 
-const MIN_DATE = new Date(0);
+const sortChatMessages = (a: ChatMessage, b: ChatMessage) => {
+  return a.createdAt.getTime() - b.createdAt.getTime();
+};
+
+type MessagesObject = {
+  [groupId: string]: ChatMessage[];
+};
 
 export const useMessaging = () => {
   const [contacts, setContacts] = useState([] as MyGroups_me_groups[]);
   const [groupId, setGroupId] = useState(null as number | null);
 
   const [user, userLoading] = useAuthState(firebase.auth());
-  const uid = user?.uid;
+  const username = user?.email?.split("@")?.[0];
 
   // chat messages gropued by group, as ChatMessage items.
   const [groupMessages, setGroupMessages] = useState({} as MessagesObject);
@@ -140,15 +160,18 @@ export const useMessaging = () => {
   const [sendToServer] = useMutation<AddMessage>(ADD_MESSAGE);
 
   // get my messages for a specific contact group.
-  const [fetchMessages, {data: messagesData, loading, refetch }] = useLazyQuery<MyMessages>(MESSAGES_QUERY);
+  const [
+    fetchMessages,
+    { data: messagesData, loading, refetch },
+  ] = useLazyQuery<MyMessages>(MESSAGES_QUERY);
 
   useEffect(() => {
     if (groupId != null) {
       setMessages(null);
       if (!refetch) {
-        fetchMessages({ variables: { groupId }});
+        fetchMessages({ variables: { groupId } });
       } else {
-        refetch({ variables: { groupId }});
+        refetch({ variables: { groupId } });
       }
     }
   }, [groupId]);
@@ -163,15 +186,8 @@ export const useMessaging = () => {
   const sortedContacts = useMemo(() => {
     // sort by most recent messages first.
     const sorted = [...contacts];
-    sorted.sort((a, b) => {
-      const m1 = groupMessages[a.id] ?? [];
-      const m2 = groupMessages[b.id] ?? [];
-
-      const date1 = m1[m1.length - 1]?.createdAt;
-      const date2 = m2[m2.length - 1]?.createdAt;
-
-      return -((date1 ?? MIN_DATE).getTime() - (date2 ?? MIN_DATE).getTime());
-    })
+    sorted.sort(sortContacts);
+    return sorted;
   }, [contacts, groupMessages]);
 
   // subscription handler to add a new received message.
@@ -181,42 +197,45 @@ export const useMessaging = () => {
 
       console.log("received " + data);
 
-      if (data && uid) {
+      if (data && username) {
         const groupId = data.group.id;
         const messages = groupMessages[groupId] ?? [];
 
         setGroupMessages({
           ...groupMessages,
-          [groupId]: [...messages, toChatMessage(data, uid)],
+          [groupId]: [...messages, toChatMessage(data, username)],
         });
       }
     },
-    [uid]
+    [username]
   );
 
   // subscribe to incoming messages with the above handler.
-  const {data: subscriptionData} = useSubscription<OnMessageReceived>(
+  const { data: subscriptionData } = useSubscription<OnMessageReceived>(
     MESSAGES_SUBSCRIPTION,
     {
-      variables: { uid },
+      variables: { uid: username },
       onSubscriptionData: handleNewMessage,
     }
   );
 
   // when data changes, update oldMessages.
   useEffect(() => {
-    if (!messagesData || !uid) return;
+    if (!messagesData || !username) return;
 
     const groupId = messagesData.getMessages[0]?.group?.id;
-    const messages = messagesData.getMessages.map(x => toChatMessage(x, uid));
+    const messages = messagesData.getMessages.map((x) =>
+      toChatMessage(x, username)
+    );
+    messages.sort(sortChatMessages);
 
     if (groupId) {
-      setGroupMessages(groupMessages => ({
+      setGroupMessages((groupMessages) => ({
         ...groupMessages,
         [groupId!]: messages,
       }));
     }
-  }, [groupId, messagesData, uid]);
+  }, [groupId, messagesData, username]);
 
   useEffect(() => {
     if (groupId != null) {
@@ -224,30 +243,35 @@ export const useMessaging = () => {
     }
   }, [groupId, groupMessages]);
 
-  const sendMessage = useCallback((args: AddMessageVariables) => {
+  const sendMessage = useCallback(
+    (args: AddMessageVariables) => {
+      setGroupMessages((groupMessages) => ({
+        ...groupMessages,
 
-    setGroupMessages(groupMessages => ({
-      ...groupMessages,
-      
-      [args.groupId]: [...groupMessages[args.groupId] ?? [], {
-          text: args.send,
-          sender: uid!,
-          direction: 'right',
-          groupId: args.groupId,
-          createdAt: new Date(),
-      }],
-    }));
+        [args.groupId]: [
+          ...(groupMessages[args.groupId] ?? []),
+          {
+            text: args.send,
+            sender: username!,
+            direction: "right",
+            groupId: args.groupId,
+            createdAt: new Date(),
+          },
+        ],
+      }));
 
-    sendToServer({ variables: args });
-  }, [uid]);
+      sendToServer({ variables: args });
+    },
+    [username]
+  );
 
   return {
     contacts: sortedContacts,
     groupMessages: messages,
     setGroupId,
-    sendMessage
-  }
-
+    sendMessage,
+    username,
+  };
 };
 
 export const Messaging = createContainer(useMessaging);

@@ -12,7 +12,6 @@ const UPLOAD_FILE = gql`
 `;
 
 const UploadTest = () => {
-
   const [upload, { data }] = useMutation<SingleUpload>(UPLOAD_FILE);
 
   const url = data?.singleUpload;

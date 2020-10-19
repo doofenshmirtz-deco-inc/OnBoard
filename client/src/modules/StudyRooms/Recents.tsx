@@ -9,7 +9,7 @@ import { MeId } from "../../graphql/MeId";
 import { useHistory, useParams } from "react-router";
 
 const GROUPS_QUERY = gql`
-  query MyGroups {
+  query MyGroupsxx {
     me {
       groups {
         ... on DMGroup {
