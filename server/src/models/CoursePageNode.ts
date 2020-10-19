@@ -40,9 +40,9 @@ export abstract class BaseNode extends BaseEntity {
   @Field()
   title: string;
 
-  @Column()
-  @Field()
-  link: string;
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+  link?: string;
 
   // TODO maybe custom type checking
   // TODO so bad v bad fix me
