@@ -16,6 +16,7 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 import { Login } from "./modules/Login";
 import { LoadingPage } from "./components/LoadingPage";
+import { Messaging } from "./hooks/useMessaging";
 
 const drawerWidth = 240;
 
@@ -115,9 +116,11 @@ export default function App() {
         <Sidebar />
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          {modules.map((module) => (
-            <Route {...module.routeProps} key={module.name} />
-          ))}
+          <Messaging.Provider>
+            {modules.map((module) => (
+              <Route {...module.routeProps} key={module.name} />
+            ))}
+          </Messaging.Provider>
         </main>
       </>
     );

@@ -27,60 +27,8 @@ import {
 import { Contact } from "../modules/StudyRooms/Recents";
 import * as firebase from "firebase";
 import { useParams, useHistory } from "react-router";
+import { Messaging } from "../hooks/useMessaging";
 
-const MESSAGES_QUERY = gql`
-  query MyMessages($groupId: ID!) {
-    getMessages(groupID: $groupId) {
-      text
-      user {
-        id
-        name
-      }
-      group {
-        id
-      }
-      createdAt
-    }
-  }
-`;
-
-const ADD_MESSAGE = gql`
-  mutation AddMessage($send: String!, $groupId: ID!) {
-    addMessage(message: { text: $send, groupID: $groupId }) {
-      id
-    }
-  }
-`;
-
-const MESSAGES_SUBSCRIPTION = gql`
-  subscription OnMessageReceived($uid: ID!) {
-    newMessages(uid: $uid) {
-      text
-      group {
-        id
-      }
-      user {
-        id
-      }
-      createdAt
-    }
-  }
-`;
-
-// note that this takes an OnMessageReceived_newMessages, but the queries are
-// written such that MyMessages_getMessages has the exact same type.
-const toChatMessage = (
-  data: OnMessageReceived_newMessages,
-  uid: string
-): ChatMessage => {
-  return {
-    sender: data.user.id,
-    text: data.text,
-    direction: data.user.id === uid ? "right" : "left",
-    groupId: data.group.id,
-    createdAt: new Date(data.createdAt),
-  };
-};
 
 const renderChatMessage = (message: ChatMessage) => {
   const key = `${message.createdAt}-${message.sender}-${message.groupId}`;
@@ -143,19 +91,20 @@ const MessageBox = (props: MessageBoxProps) => {
 
   const classes = useStyles();
 
-  const { groupID } = useParams();
+  const { groupID } = useParams<any>();
   const history = useHistory();
-
-  const uid = firebase.auth().currentUser?.uid;
   const id = props.id ? props.id : groupID;
+
+  const x = Messaging.useContainer();
+
+  useEffect(() => {
+    console.log("setting group id to " + id);
+    x.setGroupId(id);
+  }, [id]);
 
   // current message being typed in text box.
   const [messageInput, setMessageInput] = useState("");
-  // existing chat messages as ChatMessage items.
-  const [oldMessages, setOldMessages] = useState([] as ChatMessage[]);
-  // new messages obtained via subscription.
-  const [newMessages, setNewMessages] = useState([] as ChatMessage[]);
-
+  
   // reference to end of messages, to scroll to bottom on new message.
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -164,78 +113,7 @@ const MessageBox = (props: MessageBoxProps) => {
     }
   });
 
-  // mutation to send a new message to the server.
-  const [sendToServer] = useMutation(ADD_MESSAGE);
-
-  // get my messages for a specific contact group.
-  const { data, loading, refetch } = useQuery<MyMessages>(MESSAGES_QUERY, {
-    variables: { groupId: id },
-  });
-
-  // FIXME: i feel like this is dodgy :/
-  let contact = props.contacts
-    ? props.contacts.filter((c) => c.id === id)[0]
-    : null;
-  if (contact && !contact.readStatus) {
-    contact.readStatus = true;
-    if (props.setContacts)
-      props.setContacts([
-        contact,
-        ...props.contacts!.filter((c) => c.id !== id),
-      ]);
-  }
-
-  // subscription handler to add a new received message.
-  const handleNewMessage = useCallback(
-    (options: OnSubscriptionDataOptions<OnMessageReceived>) => {
-      const data = options.subscriptionData.data?.newMessages;
-
-      if (data) {
-        if (data.group.id !== id && props.contacts) {
-          // FIXME: i feel like this is dodgy :/ (perhaps abstract to a function?)
-          let contact = props.contacts.filter((c) => c.id === data.group.id)[0];
-          contact.readStatus = false;
-          if (props.setContacts)
-            props.setContacts([
-              contact,
-              ...props.contacts.filter((c) => c.id !== data.group.id),
-            ]);
-          return; // not the selected group
-        }
-        setNewMessages([...newMessages, toChatMessage(data, uid!)]);
-      }
-    },
-    [newMessages, uid]
-  );
-
-  // subscribe to incoming messages with the above handler.
-  const { data: subData } = useSubscription<OnMessageReceived>(
-    MESSAGES_SUBSCRIPTION,
-    {
-      variables: { uid },
-      onSubscriptionData: handleNewMessage,
-    }
-  );
-
-  // when data changes, update oldMessages.
-  useEffect(() => {
-    if (!data) return;
-
-    const oldMessages: ChatMessage[] =
-      data?.getMessages?.map((x) => toChatMessage(x, uid!)) ?? [];
-
-    oldMessages.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
-
-    setOldMessages(oldMessages);
-  }, [data, uid]);
-
-  // reset cached messages when group id changes.
-  useEffect(() => {
-    refetch();
-    setNewMessages([]);
-  }, [id]);
-
-  if (!data || loading) {
+  if (!x.groupMessages) {
     return <LoadingPage />;
   }
 
@@ -244,25 +122,12 @@ const MessageBox = (props: MessageBoxProps) => {
       return;
     }
 
-    setNewMessages([
-      ...newMessages,
-      {
-        text: message,
-        sender: uid!,
-        direction: "right",
-        groupId: id,
-        createdAt: new Date(),
-      },
-    ]);
-
     setMessageInput("");
     props.onSentMessage?.();
 
-    sendToServer({
-      variables: {
+    x.sendMessage({
         send: message,
         groupId: id,
-      },
     });
   };
 
@@ -281,8 +146,7 @@ const MessageBox = (props: MessageBoxProps) => {
         <> </>
       )}
       <div className={classes.messagingContainer}>
-        {oldMessages.map(renderChatMessage)}
-        {newMessages.map(renderChatMessage)}
+        {x.groupMessages.map(renderChatMessage)}
         <div ref={messagesEndRef} />
       </div>
       <TextField
