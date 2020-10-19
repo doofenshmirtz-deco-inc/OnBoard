@@ -8,14 +8,25 @@ import {
   ThemeProvider,
   createMuiTheme,
 } from "@material-ui/core/styles";
-
+import { createUploadLink } from "apollo-upload-client";
+import {
+  ApolloLink,
+  ApolloClient,
+  InMemoryCache,
+  split,
+  ApolloProvider,
+  NormalizedCacheObject,
+} from "@apollo/client";
+import { persistCache, PersistentStorage } from "apollo3-cache-persist";
+import { setContext } from "@apollo/client/link/context";
+import { WebSocketLink } from "@apollo/client/link/ws";
+import firebase from "firebase";
+import { getMainDefinition } from "@apollo/client/utilities";
 import modules from "./modules";
 import Sidebar from "./components/Sidebar";
-
-import * as firebase from "firebase/app";
-import "firebase/auth";
 import { Login } from "./modules/Login";
 import { LoadingPage } from "./components/LoadingPage";
+import { PersistedData } from "apollo3-cache-persist/lib/types";
 
 const drawerWidth = 240;
 
@@ -84,10 +95,60 @@ const theme = createMuiTheme({
   },
 });
 
-export default function App() {
-  const classes = useStyles();
+const getClient = async () => {
+  const httpLink = (createUploadLink({
+    uri: process.env.REACT_APP_GRAPHQL_URL,
+    headers: {
+      "keep-alive": "true",
+    },
+  }) as unknown) as ApolloLink;
 
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const authLink = setContext(async (_, { headers }) => {
+    const token = await firebase.auth().currentUser?.getIdToken();
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? token : "",
+      },
+    };
+  });
+
+  const wsLink = new WebSocketLink({
+    uri: process.env.REACT_APP_GRAPHQL_WS!,
+    options: {
+      reconnect: true,
+    },
+  });
+
+  const splitLink = split(
+    ({ query }) => {
+      const definition = getMainDefinition(query);
+      return (
+        definition.kind === "OperationDefinition" &&
+        definition.operation === "subscription"
+      );
+    },
+    wsLink,
+    httpLink
+  );
+
+  const cache = new InMemoryCache();
+  await persistCache({
+    cache,
+    storage: window.localStorage as PersistentStorage<
+      PersistedData<NormalizedCacheObject>
+    >,
+  });
+
+  return new ApolloClient({
+    link: authLink.concat(splitLink),
+    cache,
+  });
+};
+
+export default function App() {
+  const [client, setClient] = useState(null as ApolloClient<any> | null);
+  const classes = useStyles();
 
   const [loaded, setLoaded] = React.useState(false);
 
@@ -103,15 +164,23 @@ export default function App() {
         setLoaded(true);
       });
     }
+  }, [loaded]);
+
+  useEffect(() => {
+    getClient().then((c) => setClient(c));
   }, []);
 
-  if (!loaded) return <LoadingPage />;
+  firebase.auth().onAuthStateChanged(() => {
+    if (client) client.resetStore();
+  });
+
+  if (!loaded || !client) return <LoadingPage />;
 
   const screen = () => {
     if (!user) return <Login />;
 
     return (
-      <>
+      <ApolloProvider client={client}>
         <Sidebar />
         <main className={classes.content}>
           <div className={classes.toolbar} />
@@ -119,7 +188,7 @@ export default function App() {
             <Route {...module.routeProps} key={module.name} />
           ))}
         </main>
-      </>
+      </ApolloProvider>
     );
   };
 
