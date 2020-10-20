@@ -14,7 +14,6 @@ export class AuthResolver {
   ): Promise<AuthToken> {
     if (process.env.NODE_ENV !== "development")
       throw new Error("Only availible in development");
-    console.log(process.env);
     let customToken = await admin.auth().createCustomToken(testUID);
 
     let user = await firebase.auth().signInWithCustomToken(customToken);

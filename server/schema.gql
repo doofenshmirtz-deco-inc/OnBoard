@@ -24,6 +24,20 @@ type BaseGroup {
   users: [User!]!
 }
 
+type BaseNode {
+  id: ID!
+  link: String
+  parent: FolderNode
+  title: String!
+}
+
+input BaseNodeInput {
+  id: Float
+  link: String!
+  parent: Float!
+  title: String!
+}
+
 type ClassGroup {
   course: Course!
   duration: Float!
@@ -92,7 +106,16 @@ type DMGroup {
 type FolderNode {
   children: [Node!]!
   id: ID!
+  link: String
   parent: FolderNode
+  title: String!
+}
+
+input FolderNodeInput {
+  children: [String!]!
+  id: Float
+  link: String!
+  parent: Float!
   title: String!
 }
 
@@ -100,6 +123,7 @@ union Group = ClassGroup | CourseGroup | DMGroup | StudyGroup
 
 type HeadingNode {
   id: ID!
+  link: String
   parent: FolderNode
   title: String!
 }
@@ -121,8 +145,12 @@ type Mutation {
   addClassGroup(classData: ClassGroupInput!): ClassGroup!
   addMessage(message: MessageInput!): Message!
   addStudyGroup(groupName: String!, isPublic: Boolean!, uids: [String!]!): StudyGroup!
+  deleteNode(id: Float!): BaseNode!
+  editFolderNode(data: FolderNodeInput!): FolderNode!
   joinStudyGroup(groupID: ID!): StudyGroup!
   singleUpload(file: Upload!): String!
+  textNode(data: TextNodeInput!): TextNode!
+  titleNode(data: BaseNodeInput!): HeadingNode!
 }
 
 union Node = FolderNode | HeadingNode | TextNode
@@ -162,7 +190,16 @@ type Subscription {
 
 type TextNode {
   id: ID!
+  link: String
   parent: FolderNode
+  text: String!
+  title: String!
+}
+
+input TextNodeInput {
+  id: Float
+  link: String!
+  parent: Float!
   text: String!
   title: String!
 }
