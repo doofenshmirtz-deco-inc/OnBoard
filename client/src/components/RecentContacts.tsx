@@ -60,7 +60,7 @@ const RecentContacts = (props: any) => {
 
   return (
     <div>
-    <TextField
+      <TextField
         className={classes.searchBar}
         id="contacts-search"
         label="Search"
@@ -74,40 +74,37 @@ const RecentContacts = (props: any) => {
           ),
         }}
       />
-      <CreateRoomBtn
-        contacts={contacts}
-        explore={false}
-      />
-    <List className={classes.root}>
-      {Object.values(props.contacts).map((item: any) =>
-        item?.name?.toLowerCase?.().includes?.(searchTerm.toLowerCase()) ? (
-          <Button
-            key={item.id}
-            color="primary"
-            disableElevation
-            style={{
-              backgroundColor:
-                props.selected.id === item.id ? "#e3e1e1" : "white",
-            }}
-            onClick={(e) => {
-              props.handleClick(item);
-            }}
-            className={classes.contact}
-          >
-            <ContactCard
+      <CreateRoomBtn contacts={contacts} explore={false} />
+      <List className={classes.root}>
+        {Object.values(props.contacts).map((item: any) =>
+          item?.name?.toLowerCase?.().includes?.(searchTerm.toLowerCase()) ? (
+            <Button
               key={item.id}
-              name={item.name}
-              readStatus={item.readStatus}
-              contact={item.users[0]}
-              buttonsOff={true}
-              group={item.group}
-              contact2={item.users[1]}
-              contacts={item.users}
-            />
-          </Button>
-        ) : null
-      )}
-    </List>
+              color="primary"
+              disableElevation
+              style={{
+                backgroundColor:
+                  props.selected.id === item.id ? "#e3e1e1" : "white",
+              }}
+              onClick={(e) => {
+                props.handleClick(item);
+              }}
+              className={classes.contact}
+            >
+              <ContactCard
+                key={item.id}
+                name={item.name}
+                readStatus={item.readStatus}
+                contact={item.users[0]}
+                buttonsOff={true}
+                group={item.group}
+                contact2={item.users[1]}
+                contacts={item.users}
+              />
+            </Button>
+          ) : null
+        )}
+      </List>
     </div>
   );
 };

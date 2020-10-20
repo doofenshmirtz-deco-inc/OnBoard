@@ -18,7 +18,7 @@ import AddIcon from "@material-ui/icons/Add";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { AddStudyGroup } from "../graphql/AddStudyGroup";
-import GroupAddIcon from '@material-ui/icons/GroupAdd';
+import GroupAddIcon from "@material-ui/icons/GroupAdd";
 
 const addStudyGroup = gql`
   mutation AddStudyGroup(
@@ -97,9 +97,9 @@ const PopUp = (props: any) => {
         variant="contained"
         color="secondary"
         className={classes.button}
-        startIcon={props.explore ? <AddIcon /> :  null}
+        startIcon={props.explore ? <AddIcon /> : null}
         onClick={handleClickOpen}
-        style={{width: props.explore ? "16%" : "23%"}}
+        style={{ width: props.explore ? "16%" : "23%" }}
       >
         {props.explore ? "Create Study Room" : <GroupAddIcon />}
       </Button>
