@@ -1,7 +1,3 @@
-log {
-	level INFO
-}
-
 onboard.doofenshmirtz.xyz, localhost {
     reverse_proxy onboard-server:5000
 }
