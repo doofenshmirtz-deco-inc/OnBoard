@@ -1,8 +1,8 @@
 version: '3.8'
 services:
   etherpad:
-    image: docker.pkg.github.com/doofenshmirtz-deco-inc/onboard/etherpad:0.3.5
-    restart: ${RESTART_POLICY}
+    image: docker.pkg.github.com/doofenshmirtz-deco-inc/onboard/etherpad:0.4
+    restart: unless-stopped
     #volumes:
     #  - /opt/etherpad-lite/var:/opt/etherpad-lite/var
     #  - /opt/etherpad-lite/node_modules:/opt/etherpad-lite/node_modules
@@ -16,6 +16,13 @@ services:
       jitsi:
         aliases:
           - "etherpad.jitsi"
+  wbo:
+    image: lovasoa/wbo:latest
+    restart: unless-stopped
+    ports:
+      - "5001:80"
+    volumes:
+      - ./wbo/wbo-boards:/opt/app/server-data <- you might choose a different local directory to store stuff
 
 
 networks:
