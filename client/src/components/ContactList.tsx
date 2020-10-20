@@ -12,6 +12,8 @@ import SearchIcon from "@material-ui/icons/Search";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
 import contacts from "./Contacts.json";
+import RecentContacts from "./RecentContacts";
+import Recents from "../modules/StudyRooms/Recents";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,7 +59,8 @@ export default function ContactList() {
     <Box border={1} className={classes.root}>
       <Container>
         <h2 className={classes.title}>Contacts</h2>
-        <TextField
+        <Recents />
+        {/* <TextField
           className={classes.searchBar}
           id="contacts-search"
           label="Search"
@@ -94,8 +97,8 @@ export default function ContactList() {
             horizontal: "center",
           }}
         >
-          <ContactCard contact={selectedContact} />
-        </Popover>
+          <ContactCard contact={selectedContact} /> */}
+        {/* </Popover> */}
       </Container>
     </Box>
   );

@@ -174,7 +174,7 @@ const Explore = (props: Props) => {
             contacts={contactsData.data?.me?.groups.filter(
               (c: any) => c.__typename === "DMGroup"
             )}
-            explore={true}
+            explore
           />
         ) : (
           <> </>
