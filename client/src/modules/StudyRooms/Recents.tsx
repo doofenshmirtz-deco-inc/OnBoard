@@ -100,6 +100,7 @@ const Recents = (props: any) => {
   // callback handler to bump the currently selected group to the top of the list.
   // passed to message box so it can be called when a new message is received.
   const bumpSelectedContact = useCallback(() => {
+    console.log(contacts);
     if (!contacts) return;
     const selectedContacts = contacts.filter((c) => c.id === selected.id);
     const notSelectedContacts = contacts.filter((c) => c.id !== selected.id);

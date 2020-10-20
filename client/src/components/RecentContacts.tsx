@@ -7,11 +7,11 @@ import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { gql, useQuery } from "@apollo/client";
-import { Contacts } from "../graphql/Contacts";
 import CreateRoomBtn from "./CreateRoomBtn";
+import { ContactsRecents } from "../graphql/ContactsRecents";
 
 const contactsQuery = gql`
-  query Contacts {
+  query ContactsRecents {
     me {
       groups {
         ... on DMGroup {
@@ -53,7 +53,7 @@ const RecentContacts = (props: any) => {
 
   const classes = useStyles();
 
-  const contactsData = useQuery<Contacts>(contactsQuery);
+  const contactsData = useQuery<ContactsRecents>(contactsQuery);
   const contacts = contactsData.data?.me?.groups.filter(
     (c: any) => c.__typename === "DMGroup"
   );

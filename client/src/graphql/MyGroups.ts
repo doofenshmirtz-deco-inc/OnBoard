@@ -63,11 +63,7 @@ export interface MyGroups_me_groups_StudyGroup {
   users: MyGroups_me_groups_StudyGroup_users[];
 }
 
-export type MyGroups_me_groups =
-  | MyGroups_me_groups_DMGroup
-  | MyGroups_me_groups_ClassGroup
-  | MyGroups_me_groups_CourseGroup
-  | MyGroups_me_groups_StudyGroup;
+export type MyGroups_me_groups = MyGroups_me_groups_DMGroup | MyGroups_me_groups_ClassGroup | MyGroups_me_groups_CourseGroup | MyGroups_me_groups_StudyGroup;
 
 export interface MyGroups_me {
   __typename: "User";

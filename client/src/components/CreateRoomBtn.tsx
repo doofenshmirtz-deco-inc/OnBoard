@@ -1,7 +1,6 @@
 import React, { useState, ChangeEvent } from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { gql, useMutation } from "@apollo/client";
-import firebase from "firebase";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import {
   Checkbox,
   Dialog,
@@ -19,6 +18,9 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { AddStudyGroup } from "../graphql/AddStudyGroup";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
+import { useHistory } from "react-router";
+import { GetMyId } from "../graphql/GetMyId";
+import { LoadingPage } from "./LoadingPage";
 
 const addStudyGroup = gql`
   mutation AddStudyGroup(
@@ -27,6 +29,14 @@ const addStudyGroup = gql`
     $groupName: String!
   ) {
     addStudyGroup(uids: $uids, isPublic: $isPublic, groupName: $groupName) {
+      id
+    }
+  }
+`;
+
+const meId = gql`
+  query GetMyId {
+    me {
       id
     }
   }
@@ -72,11 +82,20 @@ const PopUp = (props: any) => {
     setOpen(false);
   };
 
-  const uid = firebase.auth().currentUser?.uid;
+  const uidData = useQuery<GetMyId>(meId);
+  const history = useHistory();
+  const classes = useStyles();
+
+  if (!uidData.data || !uidData.data.me) {
+    return <LoadingPage/>
+  }
+  const uid = uidData.data.me.id;
 
   const handleCreate = () => {
-    let uids = selectedContacts.map((c: any) => c.users.slice(-1)[0].id);
+    let uids = selectedContacts.map((c: any) => c.users.filter((user: any) => user.id !== uid)[0].id);
     uids.push(uid);
+    console.log(uids);
+    console.log(selectedContacts);
     createStudyRoom({
       variables: { uids: uids, groupName: studyRoomName, isPublic: isPublic },
     });
@@ -85,11 +104,9 @@ const PopUp = (props: any) => {
     }
     // TODO: get data to work
     setGroupID(data ? (data.addStudyGroup ? data.addStudyGroup.id : "") : "");
-    window.location.href = `/study-rooms/recents/${groupID}`;
+    window.location.href = "/study-rooms/recents/" + groupID;
     handleClose();
   };
-
-  const classes = useStyles();
 
   return (
     <div className={classes.inline}>
