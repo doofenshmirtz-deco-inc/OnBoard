@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 // TODO: PopUp props type definition
- const PopUp = (props: any) => {
+const PopUp = (props: any) => {
   const [open, setOpen] = useState(false);
   const [studyRoomName, setRoomName] = useState("");
   const [selectedContacts, setSelectedContacts] = useState([] as any[]);
