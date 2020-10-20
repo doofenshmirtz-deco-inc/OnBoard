@@ -185,7 +185,7 @@ type StudyGroup {
 }
 
 type Subscription {
-  newMessages(uid: ID!): Message!
+  newMessages: Message!
 }
 
 type TextNode {

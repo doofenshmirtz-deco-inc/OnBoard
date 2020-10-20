@@ -16,7 +16,7 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 import { Login } from "./modules/Login";
 import { LoadingPage } from "./components/LoadingPage";
-import { Messaging } from "./hooks/useMessaging";
+import { Messaging, MessagingSubscriptionHelper } from "./hooks/useMessaging";
 
 const drawerWidth = 240;
 
@@ -88,7 +88,7 @@ const theme = createMuiTheme({
 export default function App() {
   const classes = useStyles();
 
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [mobileOsubpen, setMobileOpen] = React.useState(false);
 
   const [loaded, setLoaded] = React.useState(false);
 
@@ -117,6 +117,7 @@ export default function App() {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Messaging.Provider>
+            <MessagingSubscriptionHelper></MessagingSubscriptionHelper>
             {modules.map((module) => (
               <Route {...module.routeProps} key={module.name} />
             ))}

@@ -26,10 +26,13 @@ import {
   MyGroups_me_groups_StudyGroup,
 } from "../graphql/MyGroups";
 import { createContainer } from "unstated-next";
+import { subscribe } from "graphql";
+import React from "react";
 
 const MESSAGES_QUERY = gql`
   query MyMessages($groupId: ID!) {
     getMessages(groupID: $groupId) {
+      id
       text
       user {
         id
@@ -52,8 +55,9 @@ const ADD_MESSAGE = gql`
 `;
 
 const MESSAGES_SUBSCRIPTION = gql`
-  subscription OnMessageReceived($uid: ID!) {
-    newMessages(uid: $uid) {
+  subscription OnMessageReceived {
+    newMessages {
+      id
       text
       group {
         id
@@ -115,6 +119,19 @@ const GROUPS_QUERY = gql`
     }
   }
 `;
+
+export const MessagingSubscriptionHelper = () => {
+  const x = Messaging.useContainer();
+  
+  const { data } = useSubscription<OnMessageReceived>(
+    MESSAGES_SUBSCRIPTION,
+    {
+      onSubscriptionData: x.onData,
+    }
+  );
+
+  return <></>;
+};
 
 // note that this takes an OnMessageReceived_newMessages, but the queries are
 // written such that MyMessages_getMessages has the exact same type.
@@ -210,14 +227,7 @@ export const useMessaging = () => {
     [username]
   );
 
-  // subscribe to incoming messages with the above handler.
-  const { data: subscriptionData } = useSubscription<OnMessageReceived>(
-    MESSAGES_SUBSCRIPTION,
-    {
-      variables: { uid: username },
-      onSubscriptionData: handleNewMessage,
-    }
-  );
+  // console.log("username " + username);
 
   // when data changes, update oldMessages.
   useEffect(() => {
@@ -268,9 +278,11 @@ export const useMessaging = () => {
   return {
     contacts: sortedContacts,
     groupMessages: messages,
+    groupId,
     setGroupId,
     sendMessage,
     username,
+    onData: handleNewMessage
   };
 };
 
