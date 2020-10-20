@@ -6,6 +6,25 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import { gql, useQuery } from "@apollo/client";
+import { Contacts } from "../graphql/Contacts";
+import CreateRoomBtn from "./CreateRoomBtn";
+
+const contactsQuery = gql`
+  query Contacts {
+    me {
+      groups {
+        ... on DMGroup {
+          id
+          name
+          users {
+            id
+          }
+        }
+      }
+    }
+  }
+`;
 
 const RecentContacts = (props: any) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -14,7 +33,7 @@ const RecentContacts = (props: any) => {
       backgroundColor: theme.palette.background.paper,
       display: "flex",
       flexDirection: "column",
-      width: "25%",
+      width: "100%",
       height: "60vh",
       overflowY: "scroll",
       paddingBottom: "0px",
@@ -26,7 +45,7 @@ const RecentContacts = (props: any) => {
       padding: "0",
     },
     searchBar: {
-      width: "100%",
+      width: "70%",
       margin: "0",
       paddingLeft: 10,
     },
@@ -34,9 +53,14 @@ const RecentContacts = (props: any) => {
 
   const classes = useStyles();
 
+  const contactsData = useQuery<Contacts>(contactsQuery);
+  const contacts = contactsData.data?.me?.groups.filter(
+    (c: any) => c.__typename === "DMGroup"
+  );
+
   return (
-    <List className={classes.root}>
-      <TextField
+    <div>
+    <TextField
         className={classes.searchBar}
         id="contacts-search"
         label="Search"
@@ -50,6 +74,11 @@ const RecentContacts = (props: any) => {
           ),
         }}
       />
+      <CreateRoomBtn
+        contacts={contacts}
+        explore={false}
+      />
+    <List className={classes.root}>
       {Object.values(props.contacts).map((item: any) =>
         item?.name?.toLowerCase?.().includes?.(searchTerm.toLowerCase()) ? (
           <Button
@@ -79,6 +108,7 @@ const RecentContacts = (props: any) => {
         ) : null
       )}
     </List>
+    </div>
   );
 };
 
