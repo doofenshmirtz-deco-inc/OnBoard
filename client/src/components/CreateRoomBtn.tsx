@@ -87,12 +87,14 @@ const PopUp = (props: any) => {
   const classes = useStyles();
 
   if (!uidData.data || !uidData.data.me) {
-    return <LoadingPage/>
+    return <LoadingPage />;
   }
   const uid = uidData.data.me.id;
 
   const handleCreate = () => {
-    let uids = selectedContacts.map((c: any) => c.users.filter((user: any) => user.id !== uid)[0].id);
+    let uids = selectedContacts.map(
+      (c: any) => c.users.filter((user: any) => user.id !== uid)[0].id
+    );
     uids.push(uid);
     console.log(uids);
     console.log(selectedContacts);
