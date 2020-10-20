@@ -11,7 +11,7 @@ services:
     environment:
       # - ADMIN_PASSWORD=ETHERPAD_PASSWORD
       - ADMIN_PASSWORD=pass
-      # - ETHERPAD_PLUGINS="ep_whiteboard"
+      - ETHERPAD_PLUGINS="ep_draw"
     networks:
       jitsi:
         aliases:
