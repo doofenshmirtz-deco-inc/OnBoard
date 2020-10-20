@@ -23,6 +23,10 @@ services:
       - "5001:80"
     volumes:
       - ./wbo/wbo-boards:/opt/app/server-data <- you might choose a different local directory to store stuff
+    networks:
+      jitsi:
+        aliases:
+          - "etherpad.jitsi"
 
 
 networks:
