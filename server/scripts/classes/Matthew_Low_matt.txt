@@ -1,10 +1,10 @@
 Subject Code	Description	Group	Activity	Day	Time	Campus	Location	Staff	Duration	Dates
-DECO3801_S2_STLUC_FD	Design Computing Studio 3 - Build	STU1	06	Thu	10:00	STLUC	49-301 - Advanced Engineering Building, Design Studio		Glencross, Mashhuda	2 hrs	15/10
-MATH4405_S2_STLUC_FD	Measure Theory	LEC1	01	Tue	11:00	STLUC	-		Pulemotov, Artem	1 hr	13/10
-MATH4405_S2_STLUC_FD	Measure Theory	LEC2	01	Wed	12:00	STLUC	-		Pulemotov, Artem	1 hr	14/10
-MATH4405_S2_STLUC_FD	Measure Theory	TUT1	01	Mon	09:00	STLUC	35-207 - Chamberlain Building, Tutorial Room		Pulemotov, Artem	1 hr	12/10
-STAT4402_S2_STLUC_FD	Advanced Statistics II	LEC1	01	Mon	13:00	STLUC	-		Ye, Nan	1 hr	12/10
-STAT4402_S2_STLUC_FD	Advanced Statistics II	LEC2	01	Tue	14:00	STLUC	-		Ye, Nan	1 hr	13/10
-STAT4402_S2_STLUC_FD	Advanced Statistics II	LEC3	01	Wed	11:00	STLUC	-		Ye, Nan	1 hr	14/10
-STAT4402_S2_STLUC_FD	Advanced Statistics II	PRA1	01	Thu	09:00	STLUC	69-209 -  Building 69,Computer Laboratory		Ye, Nan	1 hr	15/10
-STAT4402_S2_STLUC_FD	Advanced Statistics II	TUT1	01	Tue	15:00	STLUC	07-326 - Parnell Building, Tutorial Room		Ye, Nan	1 hr	13/10
+DECO3801_S2_STLUC_FD	Design Computing Studio 3 - Build	STU1	06	Thu	10:00	STLUC	49-301 - Advanced Engineering Building, Design Studio	Glencross, Mashhuda	2 hrs	15/10
+MATH4405_S2_STLUC_FD	Measure Theory	LEC1	01	Tue	11:00	STLUC	-	Pulemotov, Artem	1 hr	13/10
+MATH4405_S2_STLUC_FD	Measure Theory	LEC2	01	Wed	12:00	STLUC	-	Pulemotov, Artem	1 hr	14/10
+MATH4405_S2_STLUC_FD	Measure Theory	TUT1	01	Mon	09:00	STLUC	35-207 - Chamberlain Building, Tutorial Room	Pulemotov, Artem	1 hr	12/10
+STAT4402_S2_STLUC_FD	Advanced Statistics II	LEC1	01	Mon	13:00	STLUC	-	Ye, Nan	1 hr	12/10
+STAT4402_S2_STLUC_FD	Advanced Statistics II	LEC2	01	Tue	14:00	STLUC	-	Ye, Nan	1 hr	13/10
+STAT4402_S2_STLUC_FD	Advanced Statistics II	LEC3	01	Wed	11:00	STLUC	-	Ye, Nan	1 hr	14/10
+STAT4402_S2_STLUC_FD	Advanced Statistics II	PRA1	01	Thu	09:00	STLUC	69-209 -  Building 69,Computer Laboratory	Ye, Nan	1 hr	15/10
+STAT4402_S2_STLUC_FD	Advanced Statistics II	TUT1	01	Tue	15:00	STLUC	07-326 - Parnell Building, Tutorial Room	Ye, Nan	1 hr	13/10
