@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 // TODO: PopUp props type definition
-const PopUp = (props: any) => {
+ const PopUp = (props: any) => {
   const [open, setOpen] = useState(false);
   const [studyRoomName, setRoomName] = useState("");
   const [selectedContacts, setSelectedContacts] = useState([] as any[]);
@@ -101,13 +101,12 @@ const PopUp = (props: any) => {
     createStudyRoom({
       variables: { uids: uids, groupName: studyRoomName, isPublic: isPublic },
     });
-    while (loading) {
-      console.log("hello");
-    }
+    // while (loading) {
+    //   console.log("hello");
+    // }
     // TODO: get data to work
     setGroupID(data ? (data.addStudyGroup ? data.addStudyGroup.id : "") : "");
     window.location.href = "/study-rooms/recents/" + groupID;
-    handleClose();
   };
 
   return (
