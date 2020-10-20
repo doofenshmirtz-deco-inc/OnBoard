@@ -6,7 +6,6 @@ import {
   Query,
   Authorized,
   Mutation,
-  Args,
 } from "type-graphql";
 import {
   FolderNode,
@@ -51,7 +50,7 @@ export class NodeResolver {
 
   @Mutation(() => FolderNode)
   @Authorized()
-  async editFolderNode(@Args() data: FolderNodeInput) {
+  async editFolderNode(@Arg("data") data: FolderNodeInput) {
     const children = BaseNode.findByIds(data.children);
     const parent = BaseNode.findOne({ id: data.parent });
 
@@ -76,7 +75,7 @@ export class NodeResolver {
 
   @Mutation(() => HeadingNode)
   @Authorized()
-  async titleNode(@Args() data: BaseNodeInput) {
+  async titleNode(@Arg("data") data: BaseNodeInput) {
     const parent = BaseNode.findOne({ id: data.parent });
 
     if (!data.id)
@@ -98,7 +97,7 @@ export class NodeResolver {
 
   @Mutation(() => TextNode)
   @Authorized()
-  async textNode(@Args() data: TextNodeInput) {
+  async textNode(@Arg("data") data: TextNodeInput) {
     const parent = BaseNode.findOne({ id: data.parent });
 
     if (!data.id)
