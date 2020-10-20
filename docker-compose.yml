@@ -30,7 +30,7 @@ services:
       - "18443:18443" # jitsi http
       - "18000:18000" # jitsi https
       # - "5000:5000" # onboard server
-      - "15001:15001" # onboard server
+      - "15001:15001" # wbo
     volumes:
       - ./deploy/caddy/Caddyfile:/etc/caddy/Caddyfile
       # - $PWD/site:/srv
