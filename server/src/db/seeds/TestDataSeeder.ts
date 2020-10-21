@@ -84,31 +84,43 @@ export default class TestDataSeeder implements Seeder {
     const tom = await factory(User)({
       uid: "tom",
       name: "Tom Cranitch",
+      avatar:
+        "https://onboard.doofenshmirtz.xyz/api/uploads/Km9idgMc2/119029097_658777401415540_3584320142183412369_n.jpg",
     }).create();
 
     const kenton = await factory(User)({
       uid: "kenton",
       name: "Kenton Lam",
+      avatar:
+        "https://onboard.doofenshmirtz.xyz/api/uploads/Q-Crj_3Js/118886179_707789733143369_8050551153264937934_n.jpg",
     }).create();
 
     const matt = await factory(User)({
       uid: "matt",
       name: "Matthew Low",
+      avatar:
+        "https://onboard.doofenshmirtz.xyz/api/uploads/fouPF3PGk/119667941_4387400197967648_3416189252965666527_n.png",
     }).create();
 
     const james = await factory(User)({
       uid: "james",
       name: "James Dearlove",
+      avatar:
+        "https://onboard.doofenshmirtz.xyz/api/uploads/OgDIeu7-3/119047745_671172086826576_8205359725655325991_n.jpg",
     }).create();
 
     const sanni = await factory(User)({
       uid: "sanni",
       name: "Sanni Bosamia",
+      avatar:
+        "https://onboard.doofenshmirtz.xyz/api/uploads/IvpZYPXb4/118786576_951468675334793_3873917074362174615_n.png",
     }).create();
 
     const nat = await factory(User)({
       uid: "nat",
       name: "Natalie Hong",
+      avatar:
+        "https://onboard.doofenshmirtz.xyz/api/uploads/3HG95b1T6/118785481_4424886224250722_505129378704425508_n.png",
     }).create();
 
     generateDMs([heinz, perry, tom, kenton, matt, james, sanni, nat]);
