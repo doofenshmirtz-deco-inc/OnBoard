@@ -12,6 +12,7 @@ services:
       # - meet.jitsi
     volumes:
       - client-build:/usr/src/client/build
+      - uploads:/usr/src/server/uploads
   onboard-client:
     build: client
     networks:
@@ -49,3 +50,4 @@ networks:
       name: meet.jitsi
 volumes: 
   client-build:
+  uploads:
