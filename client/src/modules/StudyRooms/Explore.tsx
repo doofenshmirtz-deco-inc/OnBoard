@@ -108,7 +108,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.background.paper,
     display: "flex",
     flexDirection: "column",
-    color: theme.palette.primary.dark
   },
   searchBar: {
     width: "70%",

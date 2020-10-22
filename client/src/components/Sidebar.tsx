@@ -20,7 +20,6 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import modules from "../modules";
-import Button from '@material-ui/core/Button';
 import { NavLink } from "react-router-dom";
 import * as firebase from "firebase";
 import { Icon, Avatar } from "@material-ui/core";
@@ -29,6 +28,12 @@ import { useQuery, gql } from "@apollo/client";
 import { Me } from "../graphql/Me";
 import Brightness3Icon from '@material-ui/icons/Brightness3';
 import WbSunnyIcon from '@material-ui/icons/WbSunny';
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Button from "@material-ui/core/Button";
 
 const drawerWidth = 240;
 
@@ -137,6 +142,20 @@ export default function MiniDrawer(props: any) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [logoutOpen, setLogoutOpen] = React.useState(false);
+
+  const handleLogoutOpen = () => {
+    setLogoutOpen(true);
+  };
+
+  const handleLogoutClose = () => {
+    setLogoutOpen(false);
+  };
+
+  const handleLogout = () => {
+    setLogoutOpen(false);
+    firebase.auth().signOut();
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -236,7 +255,7 @@ export default function MiniDrawer(props: any) {
             button
             key="logout"
             classes={{ gutters: clsx(classes.gutters) }}
-            onClick={() => firebase.auth().signOut()}
+            onClick={handleLogoutOpen}
           >
             <ListItemIcon className={classes.icon}>
               <ExitToApp />
@@ -245,6 +264,27 @@ export default function MiniDrawer(props: any) {
           </ListItem>
         </List>
       </Drawer>
+      <Dialog
+        open={logoutOpen}
+        onClose={handleLogoutClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm logout"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Would you like to logout?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleLogoutClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleLogout} color="primary" autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

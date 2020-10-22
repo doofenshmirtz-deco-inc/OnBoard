@@ -23,6 +23,7 @@ import {
   createUnionType,
   FieldResolver,
   Ctx,
+  InputType,
 } from "type-graphql";
 import { User } from "./User";
 import { Course } from "./Course";
@@ -79,7 +80,9 @@ export abstract class BaseGroup extends BaseEntity {
     this.lastActive = new Date();
   }
 
+  @Column()
   @Generated("uuid")
+  @Field()
   meetingPassword: string;
 }
 
@@ -95,7 +98,6 @@ export class CourseGroup extends BaseGroup {
 @ObjectType()
 export class ClassGroup extends BaseGroup {
   @Column()
-  @Field()
   name: string;
 
   @Column({ type: "enum", enum: ClassType })
@@ -104,7 +106,7 @@ export class ClassGroup extends BaseGroup {
 
   @ManyToOne(() => Course)
   @Field(() => Course)
-  course: Course;
+  course: Promise<Course>;
 
   @Column("timestamp", { array: true })
   @Field(() => [Date])
@@ -121,6 +123,10 @@ export class StudyGroup extends BaseGroup {
   @Column()
   @Field()
   name: string;
+
+  @Column()
+  @Field()
+  isPublic: boolean;
 }
 
 @ChildEntity(GroupType.DirectMessage)
@@ -131,3 +137,24 @@ export const Group = createUnionType({
   name: "Group",
   types: () => [CourseGroup, ClassGroup, StudyGroup, DMGroup],
 });
+
+@InputType()
+export class ClassGroupInput {
+  @Field(() => [String])
+  uids: string[];
+
+  @Field()
+  name: string;
+
+  @Field()
+  type: ClassType;
+
+  @Field(() => ID)
+  courseID: number;
+
+  @Field(() => [Date])
+  times: Date[];
+
+  @Field()
+  duration: number;
+}

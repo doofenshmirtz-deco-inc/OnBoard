@@ -1,18 +1,15 @@
 import {
   Resolver,
   Query,
-  Args,
   Arg,
   ID,
-  Int,
-  UseMiddleware,
   Ctx,
   FieldResolver,
   Root,
   Authorized,
+  Mutation,
 } from "type-graphql";
 import { User } from "../models/User";
-import { PaginationArgs, getOrder } from "./Types";
 import { Context } from "../middleware/Context";
 import {
   BaseGroup,
@@ -20,29 +17,37 @@ import {
   GroupType,
   CourseGroup,
   DMGroup,
+  Group,
+  StudyGroup,
+  ClassGroupInput,
 } from "../models/UserGroup";
 import { CourseGroupPair } from "../models/CourseGroupPair";
+import { Course } from "../models/Course";
 
 @Resolver((of) => BaseGroup)
 export class UserGroupResolver {
-  @Query(() => [BaseGroup])
+  @Query(() => [Group])
   @Authorized()
-  async userGroups(@Args() pag: PaginationArgs) {
-    return (
-      await BaseGroup.findAndCount({
-        order: getOrder(pag),
-        take: pag.limit,
-        skip: pag.skip,
-      })
-    )[0];
+  async userGroups() {
+    return await BaseGroup.find();
   }
 
   @Query(() => BaseGroup, { nullable: true })
   @Authorized()
-  async userGroup(@Arg("id", () => String) id: String) {
-    return BaseGroup.findOne({
+  async userGroup(@Arg("id", () => ID) id: String) {
+    const group = BaseGroup.findOne({
       where: { id },
     });
+
+    console.log(await group);
+
+    return group;
+  }
+
+  @Query(() => [StudyGroup], { nullable: true })
+  @Authorized()
+  async studyRooms() {
+    return StudyGroup.find({ where: { isPublic: true } });
   }
 
   @FieldResolver((type) => [User])
@@ -71,5 +76,64 @@ export class UserGroupResolver {
       const cgp = await query.getOne();
       return `${cgp?.course.code}: ${cgp?.course.name}`;
     }
+    if (group instanceof ClassGroup)
+      return (await group.course).code + " - " + group.name;
+    if (group instanceof StudyGroup) return group.name;
+  }
+
+  @Mutation(() => StudyGroup)
+  @Authorized()
+  async joinStudyGroup(
+    @Arg("groupID", () => ID) groupID: number,
+    @Ctx() ctx: Context
+  ) {
+    const group = await StudyGroup.findOne({ id: groupID });
+    if (!group || !group.isPublic) throw new Error("Group is not public");
+    if (!ctx.payload) throw new Error("Payload required");
+
+    const user = await User.findOne({ id: ctx.payload.uid });
+    if (!user) throw new Error("User not found");
+    (await group.users).push(user);
+
+    return await group.save();
+  }
+
+  @Mutation(() => StudyGroup)
+  @Authorized()
+  async addStudyGroup(
+    @Arg("groupName") name: string,
+    @Arg("isPublic") isPublic: boolean,
+    @Arg("uids", () => [String]) uids: string[],
+    @Ctx() ctx: Context
+  ) {
+    if (!ctx.payload) throw new Error("Invalid user");
+    uids.push(ctx.payload.uid);
+    const users = await User.findByIds(uids);
+
+    const group = StudyGroup.create({
+      name,
+      isPublic,
+    });
+
+    await group.setUsers(users);
+    return await group.save();
+  }
+
+  @Mutation(() => ClassGroup)
+  @Authorized()
+  async addClassGroup(@Arg("classData") classData: ClassGroupInput) {
+    const users = User.findByIds(classData.uids);
+    const course = Course.findOne({ id: classData.courseID });
+
+    const group = ClassGroup.create({
+      users,
+      course,
+      name: classData.name,
+      type: classData.type,
+      times: classData.times,
+      duration: classData.duration,
+    });
+
+    return await group.save();
   }
 }

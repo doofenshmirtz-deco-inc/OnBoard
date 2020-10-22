@@ -13,6 +13,7 @@ import {
   DMGroup,
   ClassGroup,
   ClassType,
+  StudyGroup,
 } from "../../models/UserGroup";
 import { Announcement } from "../../models/Announcement";
 import { CourseRole, CourseGroupPair } from "../../models/CourseGroupPair";
@@ -162,6 +163,7 @@ export default class TestDataSeeder implements Seeder {
       edis
     );
 
+    /*
     await generateTestAnnouncements(
       {
         course: secr,
@@ -198,18 +200,34 @@ export default class TestDataSeeder implements Seeder {
     */
 
     await factory(ClassGroup)({
-      name: "Bruh",
-      type: ClassType.Lecture,
+      name: "Tutorial One",
+      type: ClassType.Tutorial,
       course: secr,
       users: [heinz],
     }).create();
 
     await factory(ClassGroup)({
-      name: "Bruh2",
+      name: "Lecture One",
       type: ClassType.Lecture,
       course: secr,
       users: [heinz],
       duration: 120,
+    }).create();
+
+    await factory(StudyGroup)({
+      isPublic: true,
+    }).createMany(20);
+
+    await factory(StudyGroup)({
+      users: [heinz, perry, tom, james, sanni, kenton, matt, nat],
+      isPublic: false,
+      name: "EDIS3801 Study Group",
+    }).create();
+
+    await factory(StudyGroup)({
+      users: [heinz, perry, tom, james, sanni, kenton, matt, nat],
+      isPublic: false,
+      name: "Study sesh",
     }).create();
   }
 }

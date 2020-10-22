@@ -1,5 +1,5 @@
 import React from "react";
-import ClassIcon from "@material-ui/icons/Class";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ClassesList from "../../components/ClassesList";
 import ClassesTabs from "../../components/ClassView";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
@@ -31,5 +31,5 @@ export default {
     component: Classes,
   },
   name: "My Classes",
-  icon: ClassIcon,
+  icon: MenuBookIcon,
 };

@@ -11,6 +11,6 @@ export const createTestConnection = async () => {
     synchronize: true,
     dropSchema: true,
     logging: false,
-	entities: ["./src/models/*.ts"],
+    entities: ["./src/models/*.ts"],
   });
-}
+};

@@ -31,6 +31,7 @@ const RecentContacts = (props: any) => {
       width: "100%",
       color: theme.palette.primary.dark,
       margin: "0",
+      paddingLeft: 10,
     },
   }));
 

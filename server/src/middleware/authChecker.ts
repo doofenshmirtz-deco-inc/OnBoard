@@ -6,6 +6,9 @@ export const authChecker: AuthChecker<Context> = async ({ context }) => {
   const authorization = context.req
     ? context.req.headers.authorization
     : context.connection.context.authorization;
-  context.payload = { uid: (await checkAuthToken(authorization)).uid };
+  // Get username from email
+  context.payload = {
+    uid: (await checkAuthToken(authorization)).email?.split("@")[0],
+  };
   return true;
 };
