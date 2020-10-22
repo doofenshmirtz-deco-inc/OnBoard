@@ -6,6 +6,7 @@ import {
   ID,
   UseMiddleware,
   Authorized,
+  Ctx,
 } from "type-graphql";
 import { PaginationArgs, getOrder } from "./Types";
 import { Course } from "../models/Course";

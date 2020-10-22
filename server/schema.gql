@@ -36,6 +36,15 @@ type ClassGroup {
   users: [User!]!
 }
 
+input ClassGroupInput {
+  courseID: ID!
+  duration: Float!
+  name: String!
+  times: [DateTime!]!
+  type: String!
+  uids: [String!]!
+}
+
 type Course {
   announcements: [Announcement!]
   assesmentPage: FolderNode!
@@ -109,6 +118,7 @@ input MessageInput {
 }
 
 type Mutation {
+  addClassGroup(classData: ClassGroupInput!): ClassGroup!
   addMessage(message: MessageInput!): Message!
   addStudyGroup(groupName: String!, isPublic: Boolean!, uids: [String!]!): StudyGroup!
   joinStudyGroup(groupID: ID!): StudyGroup!
