@@ -18,6 +18,7 @@ import {
   useLocation,
   useParams,
 } from "react-router-dom";
+import { GetCoursePermissions } from "../graphql/GetCoursePermissions";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -87,9 +88,13 @@ let tabPages: MenuBarComponent[] = [
   {
     name: "Learning Resources",
     path: "resources/",
-    content: <ResourceFolder />,
+    content: <ResourceFolder assessmentPage={false} />,
   },
-  { name: "Assessment", path: "assessment/", content: <p>Assessment</p> },
+  {
+    name: "Assessment",
+    path: "assessment/",
+    content: <ResourceFolder assessmentPage={true} />,
+  },
   { name: "Course Staff", path: "staff/", content: <p>Staff</p> },
   {
     name: "Course Profile (ECP)",
@@ -115,6 +120,28 @@ const COURSE_INFO = gql`
   }
 `;
 
+const COURSE_PERMISSIONS = gql`
+  query GetCoursePermissions {
+    me {
+      coursesCoordinator: courses(role: Coordinator) {
+        course {
+          id
+        }
+      }
+      coursesTutor: courses(role: Tutor) {
+        course {
+          id
+        }
+      }
+      coursesStudent: courses(role: Student) {
+        course {
+          id
+        }
+      }
+    }
+  }
+`;
+
 export default function ClassView() {
   const classes = useStyles();
 
@@ -125,9 +152,25 @@ export default function ClassView() {
 
   const { loading, data } = useQuery<GetClassInfo>(COURSE_INFO);
 
+  const { data: userPermissions } = useQuery<GetCoursePermissions>(
+    COURSE_PERMISSIONS
+  );
+
   let courseData = data?.me?.courses.find(
     (element) => element.course.id === courseId
   );
+
+  let userEdit = false;
+  if (
+    userPermissions?.me?.coursesCoordinator.find(
+      (element) => element.course.id === courseId
+    ) ||
+    userPermissions?.me?.coursesTutor.find(
+      (element) => element.course.id === courseId
+    )
+  ) {
+    userEdit = true;
+  }
 
   return !courseData ? (
     loading ? (
@@ -174,7 +217,7 @@ export default function ClassView() {
               path={`${url}/${item.path}`}
               render={() => (
                 <TabPanel index={index}>
-                  {React.cloneElement(item.content, { courseId: courseId })}
+                  {React.cloneElement(item.content, { courseId: courseId, editable: userEdit })}
                 </TabPanel>
               )}
             />

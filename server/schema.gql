@@ -61,7 +61,7 @@ input ClassGroupInput {
 
 type Course {
   announcements: [Announcement!]
-  assesmentPage: FolderNode!
+  assessmentPage: FolderNode!
   code: String!
   courseLevel: String!
   coursePage: FolderNode!
