@@ -31,13 +31,6 @@ type BaseNode {
   title: String!
 }
 
-input BaseNodeInput {
-  id: Float
-  link: String!
-  parent: Float!
-  title: String!
-}
-
 type ClassGroup {
   course: Course!
   duration: Float!
@@ -103,11 +96,11 @@ type FolderNode {
 }
 
 input FolderNodeInput {
-  children: [String!]!
+  children: [String!]
   id: Float
-  link: String!
-  parent: Float!
-  title: String!
+  link: String
+  parent: Float
+  title: String
 }
 
 union Group = ClassGroup | CourseGroup | DMGroup | StudyGroup
@@ -137,10 +130,9 @@ type Mutation {
   addStudyGroup(groupName: String!, isPublic: Boolean!, uids: [String!]!): StudyGroup!
   deleteNode(id: Float!): BaseNode!
   editFolderNode(data: FolderNodeInput!): FolderNode!
+  editTextNode(data: TextNodeInput!): TextNode!
   joinStudyGroup(groupID: ID!): StudyGroup!
   singleUpload(file: Upload!): String!
-  textNode(data: TextNodeInput!): TextNode!
-  titleNode(data: BaseNodeInput!): HeadingNode!
 }
 
 union Node = FolderNode | HeadingNode | TextNode
@@ -188,10 +180,10 @@ type TextNode {
 
 input TextNodeInput {
   id: Float
-  link: String!
-  parent: Float!
-  text: String!
-  title: String!
+  link: String
+  parent: Float
+  text: String
+  title: String
 }
 
 """The `Upload` scalar type represents a file upload."""
