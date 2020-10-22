@@ -1,6 +1,8 @@
 import {
   gql,
   OnSubscriptionDataOptions,
+  SubscriptionResult,
+  useApolloClient,
   useLazyQuery,
   useMutation,
   useQuery,
@@ -120,15 +122,44 @@ const GROUPS_QUERY = gql`
   }
 `;
 
+export const useNewMessagesSubscription = (onData: any) => {
+  const client = useApolloClient();
+
+  useEffect(() => {
+    const observer = client.subscribe({
+      query: MESSAGES_SUBSCRIPTION,
+    });
+
+    const subscription = observer.subscribe(onData);
+
+    return () => subscription.unsubscribe();
+  }, [onData]);
+};
+
 export const MessagingSubscriptionHelper = () => {
   const x = Messaging.useContainer();
   
-  const { data } = useSubscription<OnMessageReceived>(
-    MESSAGES_SUBSCRIPTION,
-    {
-      onSubscriptionData: x.onData,
-    }
+  // subscription handler to add a new received message.
+  const handleNewMessage = useCallback(
+    (options: SubscriptionResult<OnMessageReceived>) => {
+      console.log(options);
+      const data = options.data?.newMessages;
+
+      // console.log("received " + data);
+
+      if (data && x.username) {
+        const groupId = data.group.id;
+
+        x.setGroupMessages(groupMessages => ({
+          ...groupMessages,
+          [groupId]: [...groupMessages[groupId] ?? [], toChatMessage(data, x.username!)],
+        }));
+      }
+    },
+    [x.username]
   );
+
+  useNewMessagesSubscription(handleNewMessage);
 
   return <></>;
 };
@@ -207,26 +238,6 @@ export const useMessaging = () => {
     return sorted;
   }, [contacts, groupMessages]);
 
-  // subscription handler to add a new received message.
-  const handleNewMessage = useCallback(
-    (options: OnSubscriptionDataOptions<OnMessageReceived>) => {
-      const data = options.subscriptionData.data?.newMessages;
-
-      console.log("received " + data);
-
-      if (data && username) {
-        const groupId = data.group.id;
-        const messages = groupMessages[groupId] ?? [];
-
-        setGroupMessages({
-          ...groupMessages,
-          [groupId]: [...messages, toChatMessage(data, username)],
-        });
-      }
-    },
-    [username]
-  );
-
   // console.log("username " + username);
 
   // when data changes, update oldMessages.
@@ -255,20 +266,20 @@ export const useMessaging = () => {
 
   const sendMessage = useCallback(
     (args: AddMessageVariables) => {
-      setGroupMessages((groupMessages) => ({
-        ...groupMessages,
+      // setGroupMessages((groupMessages) => ({
+      //   ...groupMessages,
 
-        [args.groupId]: [
-          ...(groupMessages[args.groupId] ?? []),
-          {
-            text: args.send,
-            sender: username!,
-            direction: "right",
-            groupId: args.groupId,
-            createdAt: new Date(),
-          },
-        ],
-      }));
+      //   [args.groupId]: [
+      //     ...(groupMessages[args.groupId] ?? []),
+      //     {
+      //       text: args.send,
+      //       sender: username!,
+      //       direction: "right",
+      //       groupId: args.groupId,
+      //       createdAt: new Date(),
+      //     },
+      //   ],
+      // }));
 
       sendToServer({ variables: args });
     },
@@ -278,11 +289,11 @@ export const useMessaging = () => {
   return {
     contacts: sortedContacts,
     groupMessages: messages,
+    setGroupMessages,
     groupId,
     setGroupId,
     sendMessage,
     username,
-    onData: handleNewMessage
   };
 };
 

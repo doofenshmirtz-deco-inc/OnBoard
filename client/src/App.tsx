@@ -117,7 +117,7 @@ export default function App() {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Messaging.Provider>
-            <MessagingSubscriptionHelper></MessagingSubscriptionHelper>
+            <MessagingSubscriptionHelper/>
             {modules.map((module) => (
               <Route {...module.routeProps} key={module.name} />
             ))}
