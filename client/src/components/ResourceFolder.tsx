@@ -11,8 +11,9 @@ import { useQuery, useMutation, gql } from "@apollo/client";
 import { GetRootCoursePage } from "../graphql/GetRootCoursePage";
 import { GetRootAssessmentPage } from "../graphql/GetRootAssessmentPage";
 import { GetNode } from "../graphql/GetNode";
-import { AddTextNode } from "../graphql/AddTextNode";
+import { EditTextNode } from "../graphql/EditTextNode";
 import { FileUpload } from "../graphql/FileUpload";
+import { DeleteNode } from "../graphql/DeleteNode";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import {
   Route,
@@ -36,6 +37,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
+import AttachFileIcon from '@material-ui/icons/AttachFile';
 import EditIcon from "@material-ui/icons/Edit";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import Select from "@material-ui/core/Select";
@@ -91,6 +93,7 @@ const GET_NODE = gql`
         id
         title
         text
+        link
         parent {
           id
           title
@@ -99,6 +102,7 @@ const GET_NODE = gql`
       ... on HeadingNode {
         id
         title
+        link
         parent {
           id
           title
@@ -107,6 +111,7 @@ const GET_NODE = gql`
       ... on FolderNode {
         id
         title
+        link
         parent {
           id
           title
@@ -138,15 +143,16 @@ const GET_NODE = gql`
   }
 `;
 
-const ADD_TEXT_NODE = gql`
-  mutation AddTextNode(
-    $title: String!
-    $parent: Float!
-    $text: String!
-    $link: String!
+const EDIT_TEXT_NODE = gql`
+  mutation EditTextNode(
+    $id: Float
+    $title: String
+    $link: String
+    $parent: Float
+    $text: String
   ) {
-    textNode(
-      data: { title: $title, parent: $parent, text: $text, link: $link }
+    editTextNode(
+      data: { id: $id, title: $title, link: $link, parent: $parent, text: $text }
     ) {
       id
       title
@@ -165,11 +171,13 @@ const UPLOAD_FILE = gql`
   }
 `;
 
-// const DELETE_NODE = gql`
-//   mutation DeleteNode($nodeId: float) {
-
-//   }
-// `
+const DELETE_NODE = gql`
+  mutation DeleteNode($nodeId: Float!) {
+    deleteNode(id: $nodeId) {
+      link
+    }
+  }
+`
 
 function FolderItem(item: any, index: number) {
   return (
@@ -266,7 +274,7 @@ function NodeDirectory(props: {
             </Breadcrumbs>
           </Grid>
           <Grid item xs={2}>
-            {props.editable ? <AddItem /> : null}
+            {props.editable ? <AddItem nodeId={data?.node?.id}/> : null}
           </Grid>
         </Grid>
         <List className={classes.root}>
@@ -294,9 +302,11 @@ function NodeContent(props: {
   const classes = useStyles();
   let { nodeId } = useParams<NodeProps>();
 
+  let checkedNodeId = props.nodeId ? parseInt(props.nodeId) : parseInt(nodeId)
+
   const { loading, data, error } = useQuery<GetNode>(GET_NODE, {
     variables: {
-      nodeID: props.nodeId ? parseInt(props.nodeId) : parseInt(nodeId),
+      nodeID: checkedNodeId,
     },
   });
 
@@ -314,27 +324,44 @@ function NodeContent(props: {
           <h1>{data?.node?.title}</h1>
         </Grid>
         <Grid item justify="flex-end" xs={2}>
-          {props.editable ? <DeleteNode /> : null}
+          {props.editable ? <DeleteItem nodeId={checkedNodeId} /> : null}
         </Grid>
       </Grid>
       <p>{contentText}</p>
+      {data?.node?.link &&
+      <Button
+        variant="contained"
+        color="primary"
+        size="large"
+        startIcon={<AttachFileIcon />}
+        onClick={() => window.open(data?.node?.link || undefined, "_blank")}
+      >
+        Open File
+      </Button>
+}
     </Paper>
   );
 }
 
-function AddItem(props: { nodeId?: string }) {
-  const classes = useStyles();
-
+function AddItem(props: { nodeId: string }) {
   const [open, setOpen] = React.useState(false);
 
   const [nodeTitle, setNodeTitle] = React.useState("");
   const [nodeContents, setNodeContents] = React.useState("");
-  const [nodeLink, setNodeLink] = React.useState("");
   const [nodeType, setNodeType] = React.useState("item");
   const [nodeFile, setNodeFile] = React.useState<File[]>();
 
-  const [addNode, { data: nodeData }] = useMutation<AddTextNode>(ADD_TEXT_NODE);
-  const [uploadFile, { data: fileData }] = useMutation<FileUpload>(UPLOAD_FILE);
+  const [addNode, { data: nodeData }] = useMutation<EditTextNode>(EDIT_TEXT_NODE);
+  const [uploadFile, { data: fileData }] = useMutation<FileUpload>(UPLOAD_FILE, {onCompleted(data) {
+    addNode({
+      variables: {
+        title: nodeTitle,
+        text: nodeContents,
+        link: data.singleUpload,
+        parent: parseInt(props.nodeId)
+      },
+    });
+  }});
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -345,14 +372,21 @@ function AddItem(props: { nodeId?: string }) {
   };
 
   const handleConfirm = () => {
-    addNode({
-      variables: {
-        title: nodeTitle,
-        text: nodeContents,
-        link: nodeLink,
-        parent: props.nodeId,
-      },
-    });
+    if (nodeFile) {
+      let file = nodeFile[0]
+
+      uploadFile({ variables: { file } })
+    }
+    else {
+      addNode({
+        variables: {
+          title: nodeTitle,
+          text: nodeContents,
+          parent: parseInt(props.nodeId)
+        },
+      });
+    }
+
     setOpen(false);
   };
 
@@ -393,22 +427,6 @@ function AddItem(props: { nodeId?: string }) {
             fullWidth
             onChange={(e) => setNodeContents(e.target.value)}
           />
-          {/* {nodeType === "item" ? (
-            <>
-              {nodeFile ? <>{nodeFile.name}</> : <>No file uploaded</>}
-              <input
-                id="upload-file"
-                type="file"
-                className={classes.uploadInput}
-                onChange={(e: any) => setNodeFile(e.target?.files?.[0])}
-              />
-              <label htmlFor="upload-file">
-                <IconButton aria-label="upload file" component="span">
-                  <CloudUploadIcon />
-                </IconButton>
-              </label>
-            </>
-          ) : null} */}
           <DropzoneArea filesLimit={1} onChange={(files) => setNodeFile(files)}/>
         </DialogContent>
         <DialogActions>
@@ -424,10 +442,10 @@ function AddItem(props: { nodeId?: string }) {
   );
 }
 
-function DeleteNode(props: { nodeId?: string }) {
+function DeleteItem(props: { nodeId: number }) {
   const [open, setOpen] = React.useState(false);
 
-  const [deleteNode] = useMutation<AddTextNode>(ADD_TEXT_NODE);
+  const [deleteNode, { data }] = useMutation<DeleteNode>(DELETE_NODE);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -438,7 +456,8 @@ function DeleteNode(props: { nodeId?: string }) {
   };
 
   const handleConfirm = () => {
-    deleteNode({ variables: { nodeId: props.nodeId } });
+    console.log(props.nodeId);
+    deleteNode({ variables: { nodeId: props.nodeId, } });
     setOpen(false);
   };
 
