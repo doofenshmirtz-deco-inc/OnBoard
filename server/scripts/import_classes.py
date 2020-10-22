@@ -45,10 +45,10 @@ def parse_file(filename):
             date_starts, date_ends = [dates[0], dates[2]], [dates[1], dates[3]]
             dates_full = []
 
-            for idx, i in enumerate(date_starts):
-                current_date = date_starts[idx]
+            for i in range(len(date_starts)):
+                current_date = date_starts[i]
                 dates_full.append(current_date)
-                while current_date < date_ends[idx]:
+                while current_date < date_ends[i]:
                     current_date += datetime.timedelta(days=7)
                     dates_full.append(current_date) 
 
