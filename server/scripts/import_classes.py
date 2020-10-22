@@ -6,6 +6,7 @@ import csv
 import pprint
 import os
 
+
 def parse_file(filename):
     # Deal with stupid double tabs and newlines in Allocate+ output
     with open(filename, "r+") as file:
@@ -39,8 +40,8 @@ def parse_file(filename):
             else:
                 course_type = "ClassType.Lecture"
 
-            dates = [dateparser.parse(j, settings={'DATE_ORDER': 'DMY'}) \
-                    + datetime.timedelta(minutes=timeparse(line['Time'])) for i in line['Dates'].split(", ") for j in i.split("-")]
+            dates = [dateparser.parse(j, settings={'DATE_ORDER': 'DMY'})
+                     + datetime.timedelta(minutes=timeparse(line['Time'])) for i in line['Dates'].split(", ") for j in i.split("-")]
 
             date_starts, date_ends = [dates[0], dates[2]], [dates[1], dates[3]]
             dates_full = []
@@ -50,7 +51,7 @@ def parse_file(filename):
                 dates_full.append(current_date)
                 while current_date < date_ends[i]:
                     current_date += datetime.timedelta(days=7)
-                    dates_full.append(current_date) 
+                    dates_full.append(current_date)
 
             # print(dateparser.parse(line['Dates']) + datetime.timedelta(minutes=timeparse(line['Time'])))
 
@@ -67,6 +68,7 @@ def parse_file(filename):
         courses = [dict(t) for t in {tuple(d.items()) for d in courses}]
         return courses, classes
 
+
 if __name__ == "__main__":
     files = os.listdir("classes")
     if '.DS_Store' in files:
@@ -79,7 +81,8 @@ if __name__ == "__main__":
         all_courses += courses
         all_classes += classes
 
-    all_courses = sorted([dict(t) for t in {tuple(d.items()) for d in all_courses}], key=lambda i: i['code'])
+    all_courses = sorted([dict(t) for t in {tuple(
+        d.items()) for d in all_courses}], key=lambda i: i['code'])
     all_classes = sorted(all_classes, key=lambda i: i['course'])
 
     pprint.pprint(all_classes)
@@ -89,11 +92,13 @@ if __name__ == "__main__":
     # Construct user list for each course
     for dictionary in all_classes:
         print(dictionary)
-        if len(list(filter(lambda a: a['name'] == dictionary['name'] and a['course'] == dictionary['course'], merged_classes))) == 0:
+        if len(list(filter(lambda a: a['name'] == dictionary['name']
+                           and a['course'] == dictionary['course'], merged_classes))) == 0:
             merged_classes.append(dictionary)
             print("New class", dictionary)
         else:
-            next(filter(lambda a: a['name'] == dictionary['name'] and a['course'] == dictionary['course'], merged_classes))["users"].extend(dictionary["users"])
+            next(filter(lambda a: a['name'] == dictionary['name']
+                        and a['course'] == dictionary['course'], merged_classes))["users"].extend(dictionary["users"])
 
     pprint.pprint(all_courses)
     pprint.pprint(merged_classes)
