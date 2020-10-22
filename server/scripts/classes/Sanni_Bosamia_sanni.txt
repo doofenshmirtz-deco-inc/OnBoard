@@ -1,0 +1,9 @@
+Subject Code	Description	Group	Activity	Day	Time	Campus	Location	Staff	Duration	Dates
+COMP3702_S2_STLUC_FD	Artificial Intelligence	LEC1	01	Fri	08:00	STLUC	-	Chapman, Archie	2 hrs	7/8-25/9, 9/10-30/10
+COMP3702_S2_STLUC_FD	Artificial Intelligence	TUT1	06	Tue	10:00	STLUC	84A-304 - Therapies Annexe, Collaborative Room	-	2 hrs	11/8-22/9, 6/10-27/10
+COSC3500_S2_STLUC_FD	High-Performance Computing	CON1	01	Tue	12:00	STLUC	-	Gallagher, Marcus	2 hrs	4/8-22/9, 6/10-27/10
+COSC3500_S2_STLUC_FD	High-Performance Computing	CON2	01	Thu	08:00	STLUC	03-206 - Steele Building, Lecture Theatre	Gallagher, Marcus	2 hrs	6/8-24/9, 8/10-29/10
+CSSE4630_S2_STLUC_FD	Principles of Program Analysis	ICT1	01	Thu	16:00	STLUC	78-336 - General Purpose South, Computer Laboratory	Utting, Mark	1 hr	13/8-24/9, 8/10-29/10
+CSSE4630_S2_STLUC_FD	Principles of Program Analysis	LEC1	01	Tue	15:00	STLUC	-	Utting, Mark	1 hr	4/8-22/9, 6/10-27/10
+CSSE4630_S2_STLUC_FD	Principles of Program Analysis	PBL1	01	Mon	10:00	STLUC	07-326 - Parnell Building, Tutorial Room	Utting, Mark	2 hrs	3/8-21/9, 5/10-26/10
+DECO3801_S2_STLUC_FD	Design Computing Studio 3 - Build	STU1	06	Thu	10:00	STLUC	49-301 - Advanced Engineering Building, Design Studio	Glencross, Mashhuda	2 hrs	6/8-24/9, 8/10-29/10

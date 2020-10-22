@@ -1,0 +1,13 @@
+Subject Code	Description	Group	Activity	Day	Time	Campus	Location	Staff	Duration	Dates
+CSSE4630_S2_STLUC_FD	Principles of Program Analysis	ICT1	01	Thu	16:00	STLUC	78-336 - General Purpose South, Computer Laboratory	Utting, Mark	1 hr	13/8-24/9, 8/10-29/10
+CSSE4630_S2_STLUC_FD	Principles of Program Analysis	LEC1	01	Tue	15:00	STLUC	-	Utting, Mark	1 hr	4/8-22/9, 6/10-27/10
+CSSE4630_S2_STLUC_FD	Principles of Program Analysis	PBL1	01	Mon	10:00	STLUC	07-326 - Parnell Building, Tutorial Room	Utting, Mark	2 hrs	3/8-21/9, 5/10-26/10
+DECO3801_S2_STLUC_FD	Design Computing Studio 3 - Build	STU1	06	Thu	10:00	STLUC	49-301 - Advanced Engineering Building, Design Studio	Glencross, Mashhuda	2 hrs	6/8-24/9, 8/10-29/10
+MATH3306_S2_STLUC_FD	Set Theory & Mathematical Logic	LEC1	01	Tue	12:00	STLUC	-	Scrimshaw, Travis	1 hr	4/8-22/9, 6/10-27/10
+MATH3306_S2_STLUC_FD	Set Theory & Mathematical Logic	LEC2	01	Wed	13:00	STLUC	-	Scrimshaw, Travis	1 hr	5/8-23/9, 7/10-28/10
+MATH3306_S2_STLUC_FD	Set Theory & Mathematical Logic	LEC3	01	Thu	13:00	STLUC	-	Scrimshaw, Travis	1 hr	6/8-24/9, 8/10-29/10
+MATH3306_S2_STLUC_FD	Set Theory & Mathematical Logic	TUT1	01	Thu	14:00	STLUC	47A-141 - Sir James Foots Building, Tutorial Room	-	1 hr	13/8-24/9, 8/10-29/10
+MATH4405_S2_STLUC_FD	Measure Theory	LEC1	01	Tue	11:00	STLUC	-	Pulemotov, Artem	1 hr	4/8-22/9, 6/10-27/10
+MATH4405_S2_STLUC_FD	Measure Theory	LEC2	01	Wed	12:00	STLUC	-	Pulemotov, Artem	1 hr	5/8-23/9, 7/10-28/10
+MATH4405_S2_STLUC_FD	Measure Theory	LEC3	01	Thu	09:00	STLUC	-	Pulemotov, Artem	1 hr	6/8-24/9, 8/10-29/10
+MATH4405_S2_STLUC_FD	Measure Theory	TUT1	01	Mon	09:00	STLUC	35-207 - Chamberlain Building, Tutorial Room	Pulemotov, Artem	1 hr	10/8-21/9, 5/10-26/10
