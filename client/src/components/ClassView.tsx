@@ -217,7 +217,10 @@ export default function ClassView() {
               path={`${url}/${item.path}`}
               render={() => (
                 <TabPanel index={index}>
-                  {React.cloneElement(item.content, { courseId: courseId, editable: userEdit })}
+                  {React.cloneElement(item.content, {
+                    courseId: courseId,
+                    editable: userEdit,
+                  })}
                 </TabPanel>
               )}
             />

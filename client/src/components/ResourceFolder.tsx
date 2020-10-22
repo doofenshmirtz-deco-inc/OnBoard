@@ -12,6 +12,7 @@ import { GetRootCoursePage } from "../graphql/GetRootCoursePage";
 import { GetRootAssessmentPage } from "../graphql/GetRootAssessmentPage";
 import { GetNode } from "../graphql/GetNode";
 import { AddTextNode } from "../graphql/AddTextNode";
+import { FileUpload } from "../graphql/FileUpload";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import {
   Route,
@@ -25,16 +26,21 @@ import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import AddIcon from '@material-ui/icons/Add';
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
+import AddIcon from "@material-ui/icons/Add";
+import EditIcon from "@material-ui/icons/Edit";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import { DropzoneArea } from "material-ui-dropzone"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -45,6 +51,9 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(2),
       color: theme.palette.text.secondary,
+    },
+    uploadInput: {
+      display: "none",
     },
   })
 );
@@ -130,8 +139,15 @@ const GET_NODE = gql`
 `;
 
 const ADD_TEXT_NODE = gql`
-  mutation AddTextNode($title: String!, $parent: Float!, $text: String!, $link: String!) {
-    textNode(data: {title: $title, parent: $parent, text: $text, link: $link}) {
+  mutation AddTextNode(
+    $title: String!
+    $parent: Float!
+    $text: String!
+    $link: String!
+  ) {
+    textNode(
+      data: { title: $title, parent: $parent, text: $text, link: $link }
+    ) {
       id
       title
       text
@@ -141,7 +157,13 @@ const ADD_TEXT_NODE = gql`
       link
     }
   }
-`
+`;
+
+const UPLOAD_FILE = gql`
+  mutation FileUpload($file: Upload!) {
+    singleUpload(file: $file)
+  }
+`;
 
 // const DELETE_NODE = gql`
 //   mutation DeleteNode($nodeId: float) {
@@ -204,43 +226,49 @@ function NodeDirectory(props: {
   });
 
   if (data?.node?.__typename === "TextNode") {
-    return <>{<NodeDirectory nodeId={data?.node?.parent?.id} {...props}/>}</>;
+    return <>{<NodeDirectory nodeId={data?.node?.parent?.id} {...props} />}</>;
   } else if (data?.node?.__typename === "HeadingNode") {
-    return <>{<NodeDirectory nodeId={data?.node?.parent?.id} {...props}/>}</>;
+    return <>{<NodeDirectory nodeId={data?.node?.parent?.id} {...props} />}</>;
   } else if (data?.node?.__typename === "FolderNode") {
     return (
       <>
-        <Breadcrumbs aria-label="breadcrumb">
-          {data?.node?.parent?.parent?.parent?.id ? (
-            <Link
-              color="inherit"
-              component={RouterLink}
-              to={`${data?.node?.parent?.parent?.parent?.id}`}
-            >
-              …
-            </Link>
-          ) : null}
-          {data?.node?.parent?.parent?.id ? (
-            <Link
-              color="inherit"
-              component={RouterLink}
-              to={`${data?.node?.parent?.parent?.id}`}
-            >
-              {data?.node?.parent?.parent?.title}
-            </Link>
-          ) : null}
-          {data?.node?.parent?.id ? (
-            <Link
-              color="inherit"
-              component={RouterLink}
-              to={`${data?.node?.parent?.id}`}
-            >
-              {data?.node?.parent?.title}
-            </Link>
-          ) : null}
-          <Typography color="textPrimary">{data?.node?.title}</Typography>
-        </Breadcrumbs>
-        {props.editable ? <AddItem /> : null }
+        <Grid container>
+          <Grid item xs={10}>
+            <Breadcrumbs aria-label="breadcrumb">
+              {data?.node?.parent?.parent?.parent?.id ? (
+                <Link
+                  color="inherit"
+                  component={RouterLink}
+                  to={`${data?.node?.parent?.parent?.parent?.id}`}
+                >
+                  …
+                </Link>
+              ) : null}
+              {data?.node?.parent?.parent?.id ? (
+                <Link
+                  color="inherit"
+                  component={RouterLink}
+                  to={`${data?.node?.parent?.parent?.id}`}
+                >
+                  {data?.node?.parent?.parent?.title}
+                </Link>
+              ) : null}
+              {data?.node?.parent?.id ? (
+                <Link
+                  color="inherit"
+                  component={RouterLink}
+                  to={`${data?.node?.parent?.id}`}
+                >
+                  {data?.node?.parent?.title}
+                </Link>
+              ) : null}
+              <Typography color="textPrimary">{data?.node?.title}</Typography>
+            </Breadcrumbs>
+          </Grid>
+          <Grid item xs={2}>
+            {props.editable ? <AddItem /> : null}
+          </Grid>
+        </Grid>
         <List className={classes.root}>
           {data?.node?.children.map((item, index) => {
             if (item.__typename === "TextNode") {
@@ -258,7 +286,11 @@ function NodeDirectory(props: {
   return <></>;
 }
 
-function NodeContent(props: { courseId?: string; nodeId?: string, editable?: boolean}) {
+function NodeContent(props: {
+  courseId?: string;
+  nodeId?: string;
+  editable?: boolean;
+}) {
   const classes = useStyles();
   let { nodeId } = useParams<NodeProps>();
 
@@ -268,37 +300,41 @@ function NodeContent(props: { courseId?: string; nodeId?: string, editable?: boo
     },
   });
 
+  let contentText = "";
   if (data?.node?.__typename === "TextNode") {
-    return (
-      <Paper className={classes.paper}>
-        {props.editable ? <DeleteNode /> : null}
-        <h1>{data.node?.title}</h1>
-        <p>{data.node?.text}</p>
-      </Paper>
-    );
-  }
-  
-  if (data?.node?.__typename === "FolderNode") {
-    return (
-      <Paper className={classes.paper}>
-        {props.editable ? <DeleteNode /> : null}
-        <h1>{data.node?.title}</h1>
-        <h3>Folder</h3>
-      </Paper>
-    );
+    contentText = data.node.text;
+  } else if (data?.node?.__typename === "FolderNode") {
+    contentText = "Folder";
   }
 
-  return <></>;
+  return (
+    <Paper className={classes.paper}>
+      <Grid container>
+        <Grid item xs={10}>
+          <h1>{data?.node?.title}</h1>
+        </Grid>
+        <Grid item justify="flex-end" xs={2}>
+          {props.editable ? <DeleteNode /> : null}
+        </Grid>
+      </Grid>
+      <p>{contentText}</p>
+    </Paper>
+  );
 }
 
 function AddItem(props: { nodeId?: string }) {
+  const classes = useStyles();
+
   const [open, setOpen] = React.useState(false);
 
   const [nodeTitle, setNodeTitle] = React.useState("");
   const [nodeContents, setNodeContents] = React.useState("");
   const [nodeLink, setNodeLink] = React.useState("");
+  const [nodeType, setNodeType] = React.useState("item");
+  const [nodeFile, setNodeFile] = React.useState<File[]>();
 
-  const [addNode, { data }] = useMutation<AddTextNode>(ADD_TEXT_NODE);
+  const [addNode, { data: nodeData }] = useMutation<AddTextNode>(ADD_TEXT_NODE);
+  const [uploadFile, { data: fileData }] = useMutation<FileUpload>(UPLOAD_FILE);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -309,18 +345,39 @@ function AddItem(props: { nodeId?: string }) {
   };
 
   const handleConfirm = () => {
-    addNode({ variables : { title: nodeTitle, text: nodeContents, link: nodeLink, parent: props.nodeId }})
+    addNode({
+      variables: {
+        title: nodeTitle,
+        text: nodeContents,
+        link: nodeLink,
+        parent: props.nodeId,
+      },
+    });
     setOpen(false);
   };
 
   return (
     <div>
-      <IconButton aria-label="delete" onClick={handleClickOpen}>
-        <AddIcon />
+      <IconButton aria-label="add" onClick={handleClickOpen}>
+        <AddIcon fontSize="small" />
       </IconButton>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+      >
         <DialogTitle id="form-dialog-title">Add Item</DialogTitle>
         <DialogContent>
+          <Select
+            id="typeSelect"
+            label="Type"
+            value={nodeType}
+            fullWidth
+            onChange={(e: any) => setNodeType(e.target.value)}
+          >
+            <MenuItem value={"item"}>Item</MenuItem>
+            <MenuItem value={"folder"}>Folder</MenuItem>
+          </Select>
           <TextField
             autoFocus
             id="title"
@@ -336,12 +393,23 @@ function AddItem(props: { nodeId?: string }) {
             fullWidth
             onChange={(e) => setNodeContents(e.target.value)}
           />
-          <TextField
-            id="link"
-            label="Link"
-            fullWidth
-            onChange={(e) => setNodeLink(e.target.value)}
-          />
+          {/* {nodeType === "item" ? (
+            <>
+              {nodeFile ? <>{nodeFile.name}</> : <>No file uploaded</>}
+              <input
+                id="upload-file"
+                type="file"
+                className={classes.uploadInput}
+                onChange={(e: any) => setNodeFile(e.target?.files?.[0])}
+              />
+              <label htmlFor="upload-file">
+                <IconButton aria-label="upload file" component="span">
+                  <CloudUploadIcon />
+                </IconButton>
+              </label>
+            </>
+          ) : null} */}
+          <DropzoneArea filesLimit={1} onChange={(files) => setNodeFile(files)}/>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
@@ -370,7 +438,7 @@ function DeleteNode(props: { nodeId?: string }) {
   };
 
   const handleConfirm = () => {
-    deleteNode({ variables : { nodeId: props.nodeId }})
+    deleteNode({ variables: { nodeId: props.nodeId } });
     setOpen(false);
   };
 
@@ -379,7 +447,11 @@ function DeleteNode(props: { nodeId?: string }) {
       <IconButton aria-label="delete" onClick={handleClickOpen}>
         <DeleteIcon />
       </IconButton>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+      >
         <DialogTitle id="form-dialog-title">Delete Item</DialogTitle>
         <DialogContent>
           <DialogContentText>
