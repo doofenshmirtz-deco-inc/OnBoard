@@ -475,6 +475,7 @@ function AddItem(props: { nodeId: string }) {
               />
               <DropzoneArea
                 filesLimit={1}
+                maxFileSize={50000000}
                 onChange={(files) => setNodeFile(files)}
               />
             </>
