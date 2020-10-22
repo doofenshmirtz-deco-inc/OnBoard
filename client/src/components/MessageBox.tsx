@@ -106,7 +106,6 @@ const MessageBox = (props: MessageBoxProps) => {
   const x = Messaging.useContainer();
 
   useEffect(() => {
-    console.log("setting group id to " + id);
     x.setGroupId(id);
   }, [id]);
 

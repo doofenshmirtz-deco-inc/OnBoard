@@ -154,9 +154,11 @@ export const MessagingSubscriptionHelper = () => {
           ...groupMessages,
           [groupId]: [...groupMessages[groupId] ?? [], toChatMessage(data, x.username!)],
         }));
+
+        x._bumpContact(groupId);
       }
     },
-    [x.username]
+    [x.username, x._bumpContact]
   );
 
   useNewMessagesSubscription(handleNewMessage);
@@ -224,7 +226,7 @@ export const useMessaging = () => {
     }
   }, [groupId]);
 
-  const { data: groupData } = useQuery<MyGroups>(GROUPS_QUERY);
+  const { data: groupData, refetch: refetchGroups } = useQuery<MyGroups>(GROUPS_QUERY);
 
   useEffect(() => {
     if (!groupData) return;
@@ -236,7 +238,7 @@ export const useMessaging = () => {
     const sorted = [...contacts];
     sorted.sort(sortContacts);
     return sorted;
-  }, [contacts, groupMessages]);
+  }, [contacts]);
 
   // console.log("username " + username);
 
@@ -256,13 +258,29 @@ export const useMessaging = () => {
         [groupId!]: messages,
       }));
     }
-  }, [groupId, messagesData, username]);
+  }, [messagesData, username]);
 
   useEffect(() => {
     if (groupId != null) {
       setMessages(groupMessages[groupId] ?? []);
     }
   }, [groupId, groupMessages]);
+
+  const bumpContact = useCallback((id: string) => {
+    setContacts(contacts => {
+      contacts = [...contacts];
+      for (let i = 0; i < contacts.length; i++) {
+        const c = contacts[i];
+        if (c.id === id) {
+          contacts[i] = {
+            ...c, 
+            lastActive: new Date()
+          };
+        }
+      }
+      return contacts;
+    });
+  }, []);
 
   const sendMessage = useCallback(
     (args: AddMessageVariables) => {
@@ -282,8 +300,10 @@ export const useMessaging = () => {
       // }));
 
       sendToServer({ variables: args });
+      if (username)
+        bumpContact(username);
     },
-    [username]
+    [username, bumpContact]
   );
 
   return {
@@ -294,6 +314,7 @@ export const useMessaging = () => {
     setGroupId,
     sendMessage,
     username,
+    _bumpContact: bumpContact,
   };
 };
 

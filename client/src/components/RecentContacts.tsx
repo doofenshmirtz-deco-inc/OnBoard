@@ -6,6 +6,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import { Messaging } from "../hooks/useMessaging";
 
 const RecentContacts = (props: any) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -50,7 +51,7 @@ const RecentContacts = (props: any) => {
           ),
         }}
       />
-      {Object.values(props.contacts).map((item: any) =>
+      {props.contacts.map((item: any) =>
         item?.name?.toLowerCase?.().includes?.(searchTerm.toLowerCase()) ? (
           <Button
             key={item.id}

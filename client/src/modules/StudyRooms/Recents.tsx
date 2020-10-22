@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import MessageBox from "../../components/MessageBox";
 import RecentContacts from "../../components/RecentContacts";
@@ -7,6 +7,7 @@ import { MyGroups } from "../../graphql/MyGroups";
 import { LoadingPage } from "../../components/LoadingPage";
 import { MeId } from "../../graphql/MeId";
 import { useHistory, useParams } from "react-router";
+import { Messaging } from "../../hooks/useMessaging";
 
 const GROUPS_QUERY = gql`
   query MyGroupsxx {
@@ -86,25 +87,17 @@ const Recents = () => {
     name: "",
   });
 
-  // list of contacts/groups, sorted by recency.
-  const [contacts, setContacts] = useState(null as Contact[] | null);
+  const messaging = Messaging.useContainer();
 
   const params = useParams<{ messageID?: string }>();
   const history = useHistory();
 
   // handles a click on a contact/group by selecting that contact.
   const handleClick = (item: any) => {
+    messaging.setGroupId(item.id);
     history.push("/study-rooms/recents/" + item.id);
   };
 
-  // callback handler to bump the currently selected group to the top of the list.
-  // passed to message box so it can be called when a new message is received.
-  const bumpSelectedContact = useCallback(() => {
-    if (!contacts) return;
-    const selectedContacts = contacts.filter((c) => c.id === selected.id);
-    const notSelectedContacts = contacts.filter((c) => c.id !== selected.id);
-    setContacts([...selectedContacts, ...notSelectedContacts]);
-  }, [selected, contacts]);
   // TODO: probably sort contacts initially as well. will need to sort server-side or return times in query.
 
   // get my recently contacted groups
@@ -114,9 +107,8 @@ const Recents = () => {
   const { data: me, loading: meLoading } = useQuery<MeId>(ME_QUERY);
   const uid = me?.me?.id;
 
-  // run when data from groups query is obtained.
-  useEffect(() => {
-    const myGroups = data?.me?.groups?.map((group: any) => {
+  const contacts = useMemo(() => {
+    return messaging.contacts.map((group: any) => {
       return {
         id: group.id,
         name: group.name,
@@ -125,9 +117,8 @@ const Recents = () => {
         readStatus: true,
       };
     });
+  }, [messaging.contacts]);
 
-    if (myGroups) setContacts(myGroups); // FIXME: resets order...
-  }, [data]);
 
   useEffect(() => {
     if (params.messageID && contacts) {
@@ -160,8 +151,6 @@ const Recents = () => {
             id={selected.id}
             name={selected.name}
             contacts={contacts}
-            setContacts={setContacts as any}
-            onSentMessage={bumpSelectedContact}
           />
         )}
       </div>
