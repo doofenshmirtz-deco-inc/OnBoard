@@ -12,6 +12,7 @@ import { GetRootCoursePage } from "../graphql/GetRootCoursePage";
 import { GetRootAssessmentPage } from "../graphql/GetRootAssessmentPage";
 import { GetNode } from "../graphql/GetNode";
 import { EditTextNode } from "../graphql/EditTextNode";
+import { EditFolderNode } from "../graphql/EditFolderNode";
 import { FileUpload } from "../graphql/FileUpload";
 import { DeleteNode } from "../graphql/DeleteNode";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -21,6 +22,7 @@ import {
   useParams,
   useRouteMatch,
   Link as RouterLink,
+  useHistory,
 } from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
@@ -37,12 +39,14 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
-import AttachFileIcon from '@material-ui/icons/AttachFile';
+import AttachFileIcon from "@material-ui/icons/AttachFile";
 import EditIcon from "@material-ui/icons/Edit";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import { DropzoneArea } from "material-ui-dropzone"
+import { DropzoneArea } from "material-ui-dropzone";
+import { notDeepStrictEqual } from "assert";
+import { parseIsolatedEntityName } from "typescript";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -152,15 +156,35 @@ const EDIT_TEXT_NODE = gql`
     $text: String
   ) {
     editTextNode(
-      data: { id: $id, title: $title, link: $link, parent: $parent, text: $text }
+      data: {
+        id: $id
+        title: $title
+        link: $link
+        parent: $parent
+        text: $text
+      }
     ) {
       id
       title
       text
+      link
       parent {
         id
+        title
       }
-      link
+    }
+  }
+`;
+
+const EDIT_FOLDER_NODE = gql`
+  mutation EditFolderNode($id: Float, $title: String, $parent: Float) {
+    editFolderNode(data: { id: $id, title: $title, parent: $parent }) {
+      id
+      title
+      parent {
+        id
+        title
+      }
     }
   }
 `;
@@ -177,7 +201,7 @@ const DELETE_NODE = gql`
       link
     }
   }
-`
+`;
 
 function FolderItem(item: any, index: number) {
   return (
@@ -274,7 +298,7 @@ function NodeDirectory(props: {
             </Breadcrumbs>
           </Grid>
           <Grid item xs={2}>
-            {props.editable ? <AddItem nodeId={data?.node?.id}/> : null}
+            {props.editable ? <AddItem nodeId={data?.node?.id} /> : null}
           </Grid>
         </Grid>
         <List className={classes.root}>
@@ -302,7 +326,7 @@ function NodeContent(props: {
   const classes = useStyles();
   let { nodeId } = useParams<NodeProps>();
 
-  let checkedNodeId = props.nodeId ? parseInt(props.nodeId) : parseInt(nodeId)
+  let checkedNodeId = props.nodeId ? parseInt(props.nodeId) : parseInt(nodeId);
 
   const { loading, data, error } = useQuery<GetNode>(GET_NODE, {
     variables: {
@@ -328,17 +352,17 @@ function NodeContent(props: {
         </Grid>
       </Grid>
       <p>{contentText}</p>
-      {data?.node?.link &&
-      <Button
-        variant="contained"
-        color="primary"
-        size="large"
-        startIcon={<AttachFileIcon />}
-        onClick={() => window.open(data?.node?.link || undefined, "_blank")}
-      >
-        Open File
-      </Button>
-}
+      {data?.node?.link && (
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          startIcon={<AttachFileIcon />}
+          onClick={() => window.open(data?.node?.link || undefined, "_blank")}
+        >
+          Open File
+        </Button>
+      )}
     </Paper>
   );
 }
@@ -351,17 +375,28 @@ function AddItem(props: { nodeId: string }) {
   const [nodeType, setNodeType] = React.useState("item");
   const [nodeFile, setNodeFile] = React.useState<File[]>();
 
-  const [addNode, { data: nodeData }] = useMutation<EditTextNode>(EDIT_TEXT_NODE);
-  const [uploadFile, { data: fileData }] = useMutation<FileUpload>(UPLOAD_FILE, {onCompleted(data) {
-    addNode({
-      variables: {
-        title: nodeTitle,
-        text: nodeContents,
-        link: data.singleUpload,
-        parent: parseInt(props.nodeId)
-      },
-    });
-  }});
+  const [addTextNode] = useMutation<EditTextNode>(EDIT_TEXT_NODE, {
+    update(cache) {
+      cache.reset();
+    },
+  });
+  const [addFolderNode] = useMutation<EditFolderNode>(EDIT_FOLDER_NODE, {
+    update(cache) {
+      cache.reset();
+    },
+  });
+  const [uploadFile] = useMutation<FileUpload>(UPLOAD_FILE, {
+    onCompleted(data) {
+      addTextNode({
+        variables: {
+          title: nodeTitle,
+          text: nodeContents,
+          link: data.singleUpload,
+          parent: parseInt(props.nodeId),
+        },
+      });
+    },
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -372,19 +407,28 @@ function AddItem(props: { nodeId: string }) {
   };
 
   const handleConfirm = () => {
-    if (nodeFile) {
-      let file = nodeFile[0]
+    if (nodeFile && nodeFile[0]) {
+      let file = nodeFile[0];
 
-      uploadFile({ variables: { file } })
-    }
-    else {
-      addNode({
-        variables: {
-          title: nodeTitle,
-          text: nodeContents,
-          parent: parseInt(props.nodeId)
-        },
-      });
+      uploadFile({ variables: { file } });
+    } else {
+      if (nodeType === "item") {
+        addTextNode({
+          variables: {
+            title: nodeTitle,
+            text: nodeContents,
+            parent: parseInt(props.nodeId),
+          },
+        });
+      }
+      else {
+        addFolderNode({
+          variables: {
+            title: nodeTitle,
+            parent: parseInt(props.nodeId),
+          }
+        })
+      }
     }
 
     setOpen(false);
@@ -400,7 +444,7 @@ function AddItem(props: { nodeId: string }) {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Add Item</DialogTitle>
+        <DialogTitle id="form-dialog-title">Add {nodeType}</DialogTitle>
         <DialogContent>
           <Select
             id="typeSelect"
@@ -419,15 +463,22 @@ function AddItem(props: { nodeId: string }) {
             fullWidth
             onChange={(e) => setNodeTitle(e.target.value)}
           />
-          <TextField
-            id="content"
-            label="Content"
-            rows={4}
-            multiline
-            fullWidth
-            onChange={(e) => setNodeContents(e.target.value)}
-          />
-          <DropzoneArea filesLimit={1} onChange={(files) => setNodeFile(files)}/>
+          {nodeType === "item" && (
+            <>
+              <TextField
+                id="content"
+                label="Content"
+                rows={4}
+                multiline
+                fullWidth
+                onChange={(e) => setNodeContents(e.target.value)}
+              />
+              <DropzoneArea
+                filesLimit={1}
+                onChange={(files) => setNodeFile(files)}
+              />
+            </>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
@@ -444,8 +495,13 @@ function AddItem(props: { nodeId: string }) {
 
 function DeleteItem(props: { nodeId: number }) {
   const [open, setOpen] = React.useState(false);
+  const history = useHistory();
 
-  const [deleteNode, { data }] = useMutation<DeleteNode>(DELETE_NODE);
+  const [deleteNode] = useMutation<DeleteNode>(DELETE_NODE, {
+    update(cache) {
+      cache.reset();
+    },
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -456,8 +512,8 @@ function DeleteItem(props: { nodeId: number }) {
   };
 
   const handleConfirm = () => {
-    console.log(props.nodeId);
-    deleteNode({ variables: { nodeId: props.nodeId, } });
+    deleteNode({ variables: { nodeId: props.nodeId } });
+    history.goBack();
     setOpen(false);
   };
 

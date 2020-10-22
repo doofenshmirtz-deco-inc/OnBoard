@@ -56,7 +56,7 @@ export class NodeResolver {
 
     if (!data.id) {
       console.log("here");
-      const node = new TextNode();
+      const node = new FolderNode();
       node.title = data.title!;
       node.link = data.link!;
       await node.save();

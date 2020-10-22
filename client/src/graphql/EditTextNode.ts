@@ -10,6 +10,7 @@
 export interface EditTextNode_editTextNode_parent {
   __typename: "FolderNode";
   id: string;
+  title: string;
 }
 
 export interface EditTextNode_editTextNode {
@@ -17,8 +18,8 @@ export interface EditTextNode_editTextNode {
   id: string;
   title: string;
   text: string;
-  parent: EditTextNode_editTextNode_parent | null;
   link: string | null;
+  parent: EditTextNode_editTextNode_parent | null;
 }
 
 export interface EditTextNode {
