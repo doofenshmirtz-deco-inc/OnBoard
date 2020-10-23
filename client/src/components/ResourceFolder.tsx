@@ -45,8 +45,6 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { DropzoneArea } from "material-ui-dropzone";
-import { notDeepStrictEqual } from "assert";
-import { parseIsolatedEntityName } from "typescript";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -58,8 +56,8 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
       color: theme.palette.text.secondary,
     },
-    uploadInput: {
-      display: "none",
+    uploadDropZone: {
+      marginTop: "0.5rem",
     },
   })
 );
@@ -264,8 +262,8 @@ function NodeDirectory(props: {
   } else if (data?.node?.__typename === "FolderNode") {
     return (
       <>
-        <Grid container>
-          <Grid item xs={10}>
+        <Grid container justify="space-between">
+          <Grid item>
             <Breadcrumbs aria-label="breadcrumb">
               {data?.node?.parent?.parent?.parent?.id ? (
                 <Link
@@ -297,7 +295,7 @@ function NodeDirectory(props: {
               <Typography color="textPrimary">{data?.node?.title}</Typography>
             </Breadcrumbs>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item>
             {props.editable ? <AddItem nodeId={data?.node?.id} /> : null}
           </Grid>
         </Grid>
@@ -343,11 +341,11 @@ function NodeContent(props: {
 
   return (
     <Paper className={classes.paper}>
-      <Grid container>
-        <Grid item xs={10}>
+      <Grid container justify="space-between">
+        <Grid item>
           <h1>{data?.node?.title}</h1>
         </Grid>
-        <Grid item justify="flex-end" xs={2}>
+        <Grid item>
           {props.editable ? <DeleteItem nodeId={checkedNodeId} /> : null}
         </Grid>
       </Grid>
@@ -368,6 +366,8 @@ function NodeContent(props: {
 }
 
 function AddItem(props: { nodeId: string }) {
+  const classes = useStyles();
+
   const [open, setOpen] = React.useState(false);
 
   const [nodeTitle, setNodeTitle] = React.useState("");
@@ -420,14 +420,13 @@ function AddItem(props: { nodeId: string }) {
             parent: parseInt(props.nodeId),
           },
         });
-      }
-      else {
+      } else {
         addFolderNode({
           variables: {
             title: nodeTitle,
             parent: parseInt(props.nodeId),
-          }
-        })
+          },
+        });
       }
     }
 
@@ -474,8 +473,9 @@ function AddItem(props: { nodeId: string }) {
                 onChange={(e) => setNodeContents(e.target.value)}
               />
               <DropzoneArea
+                dropzoneClass={classes.uploadDropZone}
                 filesLimit={1}
-                maxFileSize={50000000}
+                maxFileSize={52428800}
                 onChange={(files) => setNodeFile(files)}
               />
             </>
