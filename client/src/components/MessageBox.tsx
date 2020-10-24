@@ -6,7 +6,7 @@ import React, {
   SetStateAction,
   Dispatch,
 } from "react";
-import { Button, makeStyles, TextField, IconButton } from "@material-ui/core";
+import { Button, makeStyles, TextField, IconButton, CssBaseline, AppBar, Typography, Drawer, Divider, List, ListItem, ListItemIcon, ListItemText, Collapse, CardContent } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import {
@@ -27,6 +27,10 @@ import {
 import { Contact } from "../modules/StudyRooms/Recents";
 import * as firebase from "firebase";
 import { useParams, useHistory } from "react-router";
+import InfoIcon from '@material-ui/icons/Info';
+import clsx from 'clsx';
+import Toolbar from "@material-ui/core/Toolbar/Toolbar";
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 const MESSAGES_QUERY = gql`
   query MyMessages($groupId: ID!) {
@@ -73,6 +77,8 @@ const toChatMessage = (
   data: OnMessageReceived_newMessages,
   uid: string
 ): ChatMessage => {
+  console.log(data);
+  console.log(uid);
   return {
     sender: data.user.id,
     text: data.text,
@@ -90,12 +96,15 @@ const renderChatMessage = (message: ChatMessage) => {
 };
 
 export type MessageBoxProps = {
+  uid?: string; // uid of the user currently logged in
   id?: string; // group id of chat.
   name?: string; // name of group
   onSentMessage?: () => any; // to be called when new message is received.
   contacts?: Contact[]; // all the contacts
   setContacts?: Dispatch<SetStateAction<Contact[]>>; // setContacts from parent (recents.tsx)
 };
+
+const drawerWidth = 240;
 
 // TODO: clear input message when changing contact
 const MessageBox = (props: MessageBoxProps) => {
@@ -139,6 +148,20 @@ const MessageBox = (props: MessageBoxProps) => {
     other: {
       backgroundColor: theme.palette.secondary.main,
     },
+    root: {
+      maxWidth: 345,
+    },
+    media: {
+      height: 0,
+      paddingTop: '56.25%', // 16:9
+    },
+    expand: {
+      transform: 'rotate(0deg)',
+      marginLeft: 'auto',
+      transition: theme.transitions.create('transform', {
+        duration: theme.transitions.duration.shortest,
+      }),
+    },
   }));
 
   const classes = useStyles();
@@ -146,7 +169,7 @@ const MessageBox = (props: MessageBoxProps) => {
   const { groupID } = useParams();
   const history = useHistory();
 
-  const uid = firebase.auth().currentUser?.uid;
+  const uid = props.uid;
   const id = props.id ? props.id : groupID;
 
   // current message being typed in text box.
@@ -155,6 +178,12 @@ const MessageBox = (props: MessageBoxProps) => {
   const [oldMessages, setOldMessages] = useState([] as ChatMessage[]);
   // new messages obtained via subscription.
   const [newMessages, setNewMessages] = useState([] as ChatMessage[]);
+  // handle info being expanded
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
 
   // reference to end of messages, to scroll to bottom on new message.
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
@@ -171,6 +200,8 @@ const MessageBox = (props: MessageBoxProps) => {
   const { data, loading, refetch } = useQuery<MyMessages>(MESSAGES_QUERY, {
     variables: { groupId: id },
   });
+
+  console.log(data);
 
   // FIXME: i feel like this is dodgy :/
   let contact = props.contacts
@@ -216,6 +247,8 @@ const MessageBox = (props: MessageBoxProps) => {
       onSubscriptionData: handleNewMessage,
     }
   );
+
+  console.log(oldMessages);
 
   // when data changes, update oldMessages.
   useEffect(() => {
@@ -266,6 +299,8 @@ const MessageBox = (props: MessageBoxProps) => {
     });
   };
 
+  // console.log(newMessages);
+
   return (
     <div className={classes.container}>
       {props.name ? (
@@ -276,6 +311,14 @@ const MessageBox = (props: MessageBoxProps) => {
           >
             <VideocamIcon />
           </IconButton>
+          {/* <IconButton
+            style={{position: "absolute", right: "2em", top: "9em"}}
+            onClick={handleExpandClick}
+            aria-expanded={expanded}
+            aria-label="show more"
+          >
+            <InfoIcon />
+          </IconButton> */}
         </h1>
       ) : (
         <> </>
