@@ -40,8 +40,6 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
-import EditIcon from "@material-ui/icons/Edit";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { DropzoneArea } from "material-ui-dropzone";
@@ -58,6 +56,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     uploadDropZone: {
       marginTop: "0.5rem",
+      color: theme.palette.text.secondary,
+    },
+    uploadText: {
+      color: theme.palette.text.secondary,
     },
   })
 );
@@ -473,7 +475,9 @@ function AddItem(props: { nodeId: string }) {
                 onChange={(e) => setNodeContents(e.target.value)}
               />
               <DropzoneArea
+                classes={{ icon: classes.uploadText }}
                 dropzoneClass={classes.uploadDropZone}
+                dropzoneParagraphClass={classes.uploadText}
                 filesLimit={1}
                 maxFileSize={52428800}
                 onChange={(files) => setNodeFile(files)}
