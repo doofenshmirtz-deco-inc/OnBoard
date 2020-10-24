@@ -57,6 +57,8 @@ const RecentContacts = (props: any) => {
     (c: any) => c.__typename === "DMGroup"
   );
 
+  console.log(contacts);
+
   return (
     <div>
       <TextField
@@ -96,7 +98,7 @@ const RecentContacts = (props: any) => {
                 readStatus={item.readStatus}
                 contact={item.users[0]}
                 buttonsOff={true}
-                group={item.group}
+                group={item.users.length > 2}
                 contact2={item.users[1]}
                 contacts={item.users}
               />
