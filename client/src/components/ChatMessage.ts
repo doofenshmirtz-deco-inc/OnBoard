@@ -4,6 +4,7 @@ interface ChatMessage {
   senderName: string;
   direction: "left" | "right";
   groupId: string;
+  group: boolean;
   createdAt: Date;
 }
 

@@ -23,9 +23,7 @@ export interface ContactsRecents_me_groups_DMGroup {
   users: ContactsRecents_me_groups_DMGroup_users[];
 }
 
-export type ContactsRecents_me_groups =
-  | ContactsRecents_me_groups_ClassGroup
-  | ContactsRecents_me_groups_DMGroup;
+export type ContactsRecents_me_groups = ContactsRecents_me_groups_ClassGroup | ContactsRecents_me_groups_DMGroup;
 
 export interface ContactsRecents_me {
   __typename: "User";

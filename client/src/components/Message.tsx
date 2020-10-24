@@ -37,6 +37,7 @@ export type MessageProps = {
   direction: "left" | "right";
   text: string;
   sender: string;
+  group?: boolean;
 };
 
 const Message = (props: MessageProps) => {
@@ -45,7 +46,7 @@ const Message = (props: MessageProps) => {
   return (
     <div>
       <span className={`${classes.senderName}`}>
-        {props.direction === "left" ? props.sender : ""}
+        {props.direction === "left" && props.group ? props.sender : ""}
       </span>
       <div
         className={`${classes.bubbleContainer} ${

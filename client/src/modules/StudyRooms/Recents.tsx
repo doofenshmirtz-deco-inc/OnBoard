@@ -83,6 +83,7 @@ const Recents = (props: any) => {
   const [selected, setSelectedState] = useState({
     id: "",
     name: "",
+    group: false,
   });
 
   // list of contacts/groups, sorted by recency.
@@ -130,9 +131,10 @@ const Recents = (props: any) => {
 
   useEffect(() => {
     if (params.messageID && contacts) {
-      const selectedContact = contacts.filter(
+      let selectedContact = contacts.filter(
         (c) => c.id === params.messageID
       )[0];
+      selected.group = selectedContact.users.length > 2;
       if (!selectedContact) history.push("/study-rooms/recents");
       else setSelectedState(selectedContact);
     }
@@ -160,6 +162,7 @@ const Recents = (props: any) => {
               uid={uid}
               id={selected.id}
               name={selected.name}
+              group={selected.group}
               contacts={contacts}
               setContacts={setContacts as any}
               onSentMessage={bumpSelectedContact}

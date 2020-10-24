@@ -63,6 +63,9 @@ const MESSAGES_SUBSCRIPTION = gql`
       text
       group {
         id
+        users {
+          id
+        }
       }
       user {
         id
@@ -85,6 +88,7 @@ const toChatMessage = (
     text: data.text,
     direction: data.user.id === uid ? "right" : "left",
     groupId: data.group.id,
+    group: data.group.users.length > 2,
     createdAt: new Date(data.createdAt),
   };
 };
@@ -97,6 +101,7 @@ const renderChatMessage = (message: ChatMessage) => {
       direction={message.direction}
       text={message.text}
       sender={message.senderName}
+      group={message.group}
     />
   );
 };
@@ -108,9 +113,8 @@ export type MessageBoxProps = {
   onSentMessage?: () => any; // to be called when new message is received.
   contacts?: Contact[]; // all the contacts
   setContacts?: Dispatch<SetStateAction<Contact[]>>; // setContacts from parent (recents.tsx)
+  group?: boolean; // whether or not the chat being rendered is a group chat
 };
-
-const drawerWidth = 240;
 
 // TODO: clear input message when changing contact
 const MessageBox = (props: MessageBoxProps) => {
@@ -289,6 +293,7 @@ const MessageBox = (props: MessageBoxProps) => {
         senderName: "",
         direction: "right",
         groupId: id,
+        group: false,
         createdAt: new Date(),
       },
     ]);

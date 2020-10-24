@@ -23,9 +23,7 @@ export interface Classes_me_groups_ClassGroup {
   users: Classes_me_groups_ClassGroup_users[];
 }
 
-export type Classes_me_groups =
-  | Classes_me_groups_CourseGroup
-  | Classes_me_groups_ClassGroup;
+export type Classes_me_groups = Classes_me_groups_CourseGroup | Classes_me_groups_ClassGroup;
 
 export interface Classes_me {
   __typename: "User";
