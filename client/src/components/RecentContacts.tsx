@@ -30,7 +30,6 @@ const RecentContacts = (props: any) => {
   const [searchTerm, setSearchTerm] = useState("");
   const useStyles = makeStyles((theme: Theme) => ({
     root: {
-      backgroundColor: theme.palette.background.paper,
       display: "flex",
       flexDirection: "column",
       width: "100%",
@@ -84,7 +83,7 @@ const RecentContacts = (props: any) => {
               disableElevation
               style={{
                 backgroundColor:
-                  props.selected.id === item.id ? "#e3e1e1" : "white",
+                  props.selected.id === item.id ? "#e3e1e1" : "#fafafa",
               }}
               onClick={(e) => {
                 props.handleClick(item);

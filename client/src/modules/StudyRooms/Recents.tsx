@@ -64,7 +64,6 @@ const ME_QUERY = gql`
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 3,
-    backgroundColor: theme.palette.background.paper,
     display: "flex",
   },
 }));
