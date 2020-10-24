@@ -201,8 +201,6 @@ const MessageBox = (props: MessageBoxProps) => {
     variables: { groupId: id },
   });
 
-  console.log(data);
-
   // FIXME: i feel like this is dodgy :/
   let contact = props.contacts
     ? props.contacts.filter((c) => c.id === id)[0]
@@ -247,8 +245,6 @@ const MessageBox = (props: MessageBoxProps) => {
       onSubscriptionData: handleNewMessage,
     }
   );
-
-  console.log(oldMessages);
 
   // when data changes, update oldMessages.
   useEffect(() => {
@@ -298,8 +294,6 @@ const MessageBox = (props: MessageBoxProps) => {
       },
     });
   };
-
-  // console.log(newMessages);
 
   return (
     <div className={classes.container}>
