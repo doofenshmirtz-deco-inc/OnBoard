@@ -7,7 +7,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
   bubble: {
-    borderRadius: "20px",
     margin: "1px",
     padding: "10px",
     display: "inline-block",
@@ -22,9 +21,11 @@ const useStyles = makeStyles((theme) => ({
   },
   me: {
     backgroundColor: "#c9c9c9",
+    borderRadius: "18px 18px 7px 18px",
   },
   other: {
     backgroundColor: theme.palette.secondary.main,
+    borderRadius: "18px 18px 18px 7px",
   },
   senderName: {
     fontSize: "0.6rem",
