@@ -6,7 +6,23 @@ import React, {
   SetStateAction,
   Dispatch,
 } from "react";
-import { Button, makeStyles, TextField, IconButton, CssBaseline, AppBar, Typography, Drawer, Divider, List, ListItem, ListItemIcon, ListItemText, Collapse, CardContent } from "@material-ui/core";
+import {
+  Button,
+  makeStyles,
+  TextField,
+  IconButton,
+  CssBaseline,
+  AppBar,
+  Typography,
+  Drawer,
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Collapse,
+  CardContent,
+} from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import {
@@ -27,10 +43,10 @@ import {
 import { Contact } from "../modules/StudyRooms/Recents";
 import * as firebase from "firebase";
 import { useParams, useHistory } from "react-router";
-import InfoIcon from '@material-ui/icons/Info';
-import clsx from 'clsx';
+import InfoIcon from "@material-ui/icons/Info";
+import clsx from "clsx";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
 const MESSAGES_QUERY = gql`
   query MyMessages($groupId: ID!) {
@@ -42,6 +58,11 @@ const MESSAGES_QUERY = gql`
       }
       group {
         id
+        users {
+          id
+          name
+          avatar
+        }
       }
       createdAt
     }
@@ -153,12 +174,12 @@ const MessageBox = (props: MessageBoxProps) => {
     },
     media: {
       height: 0,
-      paddingTop: '56.25%', // 16:9
+      paddingTop: "56.25%", // 16:9
     },
     expand: {
-      transform: 'rotate(0deg)',
-      marginLeft: 'auto',
-      transition: theme.transitions.create('transform', {
+      transform: "rotate(0deg)",
+      marginLeft: "auto",
+      transition: theme.transitions.create("transform", {
         duration: theme.transitions.duration.shortest,
       }),
     },
@@ -200,6 +221,8 @@ const MessageBox = (props: MessageBoxProps) => {
   const { data, loading, refetch } = useQuery<MyMessages>(MESSAGES_QUERY, {
     variables: { groupId: id },
   });
+
+  console.log(data);
 
   // FIXME: i feel like this is dodgy :/
   let contact = props.contacts
