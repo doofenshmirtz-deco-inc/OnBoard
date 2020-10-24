@@ -13,9 +13,17 @@ export interface MyMessages_getMessages_user {
   name: string;
 }
 
+export interface MyMessages_getMessages_group_users {
+  __typename: "User";
+  id: string;
+  name: string;
+  avatar: string;
+}
+
 export interface MyMessages_getMessages_group {
   __typename: "BaseGroup";
   id: string;
+  users: MyMessages_getMessages_group_users[];
 }
 
 export interface MyMessages_getMessages {

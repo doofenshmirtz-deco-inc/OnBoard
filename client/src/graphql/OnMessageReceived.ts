@@ -15,6 +15,7 @@ export interface OnMessageReceived_newMessages_group {
 export interface OnMessageReceived_newMessages_user {
   __typename: "User";
   id: string;
+  name: string;
 }
 
 export interface OnMessageReceived_newMessages {

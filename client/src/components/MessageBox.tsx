@@ -6,23 +6,7 @@ import React, {
   SetStateAction,
   Dispatch,
 } from "react";
-import {
-  Button,
-  makeStyles,
-  TextField,
-  IconButton,
-  CssBaseline,
-  AppBar,
-  Typography,
-  Drawer,
-  Divider,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Collapse,
-  CardContent,
-} from "@material-ui/core";
+import { Button, makeStyles, TextField, IconButton } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import {
@@ -41,12 +25,8 @@ import {
   OnMessageReceived_newMessages,
 } from "../graphql/OnMessageReceived";
 import { Contact } from "../modules/StudyRooms/Recents";
-import * as firebase from "firebase";
 import { useParams, useHistory } from "react-router";
 import InfoIcon from "@material-ui/icons/Info";
-import clsx from "clsx";
-import Toolbar from "@material-ui/core/Toolbar/Toolbar";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
 const MESSAGES_QUERY = gql`
   query MyMessages($groupId: ID!) {
@@ -86,6 +66,7 @@ const MESSAGES_SUBSCRIPTION = gql`
       }
       user {
         id
+        name
       }
       createdAt
     }
@@ -98,10 +79,9 @@ const toChatMessage = (
   data: OnMessageReceived_newMessages,
   uid: string
 ): ChatMessage => {
-  console.log(data);
-  console.log(uid);
   return {
     sender: data.user.id,
+    senderName: data.user.name,
     text: data.text,
     direction: data.user.id === uid ? "right" : "left",
     groupId: data.group.id,
@@ -112,7 +92,12 @@ const toChatMessage = (
 const renderChatMessage = (message: ChatMessage) => {
   const key = `${message.createdAt}-${message.sender}-${message.groupId}`;
   return (
-    <Message key={key} direction={message.direction} text={message.text} />
+    <Message
+      key={key}
+      direction={message.direction}
+      text={message.text}
+      sender={message.senderName}
+    />
   );
 };
 
@@ -301,6 +286,7 @@ const MessageBox = (props: MessageBoxProps) => {
       {
         text: message,
         sender: uid!,
+        senderName: "",
         direction: "right",
         groupId: id,
         createdAt: new Date(),

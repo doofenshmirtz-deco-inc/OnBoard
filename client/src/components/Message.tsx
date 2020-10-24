@@ -26,28 +26,38 @@ const useStyles = makeStyles((theme) => ({
   other: {
     backgroundColor: theme.palette.secondary.main,
   },
+  senderName: {
+    fontSize: "0.6rem",
+    color: "rgba(0, 0, 0, 0.4)",
+  },
 }));
 
 export type MessageProps = {
   direction: "left" | "right";
   text: string;
+  sender: string;
 };
 
 const Message = (props: MessageProps) => {
   const classes = useStyles();
 
   return (
-    <div
-      className={`${classes.bubbleContainer} ${
-        props.direction === "left" ? classes.left : classes.right
-      }`}
-    >
+    <div>
+      <span className={`${classes.senderName}`}>
+        {props.direction === "left" ? props.sender : ""}
+      </span>
       <div
-        className={`${classes.bubble} ${
-          props.direction === "left" ? classes.other : classes.me
+        className={`${classes.bubbleContainer} ${
+          props.direction === "left" ? classes.left : classes.right
         }`}
       >
-        <div>{props.text}</div>
+        <div
+          className={`${classes.bubble} ${
+            props.direction === "left" ? classes.other : classes.me
+          }`}
+        >
+          <div>{props.text}</div>
+        </div>
       </div>
     </div>
   );
