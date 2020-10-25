@@ -16,7 +16,7 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 import { Login } from "./modules/Login";
 import { LoadingPage } from "./components/LoadingPage";
-import { Messaging, MessagingSubscriptionHelper } from "./hooks/useMessaging";
+import { Messaging } from "./hooks/useMessaging";
 
 const drawerWidth = 240;
 
@@ -117,7 +117,6 @@ export default function App() {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Messaging.Provider>
-            <MessagingSubscriptionHelper/>
             {modules.map((module) => (
               <Route {...module.routeProps} key={module.name} />
             ))}

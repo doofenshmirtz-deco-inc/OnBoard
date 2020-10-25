@@ -1,4 +1,5 @@
 import {
+  FetchResult,
   gql,
   OnSubscriptionDataOptions,
   SubscriptionResult,
@@ -122,49 +123,6 @@ const GROUPS_QUERY = gql`
   }
 `;
 
-export const useNewMessagesSubscription = (onData: any) => {
-  const client = useApolloClient();
-
-  useEffect(() => {
-    const observer = client.subscribe({
-      query: MESSAGES_SUBSCRIPTION,
-    });
-
-    const subscription = observer.subscribe(onData);
-
-    return () => subscription.unsubscribe();
-  }, [onData]);
-};
-
-export const MessagingSubscriptionHelper = () => {
-  const x = Messaging.useContainer();
-  
-  // subscription handler to add a new received message.
-  const handleNewMessage = useCallback(
-    (options: SubscriptionResult<OnMessageReceived>) => {
-      console.log(options);
-      const data = options.data?.newMessages;
-
-      // console.log("received " + data);
-
-      if (data && x.username) {
-        const groupId = data.group.id;
-
-        x.setGroupMessages(groupMessages => ({
-          ...groupMessages,
-          [groupId]: [...groupMessages[groupId] ?? [], toChatMessage(data, x.username!)],
-        }));
-
-        x._bumpContact(groupId);
-      }
-    },
-    [x.username, x._bumpContact]
-  );
-
-  useNewMessagesSubscription(handleNewMessage);
-
-  return <></>;
-};
 
 // note that this takes an OnMessageReceived_newMessages, but the queries are
 // written such that MyMessages_getMessages has the exact same type.
@@ -218,11 +176,8 @@ export const useMessaging = () => {
   useEffect(() => {
     if (groupId != null) {
       setMessages(null);
-      if (!refetch) {
-        fetchMessages({ variables: { groupId } });
-      } else {
-        refetch({ variables: { groupId } });
-      }
+      // console.log("fetching messages for " + groupId)
+      fetchMessages({ variables: { groupId } });
     }
   }, [groupId]);
 
@@ -246,21 +201,26 @@ export const useMessaging = () => {
   useEffect(() => {
     if (!messagesData || !username) return;
 
-    const groupId = messagesData.getMessages[0]?.group?.id;
+    const messagesGroupId = messagesData.getMessages[0]?.group?.id;
     const messages = messagesData.getMessages.map((x) =>
       toChatMessage(x, username)
     );
     messages.sort(sortChatMessages);
 
-    if (groupId) {
+    // console.log('received message data', messages)
+
+    // console.log(messagesData.getMessages);
+    if (groupId?.toString() === messagesGroupId?.toString()) {
       setGroupMessages((groupMessages) => ({
         ...groupMessages,
         [groupId!]: messages,
       }));
     }
-  }, [messagesData, username]);
+  }, [groupId, messagesData, username]);
 
   useEffect(() => {
+    // console.log(groupId);
+    // console.log(groupMessages);
     if (groupId != null) {
       setMessages(groupMessages[groupId] ?? []);
     }
@@ -281,6 +241,41 @@ export const useMessaging = () => {
       return contacts;
     });
   }, []);
+
+  
+  // subscription handler to add a new received message.
+  const handleNewMessage = useCallback(
+    (options: FetchResult<OnMessageReceived>) => {
+      // console.log(options);
+      const data = options.data?.newMessages;
+
+      // console.log("received " + data);
+
+      if (data && username) {
+        const groupId = data.group.id;
+
+        setGroupMessages(groupMessages => ({
+          ...groupMessages,
+          [groupId]: [...groupMessages[groupId] ?? [], toChatMessage(data, username!)],
+        }));
+
+        bumpContact(groupId);
+      }
+    },
+    [username, bumpContact]
+  );
+
+  const client = useApolloClient();
+
+  useEffect(() => {
+    const observer = client.subscribe({
+      query: MESSAGES_SUBSCRIPTION,
+    });
+
+    const subscription = observer.subscribe(handleNewMessage);
+
+    return () => subscription.unsubscribe();
+  }, [handleNewMessage]);
 
   const sendMessage = useCallback(
     (args: AddMessageVariables) => {

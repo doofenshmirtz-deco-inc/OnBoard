@@ -39,7 +39,7 @@ export class UserGroupResolver {
       where: { id },
     });
 
-    console.log(await group);
+    // console.log(await group);
 
     return group;
   }
