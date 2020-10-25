@@ -6,6 +6,25 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import { gql, useQuery } from "@apollo/client";
+import CreateRoomBtn from "./CreateRoomBtn";
+import { ContactsRecents } from "../graphql/ContactsRecents";
+
+const contactsQuery = gql`
+  query ContactsRecents {
+    me {
+      groups {
+        ... on DMGroup {
+          id
+          name
+          users {
+            id
+          }
+        }
+      }
+    }
+  }
+`;
 
 const RecentContacts = (props: any) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -14,7 +33,7 @@ const RecentContacts = (props: any) => {
       backgroundColor: theme.palette.background.paper,
       display: "flex",
       flexDirection: "column",
-      width: "25%",
+      width: "100%",
       height: "60vh",
       overflowY: "scroll",
       paddingBottom: "0px",
@@ -26,7 +45,7 @@ const RecentContacts = (props: any) => {
       padding: "0",
     },
     searchBar: {
-      width: "100%",
+      width: "70%",
       margin: "0",
       paddingLeft: 10,
     },
@@ -34,8 +53,13 @@ const RecentContacts = (props: any) => {
 
   const classes = useStyles();
 
+  const contactsData = useQuery<ContactsRecents>(contactsQuery);
+  const contacts = contactsData.data?.me?.groups.filter(
+    (c: any) => c.__typename === "DMGroup"
+  );
+
   return (
-    <List className={classes.root}>
+    <div>
       <TextField
         className={classes.searchBar}
         id="contacts-search"
@@ -50,35 +74,38 @@ const RecentContacts = (props: any) => {
           ),
         }}
       />
-      {Object.values(props.contacts).map((item: any) =>
-        item?.name?.toLowerCase?.().includes?.(searchTerm.toLowerCase()) ? (
-          <Button
-            key={item.id}
-            color="primary"
-            disableElevation
-            style={{
-              backgroundColor:
-                props.selected.id === item.id ? "#e3e1e1" : "white",
-            }}
-            onClick={(e) => {
-              props.handleClick(item);
-            }}
-            className={classes.contact}
-          >
-            <ContactCard
+      <CreateRoomBtn contacts={contacts} />
+      <List className={classes.root}>
+        {Object.values(props.contacts).map((item: any) =>
+          item?.name?.toLowerCase?.().includes?.(searchTerm.toLowerCase()) ? (
+            <Button
               key={item.id}
-              name={item.name}
-              readStatus={item.readStatus}
-              contact={item.users[0]}
-              buttonsOff={true}
-              group={item.group}
-              contact2={item.users[1]}
-              contacts={item.users}
-            />
-          </Button>
-        ) : null
-      )}
-    </List>
+              color="primary"
+              disableElevation
+              style={{
+                backgroundColor:
+                  props.selected.id === item.id ? "#e3e1e1" : "white",
+              }}
+              onClick={(e) => {
+                props.handleClick(item);
+              }}
+              className={classes.contact}
+            >
+              <ContactCard
+                key={item.id}
+                name={item.name}
+                readStatus={item.readStatus}
+                contact={item.users[0]}
+                buttonsOff={true}
+                group={item.group}
+                contact2={item.users[1]}
+                contacts={item.users}
+              />
+            </Button>
+          ) : null
+        )}
+      </List>
+    </div>
   );
 };
 
