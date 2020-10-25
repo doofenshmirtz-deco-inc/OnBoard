@@ -29,36 +29,38 @@ const ContactsList = (props: any) => {
 
   return (
     <List className={classes.root}>
-        {Object.values(props.contacts).map((item: any) =>
-          item?.name?.toLowerCase?.().includes?.(props.searchTerm.toLowerCase()) ? (
-            <Button
+      {Object.values(props.contacts).map((item: any) =>
+        item?.name
+          ?.toLowerCase?.()
+          .includes?.(props.searchTerm.toLowerCase()) ? (
+          <Button
+            key={item.id}
+            color="primary"
+            disableElevation
+            style={{
+              backgroundColor:
+                props.selected.id === item.id ? "#e3e1e1" : "#fafafa",
+            }}
+            onClick={(e) => {
+              props.onClick(item);
+            }}
+            className={classes.contact}
+          >
+            <ContactCard
               key={item.id}
-              color="primary"
-              disableElevation
-              style={{
-                backgroundColor:
-                  props.selected.id === item.id ? "#e3e1e1" : "#fafafa",
-              }}
-              onClick={(e) => {
-                props.onClick(item);
-              }}
-              className={classes.contact}
-            >
-              <ContactCard
-                key={item.id}
-                name={item.name}
-                readStatus={item.readStatus}
-                contact={item.users[0]}
-                buttonsOff={true}
-                group={item.users.length > 2}
-                contact2={item.users[1]}
-                contacts={item.users}
-              />
-            </Button>
-          ) : null
-        )}
-      </List>
+              name={item.name}
+              readStatus={item.readStatus}
+              contact={item.users[0]}
+              buttonsOff={true}
+              group={item.users.length > 2}
+              contact2={item.users[1]}
+              contacts={item.users}
+            />
+          </Button>
+        ) : null
+      )}
+    </List>
   );
-}
+};
 
 export default ContactsList;

@@ -49,7 +49,7 @@ const MessageBox = (props: MessageBoxProps) => {
       height: "69vh",
       overflowY: "hidden",
       display: "inline-block",
-      float: "left"
+      float: "left",
     },
     messagingContainer: {
       overflowY: "scroll",
@@ -144,7 +144,9 @@ const MessageBox = (props: MessageBoxProps) => {
         <> </>
       )}
       <div className={classes.messagingContainer}>
-        {msgBox.groupMessages.map((y) => renderChatMessage(y, msgBox.username!))}
+        {msgBox.groupMessages.map((y) =>
+          renderChatMessage(y, msgBox.username!)
+        )}
         <div ref={messagesEndRef} />
       </div>
       <TextField

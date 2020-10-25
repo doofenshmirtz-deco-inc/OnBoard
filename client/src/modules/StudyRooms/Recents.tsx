@@ -5,6 +5,8 @@ import RecentContacts from "../../components/RecentContacts";
 import { LoadingPage } from "../../components/LoadingPage";
 import { useHistory, useParams } from "react-router";
 import { Messaging } from "../../hooks/useMessaging";
+import { List } from "@material-ui/core";
+import ContactCard from "../../components/ContactCard";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -18,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: "69vh",
     overflowY: "scroll",
     paddingBottom: "0px",
-    paddingLeft: "5px"
+    paddingLeft: "5px",
   },
   contact: {
     display: "flex",
@@ -27,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: "0",
     flexDirection: "column",
     width: "100%",
-  }
+  },
 }));
 
 export type Contact = {
@@ -103,8 +105,6 @@ const Recents = (props: any) => {
   // use first contact if none is selected.
   const selectedOrDefault = selected?.id ? selected : contacts[0];
 
-  console.log(selected.users);
-
   return (
     <div>
       <div className={classes.root}>
@@ -114,7 +114,37 @@ const Recents = (props: any) => {
           selected={props.messaging ? selectedOrDefault : {}}
         />
         {props.messaging && (
-          <MessageBox id={selectedOrDefault.id} name={selectedOrDefault.name} />
+          <div style={{width: "100%"}}>
+            <MessageBox
+              id={selectedOrDefault.id}
+              name={selectedOrDefault.name}
+            />
+            <div
+              className={classes.list}
+              style={{ display: "inline-block", float: "right" }}
+            >
+              <h2 style={{ marginBottom: "5px" }}>Members</h2>
+              <List>
+                {selected.users
+                  .filter((u: any) => u.id !== uid)
+                  .map((user: any) => (
+                    <span className={classes.contact}>
+                      <ContactCard
+                        buttonsOff
+                        name={user.name}
+                        avatar={user.avatar}
+                        contact={{
+                          name: user.name,
+                          avatar: user.avatar,
+                        }}
+                        readStatus
+                        key={user.name}
+                      />
+                    </span>
+                  ))}
+              </List>
+            </div>
+          </div>
         )}
         {/* {props.messaging ? (
           selected.id === "" ? (
