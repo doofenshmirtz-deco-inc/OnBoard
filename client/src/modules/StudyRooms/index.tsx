@@ -87,7 +87,7 @@ const StudyRooms = () => {
           <Switch>
             <Route
               path="/study-rooms/recents/:messageID?"
-              render={() => <Recents />}
+              render={() => <Recents messaging />}
             />
             <Route
               path="/study-rooms/explore"
