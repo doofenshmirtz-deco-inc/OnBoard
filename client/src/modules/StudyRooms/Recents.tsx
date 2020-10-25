@@ -41,6 +41,7 @@ const Recents = (props: any) => {
   const handleClick = (item: any) => {
     messaging.setGroupId(item.id);
     history.push("/study-rooms/recents/" + item.id);
+    setSelectedState(item);
   };
 
   const uid = messaging.username;
