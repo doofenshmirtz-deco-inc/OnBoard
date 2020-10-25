@@ -16,8 +16,6 @@ import { useParams, useHistory } from "react-router";
 import { Messaging } from "../hooks/useMessaging";
 
 const renderChatMessage = (message: ChatMessage, uid: string) => {
-  // console.log(uid);
-  // console.log(message);
   const key = `${message.createdAt.getTime()}-${message.sender}-${
     message.groupId
   }`;
@@ -26,6 +24,8 @@ const renderChatMessage = (message: ChatMessage, uid: string) => {
       key={key}
       direction={message.sender === uid ? "right" : "left"}
       text={message.text}
+      sender={message.senderName}
+      group={message.group}
     />
   );
 };
@@ -86,10 +86,10 @@ const MessageBox = (props: MessageBoxProps) => {
   const history = useHistory();
   const id = props.id ? props.id : groupID;
 
-  const x = Messaging.useContainer();
+  const msgBox = Messaging.useContainer();
 
   useEffect(() => {
-    x.setGroupId(id);
+    msgBox.setGroupId(id);
   }, [id]);
 
   // current message being typed in text box.
@@ -103,7 +103,7 @@ const MessageBox = (props: MessageBoxProps) => {
     }
   });
 
-  if (!x.groupMessages || !x.username) {
+  if (!msgBox.groupMessages || !msgBox.username) {
     return <LoadingPage />;
   }
 
@@ -115,7 +115,7 @@ const MessageBox = (props: MessageBoxProps) => {
     setMessageInput("");
     props.onSentMessage?.();
 
-    x.sendMessage({
+    msgBox.sendMessage({
       send: message,
       groupId: id,
     });
@@ -144,7 +144,7 @@ const MessageBox = (props: MessageBoxProps) => {
         <> </>
       )}
       <div className={classes.messagingContainer}>
-        {x.groupMessages.map((y) => renderChatMessage(y, x.username!))}
+        {msgBox.groupMessages.map((y) => renderChatMessage(y, msgBox.username!))}
         <div ref={messagesEndRef} />
       </div>
       <TextField

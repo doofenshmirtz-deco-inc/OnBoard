@@ -82,7 +82,6 @@ const Recents = (props: any) => {
         (c) => c.id === params.messageID
       )[0];
       selected.group = selectedContact.users.length > 2;
-      selected.users = selectedContact.users.filter((c) => c.id !== uid);
       if (!selectedContact) history.push("/study-rooms/recents");
       else setSelectedState(selectedContact);
     }
