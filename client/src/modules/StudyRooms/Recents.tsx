@@ -114,7 +114,7 @@ const Recents = (props: any) => {
           selected={props.messaging ? selectedOrDefault : {}}
         />
         {props.messaging && (
-          <div style={{width: "100%"}}>
+          <div style={{ width: "100%" }}>
             <MessageBox
               id={selectedOrDefault.id}
               name={selectedOrDefault.name}
