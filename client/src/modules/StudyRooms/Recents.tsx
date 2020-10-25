@@ -49,6 +49,7 @@ const Recents = (props: any) => {
   const contacts = useMemo(() => {
     return messaging.contacts?.map((group: any) => {
       return {
+        ...group,
         id: group.id,
         name: group.name,
         group: group.users.length > 2,
@@ -68,6 +69,17 @@ const Recents = (props: any) => {
     }
   }, [contacts, params.messageID, selected, history]);
 
+  const filteredContacts = useMemo(() => {
+    // console.log(contacts);
+    if (!props.messaging) {
+      return contacts?.filter(
+      (c: any) => c.__typename === "DMGroup"
+    ) ?? [];
+      } else {
+        return contacts ?? [];
+      }
+  }, [contacts]);
+
   if (!uid || !contacts || contacts.length === 0) {
     return <LoadingPage />;
   }
@@ -79,15 +91,14 @@ const Recents = (props: any) => {
     <div>
       <div className={classes.root}>
         <RecentContacts
-          contacts={contacts}
+          contacts={filteredContacts}
           handleClick={handleClick}
-          selected={selectedOrDefault}
+          selected={props.messaging ? selectedOrDefault : {}}
         />
         { props.messaging && 
         <MessageBox
           id={selectedOrDefault.id}
           name={selectedOrDefault.name}
-          contacts={contacts}
         />
 }
       </div>
