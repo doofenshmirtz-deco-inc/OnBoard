@@ -73,7 +73,7 @@ const StudyRooms = () => {
               />
               <Tab
                 className={classes.tabs}
-                label="Explore"
+                label="Public Study Rooms"
                 value="/study-rooms/explore"
               />
               <Tab
