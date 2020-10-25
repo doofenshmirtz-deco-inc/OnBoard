@@ -6,6 +6,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import * as firebase from "firebase";
 
 const RecentContacts = (props: any) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -50,8 +51,19 @@ const RecentContacts = (props: any) => {
           ),
         }}
       />
-      {Object.values(props.contacts).map((item: any) =>
-        item?.name?.toLowerCase?.().includes?.(searchTerm.toLowerCase()) ? (
+      {Object.values(props.contacts).map((item: any) => {
+        const users =
+          item.users.length > 1
+            ? item.users.filter((u: any) =>
+                firebase.auth().currentUser
+                  ? u.id !== firebase.auth().currentUser!.email?.split("@")[0]
+                  : true
+              )
+            : item.users;
+
+        return item?.name
+          ?.toLowerCase?.()
+          .includes?.(searchTerm.toLowerCase()) ? (
           <Button
             key={item.id}
             color="primary"
@@ -69,15 +81,15 @@ const RecentContacts = (props: any) => {
               key={item.id}
               name={item.name}
               readStatus={item.readStatus}
-              contact={item.users[0]}
+              contact={users[0]}
               buttonsOff={true}
               group={item.group}
-              contact2={item.users[1]}
+              contact2={users[1]}
               contacts={item.users}
             />
           </Button>
-        ) : null
-      )}
+        ) : null;
+      })}
     </List>
   );
 };
