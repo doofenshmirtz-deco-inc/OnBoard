@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function ContactList() {
+export default function Contacts() {
   const classes = useStyles();
 
   return (

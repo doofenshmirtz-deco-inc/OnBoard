@@ -9,6 +9,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import { gql, useQuery } from "@apollo/client";
 import CreateRoomBtn from "./CreateRoomBtn";
 import { ContactsRecents } from "../graphql/ContactsRecents";
+import ContactsList from "./ContactsList";
 
 const contactsQuery = gql`
   query ContactsRecents {
@@ -33,7 +34,7 @@ const RecentContacts = (props: any) => {
       display: "flex",
       flexDirection: "column",
       width: "100%",
-      height: "60vh",
+      height: "63vh",
       overflowY: "scroll",
       paddingBottom: "0px",
     },
@@ -57,8 +58,6 @@ const RecentContacts = (props: any) => {
     (c: any) => c.__typename === "DMGroup"
   );
 
-  console.log(contacts);
-
   return (
     <div>
       <TextField
@@ -76,6 +75,7 @@ const RecentContacts = (props: any) => {
         }}
       />
       <CreateRoomBtn contacts={contacts} />
+      {/* <ContactsList contacts={props.contacts} onClick={props.handleClick} searchTerm={searchTerm} selected={props.selected} /> */}
       <List className={classes.root}>
         {Object.values(props.contacts).map((item: any) =>
           item?.name?.toLowerCase?.().includes?.(searchTerm.toLowerCase()) ? (

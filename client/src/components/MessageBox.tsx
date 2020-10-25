@@ -120,10 +120,12 @@ export type MessageBoxProps = {
 const MessageBox = (props: MessageBoxProps) => {
   const useStyles = makeStyles((theme) => ({
     container: {
-      width: "100%",
+      width: "75%",
       paddingLeft: "2%",
       height: "69vh",
       overflowY: "hidden",
+      display: "inline-block",
+      float: "left"
     },
     messagingContainer: {
       overflowY: "scroll",
@@ -134,29 +136,9 @@ const MessageBox = (props: MessageBoxProps) => {
       position: "relative",
       bottom: "0",
     },
-    bubbleContainer: {
+    Container: {
       width: "100%",
       display: "flex",
-    },
-    bubble: {
-      borderRadius: "20px",
-      margin: "1px",
-      padding: "10px",
-      display: "inline-block",
-      maxWidth: "40%",
-      marginRight: "10px",
-    },
-    right: {
-      justifyContent: "flex-end",
-    },
-    left: {
-      justifyContent: "flex-start",
-    },
-    me: {
-      backgroundColor: "#c9c9c9",
-    },
-    other: {
-      backgroundColor: theme.palette.secondary.main,
     },
     root: {
       maxWidth: 345,

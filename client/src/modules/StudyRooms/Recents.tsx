@@ -7,6 +7,8 @@ import { MyGroups } from "../../graphql/MyGroups";
 import { LoadingPage } from "../../components/LoadingPage";
 import { MeId } from "../../graphql/MeId";
 import { useHistory, useParams } from "react-router";
+import ContactCard from "../../components/ContactCard";
+import { Button, List } from "@material-ui/core";
 
 const GROUPS_QUERY = gql`
   query MyGroups {
@@ -66,6 +68,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 3,
     display: "flex",
   },
+  list: {
+    display: "flex",
+    flexDirection: "column",
+    width: "25%",
+    height: "69vh",
+    overflowY: "scroll",
+    paddingBottom: "0px",
+    paddingLeft: "5px"
+  },
+  contact: {
+    display: "flex",
+    textTransform: "none",
+    textAlign: "left",
+    padding: "0",
+    flexDirection: "column",
+    width: "100%",
+  }
 }));
 
 export type Contact = {
@@ -84,6 +103,7 @@ const Recents = (props: any) => {
     id: "",
     name: "",
     group: false,
+    users: [] as any[],
   });
 
   // list of contacts/groups, sorted by recency.
@@ -135,6 +155,7 @@ const Recents = (props: any) => {
         (c) => c.id === params.messageID
       )[0];
       selected.group = selectedContact.users.length > 2;
+      selected.users = selectedContact.users.filter((c) => c.id !== uid);
       if (!selectedContact) history.push("/study-rooms/recents");
       else setSelectedState(selectedContact);
     }
@@ -145,6 +166,8 @@ const Recents = (props: any) => {
   }
 
   // TODO: NEED some way of updating messages in background. service/react context?
+
+  console.log(selected.users);
 
   return (
     <div>
@@ -158,15 +181,37 @@ const Recents = (props: any) => {
           selected.id === "" ? (
             <div />
           ) : (
-            <MessageBox
-              uid={uid}
-              id={selected.id}
-              name={selected.name}
-              group={selected.group}
-              contacts={contacts}
-              setContacts={setContacts as any}
-              onSentMessage={bumpSelectedContact}
-            />
+            <div style={{width: "100%"}}>
+              <MessageBox
+                uid={uid}
+                id={selected.id}
+                name={selected.name}
+                group={selected.group}
+                contacts={contacts}
+                setContacts={setContacts as any}
+                onSentMessage={bumpSelectedContact}
+              />
+              <div className={classes.list} style={{display: "inline-block", float: "right"}}>
+                <h2 style={{marginBottom: "5px"}}>Members</h2>
+                <List>
+                  {selected.users.map((user: any) => 
+                    <span className={classes.contact}>
+                      <ContactCard 
+                        buttonsOff
+                        name={user.name}
+                        avatar={user.avatar}
+                        contact={{
+                          name: user.name,
+                          avatar: user.avatar
+                        }}
+                        readStatus
+                      />
+                    </span>  
+                    )
+                  }
+                </List>
+              </div>
+            </div>
           )
         ) : null}
       </div>
