@@ -54,6 +54,7 @@ type Course {
   id: ID!
   name: String!
   semester: Semesters!
+  staff: [User!]!
   year: Int!
 }
 
