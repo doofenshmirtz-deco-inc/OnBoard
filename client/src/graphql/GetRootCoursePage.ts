@@ -10,7 +10,6 @@
 export interface GetRootCoursePage_course_coursePage {
   __typename: "FolderNode";
   id: string;
-  title: string;
 }
 
 export interface GetRootCoursePage_course {
