@@ -37,15 +37,19 @@ export class CourseResolver {
 
   @FieldResolver(() => [User])
   async staff(@Root() course: Course) {
-    return [];
-    console.log("here");
-
     let query = User.createQueryBuilder("user")
-      .leftJoinAndSelect("user.group", "group")
-      .leftJoinAndSelect("group.coursePair", "cgp")
-      .leftJoinAndSelect("cgp.course", "course")
-      .where("course.id = :id", { id: course.id });
+      .leftJoin("user.groups", "group")
+      .leftJoin("group.coursePair", "cgp")
+      .leftJoin("cgp.course", "course")
+      .where(
+        '(cpg.role = "Coordinators" OR cpg.role = "Tutors") AND course.id = :id',
+        {
+          id: course.id,
+        }
+      );
 
-    console.log(await query.getMany());
+    console.log(query.getSql());
+
+    return await query.getMany();
   }
 }
