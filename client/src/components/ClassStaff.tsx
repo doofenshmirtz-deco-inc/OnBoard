@@ -14,7 +14,7 @@ export default (props: { staff: GetClassInfo_me_courses_course_staff[] }) => {
   return (
     <List>
       {props.staff.map((i) => (
-        <ListItem key={i.name} button>
+        <ListItem key={i.name}>
           <ListItemAvatar>
             <Avatar src={i.avatar} />
           </ListItemAvatar>
