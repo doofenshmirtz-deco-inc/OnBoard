@@ -15,14 +15,8 @@ import {
   OnMessageReceived_newMessages,
 } from "../graphql/OnMessageReceived";
 import { useAuthState } from "react-firebase-hooks/auth";
-import {
-  AddMessage,
-  AddMessageVariables,
-} from "../graphql/AddMessage";
-import {
-  MyGroups,
-  MyGroups_me_groups,
-} from "../graphql/MyGroups";
+import { AddMessage, AddMessageVariables } from "../graphql/AddMessage";
+import { MyGroups, MyGroups_me_groups } from "../graphql/MyGroups";
 import { createContainer } from "unstated-next";
 
 const MESSAGES_QUERY = gql`
@@ -167,10 +161,9 @@ export const useMessaging = () => {
   const [sendToServer] = useMutation<AddMessage>(ADD_MESSAGE);
 
   // get my messages for a specific contact group.
-  const [
-    fetchMessages,
-    { data: messagesData },
-  ] = useLazyQuery<MyMessages>(MESSAGES_QUERY);
+  const [fetchMessages, { data: messagesData }] = useLazyQuery<MyMessages>(
+    MESSAGES_QUERY
+  );
 
   // when selected group id changes, fetch new messages for that group.
   useEffect(() => {
@@ -182,9 +175,7 @@ export const useMessaging = () => {
   }, [groupId]);
 
   // fetch contacts list from server
-  const { data: groupData } = useQuery<MyGroups>(
-    GROUPS_QUERY
-  );
+  const { data: groupData } = useQuery<MyGroups>(GROUPS_QUERY);
 
   // set contacts once received from server
   useEffect(() => {

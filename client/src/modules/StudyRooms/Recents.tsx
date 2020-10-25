@@ -6,7 +6,6 @@ import { LoadingPage } from "../../components/LoadingPage";
 import { useHistory, useParams } from "react-router";
 import { Messaging } from "../../hooks/useMessaging";
 
-
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 3,
@@ -72,12 +71,10 @@ const Recents = (props: any) => {
   const filteredContacts = useMemo(() => {
     // console.log(contacts);
     if (!props.messaging) {
-      return contacts?.filter(
-      (c: any) => c.__typename === "DMGroup"
-    ) ?? [];
-      } else {
-        return contacts ?? [];
-      }
+      return contacts?.filter((c: any) => c.__typename === "DMGroup") ?? [];
+    } else {
+      return contacts ?? [];
+    }
   }, [contacts]);
 
   if (!uid || !contacts || contacts.length === 0) {
@@ -95,12 +92,9 @@ const Recents = (props: any) => {
           handleClick={handleClick}
           selected={props.messaging ? selectedOrDefault : {}}
         />
-        { props.messaging && 
-        <MessageBox
-          id={selectedOrDefault.id}
-          name={selectedOrDefault.name}
-        />
-}
+        {props.messaging && (
+          <MessageBox id={selectedOrDefault.id} name={selectedOrDefault.name} />
+        )}
       </div>
     </div>
   );

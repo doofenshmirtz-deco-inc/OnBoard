@@ -7,7 +7,7 @@ import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { Messaging } from "../hooks/useMessaging";
-import CreateRoomBtn from './CreateRoomBtn';
+import CreateRoomBtn from "./CreateRoomBtn";
 
 const RecentContacts = (props: any) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -37,9 +37,8 @@ const RecentContacts = (props: any) => {
   const classes = useStyles();
 
   const { contacts: contactsData } = Messaging.useContainer();
-  const contacts = contactsData?.filter(
-    (c: any) => c.__typename === "DMGroup"
-  ) ?? [];
+  const contacts =
+    contactsData?.filter((c: any) => c.__typename === "DMGroup") ?? [];
 
   return (
     <div>
@@ -59,21 +58,21 @@ const RecentContacts = (props: any) => {
       />
       <CreateRoomBtn contacts={contacts} />
       <List className={classes.root}>
-      {props.contacts.map((item: any) =>
-        item?.name?.toLowerCase?.().includes?.(searchTerm.toLowerCase()) ? (
-          <Button
-            key={item.id}
-            color="primary"
-            disableElevation
-            style={{
-              backgroundColor:
-                props.selected.id === item.id ? "#e3e1e1" : "white",
-            }}
-            onClick={(e) => {
-              props.handleClick(item);
-            }}
-            className={classes.contact}
-          >
+        {props.contacts.map((item: any) =>
+          item?.name?.toLowerCase?.().includes?.(searchTerm.toLowerCase()) ? (
+            <Button
+              key={item.id}
+              color="primary"
+              disableElevation
+              style={{
+                backgroundColor:
+                  props.selected.id === item.id ? "#e3e1e1" : "white",
+              }}
+              onClick={(e) => {
+                props.handleClick(item);
+              }}
+              className={classes.contact}
+            >
               <ContactCard
                 key={item.id}
                 name={item.name}
