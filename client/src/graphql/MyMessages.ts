@@ -28,6 +28,7 @@ export interface MyMessages_getMessages_group {
 
 export interface MyMessages_getMessages {
   __typename: "Message";
+  id: string;
   text: string;
   user: MyMessages_getMessages_user;
   group: MyMessages_getMessages_group;

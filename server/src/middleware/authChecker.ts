@@ -3,12 +3,18 @@ import { Context } from "vm";
 import { checkAuthToken } from "./checkAuthToken";
 
 export const authChecker: AuthChecker<Context> = async ({ context }) => {
-  const authorization = context.req
-    ? context.req.headers.authorization
-    : context.connection.context.authorization;
+  // console.log('auth ' + context.auth);
+
+  const authorization =
+    context.auth ??
+    (context.req
+      ? context.req.headers.authorization
+      : context.connection.context.authorization);
+
   // Get username from email
+  const decoded = await checkAuthToken(authorization);
   context.payload = {
-    uid: (await checkAuthToken(authorization)).email?.split("@")[0],
+    uid: decoded.email ? decoded.email?.split("@")[0] : decoded.uid,
   };
   return true;
 };

@@ -18,8 +18,12 @@ const httpLink = (createUploadLink({
   },
 }) as unknown) as ApolloLink;
 
+const getToken = async () => {
+  return await firebase.auth().currentUser?.getIdToken();
+};
+
 const authLink = setContext(async (_, { headers }) => {
-  const token = await firebase.auth().currentUser?.getIdToken();
+  const token = await getToken();
   return {
     headers: {
       ...headers,
@@ -31,9 +35,22 @@ const authLink = setContext(async (_, { headers }) => {
 const wsLink = new WebSocketLink({
   uri: process.env.REACT_APP_GRAPHQL_WS!,
   options: {
+    lazy: true,
     reconnect: true,
+    connectionParams: async () => ({
+      auth: await getToken(),
+    }),
   },
 });
+
+const subscriptionMiddleware = {
+  async applyMiddleware(options: any, next: any) {
+    options.auth = await getToken();
+    next();
+  },
+};
+
+(wsLink as any).subscriptionClient.use([subscriptionMiddleware]);
 
 const splitLink = split(
   ({ query }) => {
@@ -44,11 +61,11 @@ const splitLink = split(
     );
   },
   wsLink,
-  httpLink
+  authLink.concat(httpLink)
 );
 
 const client = new ApolloClient({
-  link: authLink.concat(splitLink),
+  link: splitLink,
   cache: new InMemoryCache(),
 });
 

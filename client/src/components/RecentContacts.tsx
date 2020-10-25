@@ -6,26 +6,8 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import { gql, useQuery } from "@apollo/client";
+import { Messaging } from "../hooks/useMessaging";
 import CreateRoomBtn from "./CreateRoomBtn";
-import { ContactsRecents } from "../graphql/ContactsRecents";
-import ContactsList from "./ContactsList";
-
-const contactsQuery = gql`
-  query ContactsRecents {
-    me {
-      groups {
-        ... on DMGroup {
-          id
-          name
-          users {
-            id
-          }
-        }
-      }
-    }
-  }
-`;
 
 const RecentContacts = (props: any) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -53,10 +35,9 @@ const RecentContacts = (props: any) => {
 
   const classes = useStyles();
 
-  const contactsData = useQuery<ContactsRecents>(contactsQuery);
-  const contacts = contactsData.data?.me?.groups.filter(
-    (c: any) => c.__typename === "DMGroup"
-  );
+  const { contacts: contactsData } = Messaging.useContainer();
+  const contacts =
+    contactsData?.filter((c: any) => c.__typename === "DMGroup") ?? [];
 
   return (
     <div>
@@ -77,7 +58,7 @@ const RecentContacts = (props: any) => {
       <CreateRoomBtn contacts={contacts} />
       {/* <ContactsList contacts={props.contacts} onClick={props.handleClick} searchTerm={searchTerm} selected={props.selected} /> */}
       <List className={classes.root}>
-        {Object.values(props.contacts).map((item: any) =>
+        {props.contacts.map((item: any) =>
           item?.name?.toLowerCase?.().includes?.(searchTerm.toLowerCase()) ? (
             <Button
               key={item.id}
