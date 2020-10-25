@@ -42,13 +42,11 @@ export class CourseResolver {
       .leftJoin("group.coursePair", "cgp")
       .leftJoin("cgp.course", "course")
       .where(
-        '(cpg.role = "Coordinators" OR cpg.role = "Tutors") AND course.id = :id',
+        "(cgp.role = 'Coordinators' OR cgp.role = 'Tutors') AND course.id = :id",
         {
           id: course.id,
         }
       );
-
-    console.log(query.getSql());
 
     return await query.getMany();
   }

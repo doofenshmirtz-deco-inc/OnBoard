@@ -125,6 +125,9 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     nested: {
+      paddingLeft: theme.spacing(1),
+    },
+    nestedExp: {
       paddingLeft: theme.spacing(4),
     },
   })
@@ -264,7 +267,7 @@ export default function MiniDrawer() {
                   </ListItem>
                   <Collapse
                     in={classesOpen}
-                    className={classes.nested}
+                    className={open ? classes.nestedExp : classes.nested}
                     timeout="auto"
                     unmountOnExit
                   >

@@ -9,6 +9,12 @@ import { Semesters } from "./globalTypes";
 // GraphQL query operation: GetClassInfo
 // ====================================================
 
+export interface GetClassInfo_me_courses_course_staff {
+  __typename: "User";
+  name: string;
+  avatar: string;
+}
+
 export interface GetClassInfo_me_courses_course {
   __typename: "Course";
   id: string;
@@ -16,6 +22,7 @@ export interface GetClassInfo_me_courses_course {
   code: string;
   year: number;
   semester: Semesters;
+  staff: GetClassInfo_me_courses_course_staff[];
 }
 
 export interface GetClassInfo_me_courses {
