@@ -20,6 +20,7 @@
     "firebase": "^7.19.1",
     "graphql": "^15.3.0",
     "http-proxy-middleware": "^1.0.5",
+    "material-ui-dropzone": "^3.5.0",
     "moment": "^2.27.0",
     "prettier": "^2.0.5",
     "react": "^16.13.1",

@@ -51,69 +51,63 @@ export class NodeResolver {
   @Mutation(() => FolderNode)
   @Authorized()
   async editFolderNode(@Arg("data") data: FolderNodeInput) {
-    const children = BaseNode.findByIds(data.children);
+    const children = BaseNode.findByIds(data.children!);
     const parent = BaseNode.findOne({ id: data.parent });
 
-    if (!data.id)
-      return await FolderNode.create({
-        ...data,
-        children,
-        parent,
-      }).save();
-    else {
-      return await FolderNode.update(
-        { id: data.id },
-        {
-          ...data,
-          children,
-          id: undefined,
-          parent: undefined,
-        }
-      );
-    }
-  }
+    if (!data.id) {
+      console.log("here");
+      const node = new FolderNode();
+      node.title = data.title!;
+      node.link = data.link!;
+      await node.save();
+      node.children = children!;
+      node.parent = Promise.resolve((await parent)!);
+      return await node.save();
+    } else {
+      const node = await TextNode.findOne({ id: data.parent });
+      if (data.children) (await node?.children)!.concat(await children);
 
-  @Mutation(() => HeadingNode)
-  @Authorized()
-  async titleNode(@Arg("data") data: BaseNodeInput) {
-    const parent = BaseNode.findOne({ id: data.parent });
-
-    if (!data.id)
-      return await HeadingNode.create({
+      data = {
         ...data,
-        parent,
-      }).save();
-    else {
-      return await HeadingNode.update(
-        { id: data.id },
+        children: undefined,
+      };
+
+      await TextNode.save([
         {
-          ...data,
-          id: undefined,
-          parent: undefined,
-        }
-      );
+          ...node,
+          ...JSON.parse(JSON.stringify(data)),
+        } as any,
+      ]);
+
+      return await TextNode.findOne({ id: data.id });
     }
   }
 
   @Mutation(() => TextNode)
   @Authorized()
-  async textNode(@Arg("data") data: TextNodeInput) {
-    const parent = BaseNode.findOne({ id: data.parent });
+  async editTextNode(@Arg("data") data: TextNodeInput) {
+    const parent = FolderNode.findOne({ id: data.parent });
 
-    if (!data.id)
-      return await TextNode.create({
-        ...data,
-        parent,
-      }).save();
-    else {
-      return await TextNode.update(
-        { id: data.id },
+    if (!data.id) {
+      console.log("here");
+      const node = new TextNode();
+      node.title = data.title!;
+      node.link = data.link!;
+      node.text = data.text!;
+      await node.save();
+      node.parent = Promise.resolve((await parent)!);
+      return await node.save();
+    } else {
+      const node = await TextNode.findOne({ id: data.parent });
+
+      await TextNode.save([
         {
-          ...data,
-          id: undefined,
-          parent: undefined,
-        }
-      );
+          ...node,
+          ...JSON.parse(JSON.stringify(data)),
+        } as any,
+      ]);
+
+      return await TextNode.findOne({ id: data.id });
     }
   }
 }

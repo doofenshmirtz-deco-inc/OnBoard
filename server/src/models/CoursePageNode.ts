@@ -46,7 +46,7 @@ export abstract class BaseNode extends BaseEntity {
 
   // TODO maybe custom type checking
   // TODO so bad v bad fix me
-  @ManyToOne(() => BaseNode, (node) => node.children)
+  @ManyToOne(() => BaseNode, (node) => node.children, { cascade: true })
   parent: Promise<BaseNode>;
 
   // TODO this is bad!!
@@ -76,26 +76,26 @@ export abstract class BaseNodeInput {
   @Field({ nullable: true })
   id?: number;
 
-  @Field()
-  title: string;
+  @Field({ nullable: true })
+  title?: string;
 
-  @Field()
-  link: string;
+  @Field({ nullable: true })
+  link?: string;
 
-  @Field()
-  parent: number;
+  @Field({ nullable: true })
+  parent?: number;
 }
 
 @InputType()
 export class TextNodeInput extends BaseNodeInput {
-  @Field()
-  text: string;
+  @Field({ nullable: true })
+  text?: string;
 }
 
 @InputType()
 export class FolderNodeInput extends BaseNodeInput {
-  @Field(() => [String])
-  children: string[];
+  @Field(() => [String], { nullable: true })
+  children?: string[];
 }
 
 export const Node = createUnionType({
