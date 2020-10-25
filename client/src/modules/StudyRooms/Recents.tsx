@@ -146,43 +146,6 @@ const Recents = (props: any) => {
             </div>
           </div>
         )}
-        {/* {props.messaging ? (
-          selected.id === "" ? (
-            <div />
-          ) : (
-            <div style={{width: "100%"}}>
-              <MessageBox
-                uid={uid}
-                id={selected.id}
-                name={selected.name}
-                group={selected.group}
-                contacts={contacts}
-                setContacts={setContacts as any}
-                onSentMessage={bumpSelectedContact}
-              />
-              <div className={classes.list} style={{display: "inline-block", float: "right"}}>
-                <h2 style={{marginBottom: "5px"}}>Members</h2>
-                <List>
-                  {selected.users.map((user: any) => 
-                    <span className={classes.contact}>
-                      <ContactCard 
-                        buttonsOff
-                        name={user.name}
-                        avatar={user.avatar}
-                        contact={{
-                          name: user.name,
-                          avatar: user.avatar
-                        }}
-                        readStatus
-                      />
-                    </span>  
-                    )
-                  }
-                </List>
-              </div>
-            </div>
-          )
-        ) : null} */}
       </div>
     </div>
   );

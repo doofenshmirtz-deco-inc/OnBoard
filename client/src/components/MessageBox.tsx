@@ -131,14 +131,6 @@ const MessageBox = (props: MessageBoxProps) => {
           >
             <VideocamIcon />
           </IconButton>
-          {/* <IconButton
-            style={{position: "absolute", right: "2em", top: "9em"}}
-            onClick={handleExpandClick}
-            aria-expanded={expanded}
-            aria-label="show more"
-          >
-            <InfoIcon />
-          </IconButton> */}
         </h1>
       ) : (
         <> </>

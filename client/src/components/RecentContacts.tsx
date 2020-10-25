@@ -56,7 +56,6 @@ const RecentContacts = (props: any) => {
         }}
       />
       <CreateRoomBtn contacts={contacts} />
-      {/* <ContactsList contacts={props.contacts} onClick={props.handleClick} searchTerm={searchTerm} selected={props.selected} /> */}
       <List className={classes.root}>
         {props.contacts.map((item: any) =>
           item?.name?.toLowerCase?.().includes?.(searchTerm.toLowerCase()) ? (
