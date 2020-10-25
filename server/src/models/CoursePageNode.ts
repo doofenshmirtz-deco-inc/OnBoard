@@ -8,7 +8,13 @@ import {
   ManyToOne,
   OneToMany,
 } from "typeorm";
-import { ObjectType, ID, Field, createUnionType } from "type-graphql";
+import {
+  ObjectType,
+  ID,
+  Field,
+  createUnionType,
+  InputType,
+} from "type-graphql";
 import { DMGroup } from "./UserGroup";
 
 export enum CoursePageNodeTypes {
@@ -33,6 +39,10 @@ export abstract class BaseNode extends BaseEntity {
   @Column()
   @Field()
   title: string;
+
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+  link?: string;
 
   // TODO maybe custom type checking
   // TODO so bad v bad fix me
@@ -60,6 +70,33 @@ export class HeadingNode extends BaseNode {}
 @ChildEntity(CoursePageNodeTypes.Folder)
 @ObjectType()
 export class FolderNode extends BaseNode {}
+
+@InputType()
+export abstract class BaseNodeInput {
+  @Field({ nullable: true })
+  id?: number;
+
+  @Field()
+  title: string;
+
+  @Field()
+  link: string;
+
+  @Field()
+  parent: number;
+}
+
+@InputType()
+export class TextNodeInput extends BaseNodeInput {
+  @Field()
+  text: string;
+}
+
+@InputType()
+export class FolderNodeInput extends BaseNodeInput {
+  @Field(() => [String])
+  children: string[];
+}
 
 export const Node = createUnionType({
   name: "Node",
