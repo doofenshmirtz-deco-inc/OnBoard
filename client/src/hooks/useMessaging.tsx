@@ -1,13 +1,10 @@
 import {
   FetchResult,
   gql,
-  OnSubscriptionDataOptions,
-  SubscriptionResult,
   useApolloClient,
   useLazyQuery,
   useMutation,
   useQuery,
-  useSubscription,
 } from "@apollo/client";
 import firebase from "firebase";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -21,16 +18,12 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import {
   AddMessage,
   AddMessageVariables,
-  AddMessage_addMessage,
 } from "../graphql/AddMessage";
 import {
   MyGroups,
   MyGroups_me_groups,
-  MyGroups_me_groups_StudyGroup,
 } from "../graphql/MyGroups";
 import { createContainer } from "unstated-next";
-import { subscribe } from "graphql";
-import React from "react";
 
 const MESSAGES_QUERY = gql`
   query MyMessages($groupId: ID!) {
@@ -161,7 +154,7 @@ export const useMessaging = () => {
   const [groupId, setGroupId] = useState(null as number | null);
 
   // currently logged in user object and username (split from email)
-  const [user, userLoading] = useAuthState(firebase.auth());
+  const [user] = useAuthState(firebase.auth());
   const username = user?.email?.split("@")?.[0];
 
   // chat messages grouped by group, as ChatMessage items.
@@ -176,7 +169,7 @@ export const useMessaging = () => {
   // get my messages for a specific contact group.
   const [
     fetchMessages,
-    { data: messagesData, loading, refetch },
+    { data: messagesData },
   ] = useLazyQuery<MyMessages>(MESSAGES_QUERY);
 
   // when selected group id changes, fetch new messages for that group.
@@ -189,7 +182,7 @@ export const useMessaging = () => {
   }, [groupId]);
 
   // fetch contacts list from server
-  const { data: groupData, refetch: refetchGroups } = useQuery<MyGroups>(
+  const { data: groupData } = useQuery<MyGroups>(
     GROUPS_QUERY
   );
 

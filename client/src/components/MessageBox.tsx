@@ -2,33 +2,18 @@ import React, {
   useState,
   useLayoutEffect,
   useEffect,
-  useCallback,
   SetStateAction,
   Dispatch,
 } from "react";
 import { Button, makeStyles, TextField, IconButton } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import VideocamIcon from "@material-ui/icons/Videocam";
-import {
-  gql,
-  OnSubscriptionDataOptions,
-  useMutation,
-  useQuery,
-  useSubscription,
-} from "@apollo/client";
 import { LoadingPage } from "./LoadingPage";
-import { MyMessages } from "../graphql/MyMessages";
 import ChatMessage from "./ChatMessage";
 import Message from "./Message";
-import {
-  OnMessageReceived,
-  OnMessageReceived_newMessages,
-} from "../graphql/OnMessageReceived";
 import { Contact } from "../modules/StudyRooms/Recents";
-import * as firebase from "firebase";
 import { useParams, useHistory } from "react-router";
 import { Messaging } from "../hooks/useMessaging";
-import { useAuthState } from "react-firebase-hooks/auth";
 
 const renderChatMessage = (message: ChatMessage, uid: string) => {
   // console.log(uid);

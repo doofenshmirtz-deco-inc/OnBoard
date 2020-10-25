@@ -1,21 +1,11 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import MessageBox from "../../components/MessageBox";
 import RecentContacts from "../../components/RecentContacts";
-import { gql, useQuery } from "@apollo/client";
-import { MyGroups } from "../../graphql/MyGroups";
 import { LoadingPage } from "../../components/LoadingPage";
-import { MeId } from "../../graphql/MeId";
 import { useHistory, useParams } from "react-router";
 import { Messaging } from "../../hooks/useMessaging";
 
-const ME_QUERY = gql`
-  query MeId {
-    me {
-      id
-    }
-  }
-`;
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
