@@ -151,14 +151,21 @@ type MessagesObject = {
   [groupId: string]: ChatMessage[];
 };
 
+/**
+ * Messaging manager, provided via context to be shared by all components which
+ * interact with messaging or contacts.
+ */
 export const useMessaging = () => {
-  const [contacts, setContacts] = useState([] as MyGroups_me_groups[]);
+  // list of contacts from server, not sorted.
+  const [contacts, setContacts] = useState(null as MyGroups_me_groups[] | null);
+  // currently active group id
   const [groupId, setGroupId] = useState(null as number | null);
 
+  // currently logged in user object and username (split from email)
   const [user, userLoading] = useAuthState(firebase.auth());
   const username = user?.email?.split("@")?.[0];
 
-  // chat messages gropued by group, as ChatMessage items.
+  // chat messages grouped by group, as ChatMessage items.
   const [groupMessages, setGroupMessages] = useState({} as MessagesObject);
 
   // chat messages for the currently selected gropu, or null if loading.
@@ -173,6 +180,7 @@ export const useMessaging = () => {
     { data: messagesData, loading, refetch },
   ] = useLazyQuery<MyMessages>(MESSAGES_QUERY);
 
+  // when selected group id changes, fetch new messages for that group.
   useEffect(() => {
     if (groupId != null) {
       setMessages(null);
@@ -181,15 +189,18 @@ export const useMessaging = () => {
     }
   }, [groupId]);
 
+  // fetch contacts list from server 
   const { data: groupData, refetch: refetchGroups } = useQuery<MyGroups>(GROUPS_QUERY);
 
+  // set contacts once received from server
   useEffect(() => {
     if (!groupData) return;
     setContacts(groupData.me?.groups ?? []);
   }, [groupData]);
 
+  // sorted version of contacts. sort by most recent messages first.
   const sortedContacts = useMemo(() => {
-    // sort by most recent messages first.
+    if (!contacts) return null;
     const sorted = [...contacts];
     sorted.sort(sortContacts);
     return sorted;
@@ -197,7 +208,7 @@ export const useMessaging = () => {
 
   // console.log("username " + username);
 
-  // when data changes, update oldMessages.
+  // when we receive data for the selected group, update messages
   useEffect(() => {
     if (!messagesData || !username) return;
 
@@ -218,6 +229,8 @@ export const useMessaging = () => {
     }
   }, [groupId, messagesData, username]);
 
+  // when groupMessages or groupId changes, obtain the messages for the current
+  // group from groupMessages.
   useEffect(() => {
     // console.log(groupId);
     // console.log(groupMessages);
@@ -226,8 +239,11 @@ export const useMessaging = () => {
     }
   }, [groupId, groupMessages]);
 
+  // bumps the contact with the given id to be the most recently contacted.
+  // used when message is received. should be called with message is sent.
   const bumpContact = useCallback((id: string) => {
     setContacts(contacts => {
+      if (!contacts) return contacts;
       contacts = [...contacts];
       for (let i = 0; i < contacts.length; i++) {
         const c = contacts[i];
@@ -265,8 +281,9 @@ export const useMessaging = () => {
     [username, bumpContact]
   );
 
+  // reference to apollo client.
   const client = useApolloClient();
-
+  // we need to set up subscriptions manually to handle changing variables.
   useEffect(() => {
     const observer = client.subscribe({
       query: MESSAGES_SUBSCRIPTION,
@@ -277,22 +294,10 @@ export const useMessaging = () => {
     return () => subscription.unsubscribe();
   }, [handleNewMessage]);
 
+  // callback to send a message to the server and bump the contact.
+  // message is received back via subscription.
   const sendMessage = useCallback(
     (args: AddMessageVariables) => {
-      // setGroupMessages((groupMessages) => ({
-      //   ...groupMessages,
-
-      //   [args.groupId]: [
-      //     ...(groupMessages[args.groupId] ?? []),
-      //     {
-      //       text: args.send,
-      //       sender: username!,
-      //       direction: "right",
-      //       groupId: args.groupId,
-      //       createdAt: new Date(),
-      //     },
-      //   ],
-      // }));
 
       sendToServer({ variables: args });
       if (username)
