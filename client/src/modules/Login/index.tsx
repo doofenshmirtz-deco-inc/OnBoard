@@ -3,6 +3,7 @@ import { TextField, makeStyles, Grid, Button } from "@material-ui/core";
 import * as firebase from "firebase";
 import { LoadingPage } from "../../components/LoadingPage";
 import Alert from "@material-ui/lab/Alert";
+import logo from "./logo.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,6 +60,7 @@ export const Login = () => {
 
   return (
     <Grid container direction="column" justify="center" alignItems="center">
+      <img src={logo} width="100px" />
       <h1>Welcome to OnBoard</h1>
       <form className={classes.root} onSubmit={submit}>
         {incorrectPwd && (

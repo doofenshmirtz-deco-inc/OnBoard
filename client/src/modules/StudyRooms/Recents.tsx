@@ -23,7 +23,7 @@ export type Contact = {
   readStatus: boolean;
 };
 
-const Recents = () => {
+const Recents = (props: any) => {
   const classes = useStyles();
 
   // currently selected contact id and name.
@@ -83,11 +83,13 @@ const Recents = () => {
           handleClick={handleClick}
           selected={selectedOrDefault}
         />
+        { props.messaging && 
         <MessageBox
           id={selectedOrDefault.id}
           name={selectedOrDefault.name}
           contacts={contacts}
         />
+}
       </div>
     </div>
   );

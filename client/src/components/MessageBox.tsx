@@ -5,7 +5,23 @@ import React, {
   SetStateAction,
   Dispatch,
 } from "react";
-import { Button, makeStyles, TextField, IconButton } from "@material-ui/core";
+import {
+  Button,
+  makeStyles,
+  TextField,
+  IconButton,
+  CssBaseline,
+  AppBar,
+  Typography,
+  Drawer,
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Collapse,
+  CardContent,
+} from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import { LoadingPage } from "./LoadingPage";
@@ -31,12 +47,15 @@ const renderChatMessage = (message: ChatMessage, uid: string) => {
 };
 
 export type MessageBoxProps = {
+  uid?: string; // uid of the user currently logged in
   id?: string; // group id of chat.
   name?: string; // name of group
   onSentMessage?: () => any; // to be called when new message is received.
   contacts?: Contact[]; // all the contacts
   setContacts?: Dispatch<SetStateAction<Contact[]>>; // setContacts from parent (recents.tsx)
 };
+
+const drawerWidth = 240;
 
 // TODO: clear input message when changing contact
 const MessageBox = (props: MessageBoxProps) => {
@@ -79,6 +98,20 @@ const MessageBox = (props: MessageBoxProps) => {
     },
     other: {
       backgroundColor: theme.palette.secondary.main,
+    },
+    root: {
+      maxWidth: 345,
+    },
+    media: {
+      height: 0,
+      paddingTop: "56.25%", // 16:9
+    },
+    expand: {
+      transform: "rotate(0deg)",
+      marginLeft: "auto",
+      transition: theme.transitions.create("transform", {
+        duration: theme.transitions.duration.shortest,
+      }),
     },
   }));
 
@@ -133,6 +166,14 @@ const MessageBox = (props: MessageBoxProps) => {
           >
             <VideocamIcon />
           </IconButton>
+          {/* <IconButton
+            style={{position: "absolute", right: "2em", top: "9em"}}
+            onClick={handleExpandClick}
+            aria-expanded={expanded}
+            aria-label="show more"
+          >
+            <InfoIcon />
+          </IconButton> */}
         </h1>
       ) : (
         <> </>
