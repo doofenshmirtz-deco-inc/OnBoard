@@ -20,7 +20,7 @@ const httpLink = (createUploadLink({
 
 const getToken = async () => {
   return await firebase.auth().currentUser?.getIdToken();
-}
+};
 
 const authLink = setContext(async (_, { headers }) => {
   const token = await getToken();
@@ -44,10 +44,10 @@ const wsLink = new WebSocketLink({
 });
 
 const subscriptionMiddleware = {
-  async applyMiddleware (options: any, next: any) {
+  async applyMiddleware(options: any, next: any) {
     options.auth = await getToken();
     next();
-  }
+  },
 };
 
 (wsLink as any).subscriptionClient.use([subscriptionMiddleware]);

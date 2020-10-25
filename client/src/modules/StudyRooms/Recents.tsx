@@ -68,7 +68,6 @@ const Recents = () => {
     });
   }, [messaging.contacts]);
 
-
   useEffect(() => {
     if (params.messageID && contacts) {
       const selectedContact = contacts.filter(

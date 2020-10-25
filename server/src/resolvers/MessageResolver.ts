@@ -63,18 +63,17 @@ export class MessageResolver {
 
   @Subscription((type) => Message, {
     topics: Subscriptions.Messages,
-    filter: async function filter({ payload, args, context })  {
+    filter: async function filter({ payload, args, context }) {
       // console.log('filter', context);
       const user = (await User.findByIds([context.payload?.uid]))[0];
-      return user && (
-        (await user.groups).filter((g) => (g.id === payload.group.id)).length > 0
+      return (
+        user &&
+        (await user.groups).filter((g) => g.id === payload.group.id).length > 0
       );
     },
   })
   @Authorized()
-  async newMessages(
-    @Root() message: Message,
-  ): Promise<Message> {
+  async newMessages(@Root() message: Message): Promise<Message> {
     // TOOD make this actually for group
     // TODO auth: https://www.apollographql.com/docs/graphql-subscriptions/authentication/
     return message;

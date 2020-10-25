@@ -79,9 +79,9 @@ async function main() {
         // console.log('auth', (params as any).auth);
         return {
           ...context,
-          auth: (params as any).auth
+          auth: (params as any).auth,
         };
-      }
+      },
     },
     uploads: false,
   });

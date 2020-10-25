@@ -123,7 +123,6 @@ const GROUPS_QUERY = gql`
   }
 `;
 
-
 // note that this takes an OnMessageReceived_newMessages, but the queries are
 // written such that MyMessages_getMessages has the exact same type.
 const toChatMessage = (
@@ -189,8 +188,10 @@ export const useMessaging = () => {
     }
   }, [groupId]);
 
-  // fetch contacts list from server 
-  const { data: groupData, refetch: refetchGroups } = useQuery<MyGroups>(GROUPS_QUERY);
+  // fetch contacts list from server
+  const { data: groupData, refetch: refetchGroups } = useQuery<MyGroups>(
+    GROUPS_QUERY
+  );
 
   // set contacts once received from server
   useEffect(() => {
@@ -242,15 +243,15 @@ export const useMessaging = () => {
   // bumps the contact with the given id to be the most recently contacted.
   // used when message is received. should be called with message is sent.
   const bumpContact = useCallback((id: string) => {
-    setContacts(contacts => {
+    setContacts((contacts) => {
       if (!contacts) return contacts;
       contacts = [...contacts];
       for (let i = 0; i < contacts.length; i++) {
         const c = contacts[i];
         if (c.id === id) {
           contacts[i] = {
-            ...c, 
-            lastActive: new Date()
+            ...c,
+            lastActive: new Date(),
           };
         }
       }
@@ -258,7 +259,6 @@ export const useMessaging = () => {
     });
   }, []);
 
-  
   // subscription handler to add a new received message.
   const handleNewMessage = useCallback(
     (options: FetchResult<OnMessageReceived>) => {
@@ -270,9 +270,12 @@ export const useMessaging = () => {
       if (data && username) {
         const groupId = data.group.id;
 
-        setGroupMessages(groupMessages => ({
+        setGroupMessages((groupMessages) => ({
           ...groupMessages,
-          [groupId]: [...groupMessages[groupId] ?? [], toChatMessage(data, username!)],
+          [groupId]: [
+            ...(groupMessages[groupId] ?? []),
+            toChatMessage(data, username!),
+          ],
         }));
 
         bumpContact(groupId);
@@ -298,10 +301,8 @@ export const useMessaging = () => {
   // message is received back via subscription.
   const sendMessage = useCallback(
     (args: AddMessageVariables) => {
-
       sendToServer({ variables: args });
-      if (username)
-        bumpContact(username);
+      if (username) bumpContact(username);
     },
     [username, bumpContact]
   );
