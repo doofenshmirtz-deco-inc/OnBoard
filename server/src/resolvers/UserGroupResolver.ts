@@ -133,7 +133,6 @@ export class UserGroupResolver {
       times: classData.times,
       duration: classData.duration,
     });
-    group.save();
     group.course = Promise.resolve(course);
 
     group.setUsers(users);

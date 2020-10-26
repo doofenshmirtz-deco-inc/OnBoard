@@ -1,11 +1,14 @@
 from pytimeparse.timeparse import timeparse
 from collections import defaultdict
+from graphqlclient import GraphQLClient
+from datetime import datetime
 import dateparser
 import datetime
 import csv
 import pprint
 import os
-import graphene
+import json
+
 
 def parse_file(filename):
     # Deal with stupid double tabs and newlines in Allocate+ output
@@ -23,6 +26,7 @@ def parse_file(filename):
         reader = csv.DictReader(csvfile, delimiter="\t")
         for line in reader:
             code, sem, _, _ = line['Subject Code'].split("_")
+            sem = "One" if "S1" else "Two"
             courses.append({
                 'code': code,
                 'name': line['Description'],
@@ -52,7 +56,9 @@ def parse_file(filename):
                 dates_full.append(current_date)
                 while current_date < date_ends[i]:
                     current_date += datetime.timedelta(days=7)
-                    dates_full.append(current_date)
+                    # UTC+10, dodgy lol
+                    dates_full.append(
+                        current_date - datetime.timedelta(hours=10))
 
             # print(dateparser.parse(line['Dates']) + datetime.timedelta(minutes=timeparse(line['Time'])))
 
@@ -111,3 +117,73 @@ if __name__ == "__main__":
 
     pprint.pprint(merged_courses)
     pprint.pprint(merged_classes)
+
+    client = GraphQLClient('http://localhost:5000/graphql')
+
+    token = json.loads(client.execute('''
+    {
+        getTestingToken(testUID: "doof-uid") {
+            token
+        }
+    }
+    '''))['data']['getTestingToken']['token']
+
+    client.inject_token(token)
+
+    course_to_id = {}
+    for course in merged_courses:
+
+        result = client.execute('''
+mutation AddCourse($course: courseInput!) {
+    addCourse(course: $course) {
+        code
+        name
+        semester
+        courseLevel
+        year
+        id
+    }
+}''', variables=f'''
+{{
+    "course": {{
+        "code": "{course['code']}",
+        "name": "{course['name']}",
+        "semester": "{course['semester']}",
+        "courseLevel": "{course['courseLevel']}",
+        "year": {course['year']},
+        "students": {str(course['students']).replace("'", '"')}
+    }}
+}}
+''')
+        json_result = json.loads(result)['data']['addCourse']
+        course_to_id[json_result['code']] = json_result['id']
+
+    for classs in merged_classes:
+        dates = [i.strftime("%Y-%m-%dT%H:%M:%SZ") for i in classs['dates']]
+        result = client.execute('''
+mutation AddClass($classData: ClassGroupInput!) {
+  addClassGroup(classData: $classData) {
+    users {
+      id
+    }
+    course {
+      name
+    }
+    name
+    type
+    times
+    duration
+  }
+}''', variables=f'''
+{{
+    "classData": {{
+        "courseID": {course_to_id[classs['course']]},
+        "name": "{classs['name']}",
+        "type": "{classs['type']}",
+        "times": {str(dates).replace("'", '"')},
+        "duration": {classs['duration']},
+        "uids": {str(classs['users']).replace("'", '"')}
+    }}
+}}
+''')
+        print(json.loads(result)['data']['addClassGroup'])

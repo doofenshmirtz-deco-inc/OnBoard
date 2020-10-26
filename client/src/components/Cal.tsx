@@ -113,8 +113,8 @@ export default function MyCal() {
         <Calendar
           localizer={localizer}
           events={myTimetable}
-          min={minTime}
-          max={maxTime}
+          // min={minTime}
+          // max={maxTime}
           scrollToTime={new Date()}
           startAccessor="start"
           defaultView={"work_week"}
@@ -127,13 +127,15 @@ export default function MyCal() {
           eventPropGetter={(event, start, end, isSelected) => {
             console.log(event?.id)
             const colors = courses?.me?.courses.map(e => [e?.course?.code, e?.colour]);
-            const color = colors?.filter(e => event?.title.indexOf(e[0]) !== -1)[0][1];
+            const color = colors?.filter(e => event?.title.indexOf(e[0]) !== -1)[0] !== undefined 
+                        ? colors?.filter(e => event?.title.indexOf(e[0]) !== -1)[0][1] : '#666666';
 
             let newStyle = {
               backgroundColor: color,
               color: "white",
               borderRadius: "0px",
               border: "none",
+              fontSize: "0.8em"
             };
 
             return {
