@@ -9,9 +9,12 @@ import { List } from "@material-ui/core";
 import ContactCard from "../../components/ContactCard";
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
+  rootMessaging: {
     flexGrow: 3,
     display: "flex",
+  },
+  rootDashboard: {
+    display: "block",
   },
   list: {
     display: "flex",
@@ -107,7 +110,11 @@ const Recents = (props: any) => {
 
   return (
     <div>
-      <div className={classes.root}>
+      <div
+        className={
+          props.dashboard ? classes.rootDashboard : classes.rootMessaging
+        }
+      >
         <RecentContacts
           contacts={filteredContacts}
           handleClick={handleClick}

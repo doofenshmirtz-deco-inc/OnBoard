@@ -36,7 +36,7 @@ const Home = () => {
         <Announcements isDashboard={true} />
       </Grid>
       <Grid item xs={12} md={4}>
-        <ContactList />
+        <ContactList dashboard />
       </Grid>
     </Grid>
   );
