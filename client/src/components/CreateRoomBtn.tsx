@@ -21,6 +21,7 @@ import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import { useHistory } from "react-router";
 import { GetMyId } from "../graphql/GetMyId";
 import { LoadingPage } from "./LoadingPage";
+import { Messaging } from "../hooks/useMessaging";
 
 const addStudyGroup = gql`
   mutation AddStudyGroup(
@@ -68,7 +69,6 @@ const PopUp = (props: any) => {
   const [studyRoomName, setRoomName] = useState("");
   const [selectedContacts, setSelectedContacts] = useState([] as any[]);
   const [isPublic, setIsPublic] = useState(false);
-  const [groupID, setGroupID] = useState("");
 
   const [createStudyRoom, { data, loading }] = useMutation<AddStudyGroup>(
     addStudyGroup
@@ -86,27 +86,43 @@ const PopUp = (props: any) => {
   const history = useHistory();
   const classes = useStyles();
 
+  const messaging = Messaging.useContainer();
+
   if (!uidData.data || !uidData.data.me) {
     return <LoadingPage />;
   }
   const uid = uidData.data.me.id;
 
   const handleCreate = () => {
-    let uids = selectedContacts.map(
+    const uids = selectedContacts.map(
       (c: any) => c.users.filter((user: any) => user.id !== uid)[0].id
     );
     uids.push(uid);
+
+    const users = selectedContacts.map(
+      (c: any) => c.users.filter((user: any) => user.id !== uid)[0]
+    );
+
     console.log(uids);
     console.log(selectedContacts);
     createStudyRoom({
       variables: { uids: uids, groupName: studyRoomName, isPublic: isPublic },
+    }).then(({ data }) => {
+      if (!data?.addStudyGroup.id) return;
+
+      const groupId = data.addStudyGroup.id;
+
+      const usersString = users.map((x) => x.name).join(", ");
+      messaging.sendMessage({ groupId, send: "Created new room!" });
+      props.handleClick({ id: groupId, name: studyRoomName });
+      setOpen(false);
     });
     // while (loading) {
     //   console.log("hello");
     // }
     // TODO: get data to work
-    setGroupID(data ? (data.addStudyGroup ? data.addStudyGroup.id : "") : "");
-    window.location.href = "/study-rooms/recents/" + groupID;
+
+    // window.location.href = "/study-rooms/recents/" + groupID;
   };
 
   return (
