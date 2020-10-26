@@ -30,6 +30,9 @@ const MESSAGES_QUERY = gql`
       }
       group {
         id
+        users {
+          id
+        }
       }
       createdAt
     }
@@ -51,6 +54,9 @@ const MESSAGES_SUBSCRIPTION = gql`
       text
       group {
         id
+        users {
+          id
+        }
       }
       user {
         id
@@ -118,9 +124,11 @@ const toChatMessage = (
 ): ChatMessage => {
   return {
     sender: data.user.id,
+    senderName: data.user.name,
     text: data.text,
     direction: data.user.id === uid ? "right" : "left",
     groupId: data.group.id,
+    group: data.group.users.length > 2,
     createdAt: new Date(data.createdAt),
   };
 };

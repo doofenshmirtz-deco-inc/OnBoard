@@ -5,23 +5,7 @@ import React, {
   SetStateAction,
   Dispatch,
 } from "react";
-import {
-  Button,
-  makeStyles,
-  TextField,
-  IconButton,
-  CssBaseline,
-  AppBar,
-  Typography,
-  Drawer,
-  Divider,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Collapse,
-  CardContent,
-} from "@material-ui/core";
+import { Button, makeStyles, TextField, IconButton } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import { LoadingPage } from "./LoadingPage";
@@ -32,8 +16,6 @@ import { useParams, useHistory } from "react-router";
 import { Messaging } from "../hooks/useMessaging";
 
 const renderChatMessage = (message: ChatMessage, uid: string) => {
-  // console.log(uid);
-  // console.log(message);
   const key = `${message.createdAt.getTime()}-${message.sender}-${
     message.groupId
   }`;
@@ -42,6 +24,8 @@ const renderChatMessage = (message: ChatMessage, uid: string) => {
       key={key}
       direction={message.sender === uid ? "right" : "left"}
       text={message.text}
+      sender={message.senderName}
+      group={message.group}
     />
   );
 };
@@ -53,18 +37,19 @@ export type MessageBoxProps = {
   onSentMessage?: () => any; // to be called when new message is received.
   contacts?: Contact[]; // all the contacts
   setContacts?: Dispatch<SetStateAction<Contact[]>>; // setContacts from parent (recents.tsx)
+  group?: boolean; // whether or not the chat being rendered is a group chat
 };
-
-const drawerWidth = 240;
 
 // TODO: clear input message when changing contact
 const MessageBox = (props: MessageBoxProps) => {
   const useStyles = makeStyles((theme) => ({
     container: {
-      width: "100%",
+      width: "75%",
       paddingLeft: "2%",
       height: "69vh",
       overflowY: "hidden",
+      display: "inline-block",
+      float: "left",
     },
     messagingContainer: {
       overflowY: "scroll",
@@ -75,29 +60,9 @@ const MessageBox = (props: MessageBoxProps) => {
       position: "relative",
       bottom: "0",
     },
-    bubbleContainer: {
+    Container: {
       width: "100%",
       display: "flex",
-    },
-    bubble: {
-      borderRadius: "20px",
-      margin: "1px",
-      padding: "10px",
-      display: "inline-block",
-      maxWidth: "40%",
-      marginRight: "10px",
-    },
-    right: {
-      justifyContent: "flex-end",
-    },
-    left: {
-      justifyContent: "flex-start",
-    },
-    me: {
-      backgroundColor: "#c9c9c9",
-    },
-    other: {
-      backgroundColor: theme.palette.secondary.main,
     },
     root: {
       maxWidth: 345,
@@ -121,10 +86,10 @@ const MessageBox = (props: MessageBoxProps) => {
   const history = useHistory();
   const id = props.id ? props.id : groupID;
 
-  const x = Messaging.useContainer();
+  const msgBox = Messaging.useContainer();
 
   useEffect(() => {
-    x.setGroupId(id);
+    msgBox.setGroupId(id);
   }, [id]);
 
   // current message being typed in text box.
@@ -138,7 +103,7 @@ const MessageBox = (props: MessageBoxProps) => {
     }
   });
 
-  if (!x.groupMessages || !x.username) {
+  if (!msgBox.groupMessages || !msgBox.username) {
     return <LoadingPage />;
   }
 
@@ -150,7 +115,7 @@ const MessageBox = (props: MessageBoxProps) => {
     setMessageInput("");
     props.onSentMessage?.();
 
-    x.sendMessage({
+    msgBox.sendMessage({
       send: message,
       groupId: id,
     });
@@ -166,20 +131,14 @@ const MessageBox = (props: MessageBoxProps) => {
           >
             <VideocamIcon />
           </IconButton>
-          {/* <IconButton
-            style={{position: "absolute", right: "2em", top: "9em"}}
-            onClick={handleExpandClick}
-            aria-expanded={expanded}
-            aria-label="show more"
-          >
-            <InfoIcon />
-          </IconButton> */}
         </h1>
       ) : (
         <> </>
       )}
       <div className={classes.messagingContainer}>
-        {x.groupMessages.map((y) => renderChatMessage(y, x.username!))}
+        {msgBox.groupMessages.map((y) =>
+          renderChatMessage(y, msgBox.username!)
+        )}
         <div ref={messagesEndRef} />
       </div>
       <TextField

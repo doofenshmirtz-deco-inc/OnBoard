@@ -21,15 +21,17 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function ContactList() {
+const Contacts = (props: any) => {
   const classes = useStyles();
 
   return (
     <Box border={1} className={classes.root}>
       <Container>
         <h2 className={classes.title}>Contacts</h2>
-        <Recents />
+        <Recents dashboard={props.dashboard} />
       </Container>
     </Box>
   );
-}
+};
+
+export default Contacts;
