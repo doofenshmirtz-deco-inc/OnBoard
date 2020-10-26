@@ -97,7 +97,7 @@ jobs:
     - name: Run client tests
       working-directory: client
       run: |
-          yarn test
+          yarn cypress run
 
     - uses: actions/upload-artifact@v1
       if: failure()
