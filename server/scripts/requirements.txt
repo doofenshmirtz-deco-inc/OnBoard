@@ -1,2 +1,3 @@
 pytimeparse
 dateparser
+graphene>=2.0

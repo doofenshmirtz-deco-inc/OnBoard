@@ -54,6 +54,16 @@ export default function MyCal() {
   const { data } = useQuery<MyCalendar>(GET_CALENDAR);
   const { data: courses } = useQuery<MyColours>(GET_COLOURS);
   const [myTimetable, setMyTimetable] = useState([] as any[]);
+  const [classOpen, setClassOpen] = React.useState(false);
+
+  const handleClassOpen = () => {
+    setClassOpen(true);
+  };
+
+  const handleClassClose = () => {
+    setClassOpen(false);
+  };
+
   const history = useHistory();
   const minTime = new Date();
   minTime.setHours(8,0,0);
@@ -135,5 +145,6 @@ export default function MyCal() {
         />
       </CardContent>
     </Box>
+    
   );
 }
