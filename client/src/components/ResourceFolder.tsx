@@ -43,6 +43,7 @@ import AttachFileIcon from "@material-ui/icons/AttachFile";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { DropzoneArea } from "material-ui-dropzone";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -52,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paper: {
       padding: theme.spacing(2),
-      color: theme.palette.text.secondary,
+      color: theme.palette.text.primary,
     },
     uploadDropZone: {
       marginTop: "0.5rem",
@@ -60,6 +61,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     uploadText: {
       color: theme.palette.text.secondary,
+      fontSize: "12pt",
+    },
+    inputTopMargin: {
+      marginTop: "0.5rem",
     },
   })
 );
@@ -335,10 +340,12 @@ function NodeContent(props: {
   });
 
   let contentText = "";
+  let hasChildren = false;
   if (data?.node?.__typename === "TextNode") {
     contentText = data.node.text;
   } else if (data?.node?.__typename === "FolderNode") {
     contentText = "Folder";
+    hasChildren = data.node.children.length != 0;
   }
 
   return (
@@ -348,10 +355,12 @@ function NodeContent(props: {
           <h1>{data?.node?.title}</h1>
         </Grid>
         <Grid item>
-          {props.editable ? <DeleteItem nodeId={checkedNodeId} /> : null}
+          {props.editable ? (
+            <DeleteItem nodeId={checkedNodeId} hasChildren={hasChildren} />
+          ) : null}
         </Grid>
       </Grid>
-      <p>{contentText}</p>
+      <p style={{ whiteSpace: "pre" }}>{contentText}</p>
       {data?.node?.link && (
         <Button
           variant="contained"
@@ -360,7 +369,7 @@ function NodeContent(props: {
           startIcon={<AttachFileIcon />}
           onClick={() => window.open(data?.node?.link || undefined, "_blank")}
         >
-          Open File
+          Open Attachment
         </Button>
       )}
     </Paper>
@@ -375,6 +384,8 @@ function AddItem(props: { nodeId: string }) {
   const [nodeTitle, setNodeTitle] = React.useState("");
   const [nodeContents, setNodeContents] = React.useState("");
   const [nodeType, setNodeType] = React.useState("item");
+  const [nodeLinkType, setNodeLinkType] = React.useState("none");
+  const [nodeLink, setNodeLink] = React.useState("");
   const [nodeFile, setNodeFile] = React.useState<File[]>();
 
   const [addTextNode] = useMutation<EditTextNode>(EDIT_TEXT_NODE, {
@@ -400,6 +411,14 @@ function AddItem(props: { nodeId: string }) {
     },
   });
 
+  const addLink = (e: string) => {
+    if (e.startsWith("http")) {
+      setNodeLink(e);
+    } else {
+      setNodeLink("http://" + e);
+    }
+  };
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -409,7 +428,7 @@ function AddItem(props: { nodeId: string }) {
   };
 
   const handleConfirm = () => {
-    if (nodeFile && nodeFile[0]) {
+    if (nodeLinkType === "file" && nodeFile && nodeFile[0]) {
       let file = nodeFile[0];
 
       uploadFile({ variables: { file } });
@@ -420,6 +439,7 @@ function AddItem(props: { nodeId: string }) {
             title: nodeTitle,
             text: nodeContents,
             parent: parseInt(props.nodeId),
+            link: nodeLinkType === "link" ? nodeLink : null,
           },
         });
       } else {
@@ -437,9 +457,11 @@ function AddItem(props: { nodeId: string }) {
 
   return (
     <div>
-      <IconButton aria-label="add" onClick={handleClickOpen}>
-        <AddIcon fontSize="small" />
-      </IconButton>
+      <Tooltip title="Add">
+        <IconButton aria-label="add" onClick={handleClickOpen}>
+          <AddIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -474,14 +496,36 @@ function AddItem(props: { nodeId: string }) {
                 fullWidth
                 onChange={(e) => setNodeContents(e.target.value)}
               />
-              <DropzoneArea
-                classes={{ icon: classes.uploadText }}
-                dropzoneClass={classes.uploadDropZone}
-                dropzoneParagraphClass={classes.uploadText}
-                filesLimit={1}
-                maxFileSize={52428800}
-                onChange={(files) => setNodeFile(files)}
-              />
+              <Select
+                className={classes.inputTopMargin}
+                id="linkTypeSelect"
+                label="Attachment Type"
+                value={nodeLinkType}
+                fullWidth
+                onChange={(e: any) => setNodeLinkType(e.target.value)}
+              >
+                <MenuItem value={"none"}>No Attachment</MenuItem>
+                <MenuItem value={"file"}>File Attachment</MenuItem>
+                <MenuItem value={"link"}>Website Link</MenuItem>
+              </Select>
+              {nodeLinkType === "file" && (
+                <DropzoneArea
+                  classes={{ icon: classes.uploadText }}
+                  dropzoneClass={classes.uploadDropZone}
+                  dropzoneParagraphClass={classes.uploadText}
+                  filesLimit={1}
+                  maxFileSize={52428800}
+                  onChange={(files) => setNodeFile(files)}
+                />
+              )}
+              {nodeLinkType === "link" && (
+                <TextField
+                  id="linkInput"
+                  label="Website Link"
+                  fullWidth
+                  onChange={(e) => addLink(e.target.value)}
+                />
+              )}
             </>
           )}
         </DialogContent>
@@ -498,7 +542,7 @@ function AddItem(props: { nodeId: string }) {
   );
 }
 
-function DeleteItem(props: { nodeId: number }) {
+function DeleteItem(props: { nodeId: number; hasChildren: boolean }) {
   const [open, setOpen] = React.useState(false);
   const history = useHistory();
 
@@ -524,9 +568,17 @@ function DeleteItem(props: { nodeId: number }) {
 
   return (
     <div>
-      <IconButton aria-label="delete" onClick={handleClickOpen}>
-        <DeleteIcon />
-      </IconButton>
+      <Tooltip title={props.hasChildren ? "Foler contains items" : "Delete"}>
+        <span>
+          <IconButton
+            disabled={props.hasChildren}
+            aria-label="delete"
+            onClick={handleClickOpen}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </span>
+      </Tooltip>
       <Dialog
         open={open}
         onClose={handleClose}
