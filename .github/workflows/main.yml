@@ -92,7 +92,7 @@ jobs:
     - name: Start client for client tests
       working-directory: client
       run: |
-          yarn start &
+          yarn start & wait-on http://localhost:3000
 
     - name: Run client tests
       working-directory: client
