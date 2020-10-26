@@ -66,9 +66,9 @@ export default function MyCal() {
 
   const history = useHistory();
   const minTime = new Date();
-  minTime.setHours(8,0,0);
+  minTime.setHours(8, 0, 0);
   const maxTime = new Date();
-  maxTime.setHours(18,0,0);
+  maxTime.setHours(18, 0, 0);
 
   console.log(courses);
 
@@ -82,7 +82,7 @@ export default function MyCal() {
       e?.duration,
       e?.name,
       e?.type,
-      e?.id
+      e?.id,
     ]);
 
     let events = [] as any[];
@@ -99,7 +99,7 @@ export default function MyCal() {
             .add(duration as number, "minutes")
             .toDate(),
           title: `${type}: ${title}`,
-          id: e[4]
+          id: e[4],
         })
       );
     });
@@ -122,20 +122,26 @@ export default function MyCal() {
           endAccessor="end"
           style={{ height: 446 }}
           onSelectEvent={(event) => {
-            history.push("/study-rooms/video/" + event.id)
+            history.push("/study-rooms/video/" + event.id);
           }}
           eventPropGetter={(event, start, end, isSelected) => {
-            console.log(event?.id)
-            const colors = courses?.me?.courses.map(e => [e?.course?.code, e?.colour]);
-            const color = colors?.filter(e => event?.title.indexOf(e[0]) !== -1)[0] !== undefined 
-                        ? colors?.filter(e => event?.title.indexOf(e[0]) !== -1)[0][1] : '#666666';
+            console.log(event?.id);
+            const colors = courses?.me?.courses.map((e) => [
+              e?.course?.code,
+              e?.colour,
+            ]);
+            const color =
+              colors?.filter((e) => event?.title.indexOf(e[0]) !== -1)[0] !==
+              undefined
+                ? colors?.filter((e) => event?.title.indexOf(e[0]) !== -1)[0][1]
+                : "#666666";
 
             let newStyle = {
               backgroundColor: color,
               color: "white",
               borderRadius: "0px",
               border: "none",
-              fontSize: "0.8em"
+              fontSize: "0.8em",
             };
 
             return {
@@ -147,6 +153,5 @@ export default function MyCal() {
         />
       </CardContent>
     </Box>
-    
   );
 }

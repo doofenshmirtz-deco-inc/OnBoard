@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import { Shadows } from "@material-ui/core/styles/shadows"
+import { Shadows } from "@material-ui/core/styles/shadows";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {
   makeStyles,
