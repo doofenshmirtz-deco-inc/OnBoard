@@ -6,7 +6,10 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import Announcements from "./Announcements";
 import { useQuery, gql } from "@apollo/client";
-import { GetClassInfo } from "../graphql/GetClassInfo";
+import {
+  GetClassInfo,
+  GetClassInfo_me_courses_course_staff,
+} from "../graphql/GetClassInfo";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ResourceFolder from "./ResourceFolder";
 import {
@@ -19,6 +22,8 @@ import {
   useParams,
 } from "react-router-dom";
 import { GetCoursePermissions } from "../graphql/GetCoursePermissions";
+import ClassStaff from "./ClassStaff";
+import { CourseStaff_course_staff } from "../graphql/CourseStaff";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -79,29 +84,35 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-let tabPages: MenuBarComponent[] = [
-  {
-    name: "Announcements",
-    path: "announcements/",
-    content: <Announcements isDashboard={false} />,
-  },
-  {
-    name: "Learning Resources",
-    path: "resources/",
-    content: <ResourceFolder assessmentPage={false} />,
-  },
-  {
-    name: "Assessment",
-    path: "assessment/",
-    content: <ResourceFolder assessmentPage={true} />,
-  },
-  { name: "Course Staff", path: "staff/", content: <p>Staff</p> },
-  {
-    name: "Course Profile (ECP)",
-    path: "profile/",
-    content: <p>Course Profile (ECP)</p>,
-  },
-];
+let tabPages = (staff: GetClassInfo_me_courses_course_staff[]) => {
+  return [
+    {
+      name: "Announcements",
+      path: "announcements/",
+      content: <Announcements isDashboard={false} />,
+    },
+    {
+      name: "Learning Resources",
+      path: "resources/",
+      content: <ResourceFolder assessmentPage={false} />,
+    },
+    {
+      name: "Assessment",
+      path: "assessment/",
+      content: <ResourceFolder assessmentPage={true} />,
+    },
+    {
+      name: "Course Staff",
+      path: "staff/",
+      content: <ClassStaff staff={staff} />,
+    },
+    {
+      name: "Course Profile (ECP)",
+      path: "profile/",
+      content: <p>Course Profile (ECP)</p>,
+    },
+  ];
+};
 
 const COURSE_INFO = gql`
   query GetClassInfo {
@@ -114,6 +125,10 @@ const COURSE_INFO = gql`
           code
           year
           semester
+          staff {
+            name
+            avatar
+          }
         }
       }
     }
@@ -194,7 +209,7 @@ export default function ClassView() {
           scrollButtons="auto"
           aria-label="scrollable auto tabs example"
         >
-          {tabPages.map((item, index) => {
+          {tabPages(courseData.course.staff).map((item, index) => {
             return (
               <Tab
                 key={index}
@@ -210,7 +225,7 @@ export default function ClassView() {
         </Tabs>
       </AppBar>
       <Switch>
-        {tabPages.map((item, index) => {
+        {tabPages(courseData.course.staff).map((item, index) => {
           return (
             <Route
               key={index}
@@ -227,7 +242,9 @@ export default function ClassView() {
           );
         })}
         <Route path="/">
-          <Redirect to={`${url}/${tabPages[0].path}`} />
+          <Redirect
+            to={`${url}/${tabPages(courseData.course.staff)[0].path}`}
+          />
         </Route>
       </Switch>
     </div>

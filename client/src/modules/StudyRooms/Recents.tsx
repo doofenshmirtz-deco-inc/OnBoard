@@ -5,12 +5,33 @@ import RecentContacts from "../../components/RecentContacts";
 import { LoadingPage } from "../../components/LoadingPage";
 import { useHistory, useParams } from "react-router";
 import { Messaging } from "../../hooks/useMessaging";
+import { List } from "@material-ui/core";
+import ContactCard from "../../components/ContactCard";
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
+  rootMessaging: {
     flexGrow: 3,
-    backgroundColor: theme.palette.background.paper,
     display: "flex",
+  },
+  rootDashboard: {
+    display: "block",
+  },
+  list: {
+    display: "flex",
+    flexDirection: "column",
+    width: "25%",
+    height: "69vh",
+    overflowY: "scroll",
+    paddingBottom: "0px",
+    paddingLeft: "5px",
+  },
+  contact: {
+    display: "flex",
+    textTransform: "none",
+    textAlign: "left",
+    padding: "0",
+    flexDirection: "column",
+    width: "100%",
   },
 }));
 
@@ -29,6 +50,8 @@ const Recents = (props: any) => {
   const [selected, setSelectedState] = useState({
     id: "",
     name: "",
+    group: false,
+    users: [] as any[],
   });
 
   // access messaging manager from context.
@@ -60,9 +83,10 @@ const Recents = (props: any) => {
 
   useEffect(() => {
     if (params.messageID && contacts) {
-      const selectedContact = contacts.filter(
+      let selectedContact = contacts.filter(
         (c) => c.id === params.messageID
       )[0];
+      selected.group = selectedContact.users.length > 2;
       if (!selectedContact) history.push("/study-rooms/recents");
       else setSelectedState(selectedContact);
     }
@@ -86,14 +110,48 @@ const Recents = (props: any) => {
 
   return (
     <div>
-      <div className={classes.root}>
+      <div
+        className={
+          props.dashboard ? classes.rootDashboard : classes.rootMessaging
+        }
+      >
         <RecentContacts
           contacts={filteredContacts}
           handleClick={handleClick}
           selected={props.messaging ? selectedOrDefault : {}}
         />
         {props.messaging && (
-          <MessageBox id={selectedOrDefault.id} name={selectedOrDefault.name} />
+          <div style={{ width: "100%" }}>
+            <MessageBox
+              id={selectedOrDefault.id}
+              name={selectedOrDefault.name}
+            />
+            <div
+              className={classes.list}
+              style={{ display: "inline-block", float: "right" }}
+            >
+              <h2 style={{ marginBottom: "5px" }}>Members</h2>
+              <List>
+                {selected.users
+                  .filter((u: any) => u.id !== uid)
+                  .map((user: any) => (
+                    <span className={classes.contact}>
+                      <ContactCard
+                        buttonsOff
+                        name={user.name}
+                        avatar={user.avatar}
+                        contact={{
+                          name: user.name,
+                          avatar: user.avatar,
+                        }}
+                        readStatus
+                        key={user.name}
+                      />
+                    </span>
+                  ))}
+              </List>
+            </div>
+          </div>
         )}
       </div>
     </div>
