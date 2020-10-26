@@ -17,7 +17,11 @@ import {
   ApolloProvider,
   NormalizedCacheObject,
 } from "@apollo/client";
-import { persistCache, PersistentStorage } from "apollo3-cache-persist";
+import {
+  persistCache,
+  PersistentStorage,
+  CachePersistor,
+} from "apollo3-cache-persist";
 import { setContext } from "@apollo/client/link/context";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import firebase from "firebase";
@@ -152,13 +156,15 @@ const getClient = async () => {
   );
 
   const cache = new InMemoryCache();
-  await persistCache({
+
+  const persistor = new CachePersistor({
     cache,
     storage: window.localStorage as PersistentStorage<
       PersistedData<NormalizedCacheObject>
     >,
-    debug: true,
   });
+
+  persistor.restore();
 
   return new ApolloClient({
     link: splitLink,
