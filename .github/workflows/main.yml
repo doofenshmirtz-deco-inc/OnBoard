@@ -75,7 +75,7 @@ jobs:
     - name: Install dependencies on client
       working-directory: client
       run: |
-        yarn
+        yarn & yarn add -D wait-on
 
     - name: Run prettier check on client
       working-directory: client
