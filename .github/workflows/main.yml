@@ -75,7 +75,7 @@ jobs:
     - name: Install dependencies on client
       working-directory: client
       run: |
-        yarn & yarn add -D wait-on
+        yarn
 
     - name: Run prettier check on client
       working-directory: client
@@ -92,7 +92,7 @@ jobs:
     - name: Start client for client tests
       working-directory: client
       run: |
-          yarn start & wait-on http://localhost:3000
+          yarn start & yarn wait-on http://localhost:3000
 
     - name: Run client tests
       working-directory: client
