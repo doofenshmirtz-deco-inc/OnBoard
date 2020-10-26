@@ -30,6 +30,9 @@ const MESSAGES_QUERY = gql`
       }
       group {
         id
+        users {
+          id
+        }
       }
       createdAt
     }
@@ -51,6 +54,9 @@ const MESSAGES_SUBSCRIPTION = gql`
       text
       group {
         id
+        users {
+          id
+        }
       }
       user {
         id
@@ -118,9 +124,11 @@ const toChatMessage = (
 ): ChatMessage => {
   return {
     sender: data.user.id,
+    senderName: data.user.name,
     text: data.text,
     direction: data.user.id === uid ? "right" : "left",
     groupId: data.group.id,
+    group: data.group.users.length > 2,
     createdAt: new Date(data.createdAt),
   };
 };
@@ -175,7 +183,9 @@ export const useMessaging = () => {
   }, [groupId]);
 
   // fetch contacts list from server
-  const { data: groupData } = useQuery<MyGroups>(GROUPS_QUERY);
+  const { data: groupData, refetch: refetchGroups } = useQuery<MyGroups>(
+    GROUPS_QUERY
+  );
 
   // set contacts once received from server
   useEffect(() => {
@@ -226,22 +236,31 @@ export const useMessaging = () => {
 
   // bumps the contact with the given id to be the most recently contacted.
   // used when message is received. should be called with message is sent.
-  const bumpContact = useCallback((id: string) => {
-    setContacts((contacts) => {
-      if (!contacts) return contacts;
-      contacts = [...contacts];
-      for (let i = 0; i < contacts.length; i++) {
-        const c = contacts[i];
-        if (c.id === id) {
-          contacts[i] = {
-            ...c,
-            lastActive: new Date(),
-          };
+  const bumpContact = useCallback(
+    (id: string) => {
+      setContacts((contacts) => {
+        if (!contacts) return contacts;
+        const newContacts = [...contacts];
+        let found = false;
+        for (let i = 0; i < newContacts.length; i++) {
+          const c = newContacts[i];
+          if (c.id === id) {
+            found = true;
+            newContacts[i] = {
+              ...c,
+              lastActive: new Date(),
+            };
+          }
         }
-      }
-      return contacts;
-    });
-  }, []);
+        if (!found) {
+          refetchGroups();
+          return contacts;
+        }
+        return newContacts;
+      });
+    },
+    [refetchGroups]
+  );
 
   // subscription handler to add a new received message.
   const handleNewMessage = useCallback(

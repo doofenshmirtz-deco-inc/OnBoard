@@ -267,7 +267,7 @@ export default function MiniDrawer() {
                   </ListItem>
                   <Collapse
                     in={classesOpen}
-                    className={classes.nested}
+                    className={open ? classes.nestedExp : classes.nested}
                     timeout="auto"
                     unmountOnExit
                   >

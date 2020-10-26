@@ -7,9 +7,15 @@
 // GraphQL subscription operation: OnMessageReceived
 // ====================================================
 
+export interface OnMessageReceived_newMessages_group_users {
+  __typename: "User";
+  id: string;
+}
+
 export interface OnMessageReceived_newMessages_group {
   __typename: "BaseGroup";
   id: string;
+  users: OnMessageReceived_newMessages_group_users[];
 }
 
 export interface OnMessageReceived_newMessages_user {

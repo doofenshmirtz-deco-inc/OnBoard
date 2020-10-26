@@ -82,13 +82,22 @@ jobs:
       run: |
         yarn pretty:check
 
-    - name: Run tests on client
-      uses: cypress-io/github-action@v2
-      with:
-        working-directory: client
-        start: yarn start
-        wait-on: 'http://localhost:3000'
-        browser: chrome
+    # - name: Run tests on client
+    #  uses: cypress-io/github-action@v2
+    #  with:
+    #    working-directory: client
+    #    start: yarn start
+    #    wait-on: 'http://localhost:3000'
+    #    browser: chrome
+    - name: Start client for client tests
+      working-directory: client
+      run: |
+          yarn start & yarn wait-on http://localhost:3000
+
+    - name: Run client tests
+      working-directory: client
+      run: |
+          yarn cypress run
 
     - uses: actions/upload-artifact@v1
       if: failure()

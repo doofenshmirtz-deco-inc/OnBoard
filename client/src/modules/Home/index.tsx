@@ -1,7 +1,7 @@
 import React from "react";
 import HomeIcon from "@material-ui/icons/Home";
 import Grid from "@material-ui/core/Grid";
-import ContactList from "../../components/ContactList";
+import ContactList from "../../components/Contacts";
 import { ClassesList } from "../../components/ClassesList";
 import Announcements from "../../components/Announcements";
 import Cal from "../../components/Cal";
@@ -36,7 +36,7 @@ const Home = () => {
         <Announcements isDashboard={true} />
       </Grid>
       <Grid item xs={12} md={4}>
-        <ContactList />
+        <ContactList dashboard />
       </Grid>
     </Grid>
   );

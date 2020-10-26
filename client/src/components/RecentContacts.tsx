@@ -13,11 +13,10 @@ const RecentContacts = (props: any) => {
   const [searchTerm, setSearchTerm] = useState("");
   const useStyles = makeStyles((theme: Theme) => ({
     root: {
-      backgroundColor: theme.palette.background.paper,
       display: "flex",
       flexDirection: "column",
       width: "100%",
-      height: "60vh",
+      height: "63vh",
       overflowY: "scroll",
       paddingBottom: "0px",
     },
@@ -56,7 +55,7 @@ const RecentContacts = (props: any) => {
           ),
         }}
       />
-      <CreateRoomBtn contacts={contacts} />
+      <CreateRoomBtn contacts={contacts} handleClick={props.handleClick} />
       <List className={classes.root}>
         {props.contacts.map((item: any) =>
           item?.name?.toLowerCase?.().includes?.(searchTerm.toLowerCase()) ? (
@@ -66,7 +65,7 @@ const RecentContacts = (props: any) => {
               disableElevation
               style={{
                 backgroundColor:
-                  props.selected.id === item.id ? "#e3e1e1" : "white",
+                  props.selected.id === item.id ? "#e3e1e1" : "#fafafa",
               }}
               onClick={(e) => {
                 props.handleClick(item);
@@ -79,7 +78,7 @@ const RecentContacts = (props: any) => {
                 readStatus={item.readStatus}
                 contact={item.users[0]}
                 buttonsOff={true}
-                group={item.group}
+                group={item.users.length > 2}
                 contact2={item.users[1]}
                 contacts={item.users}
               />
