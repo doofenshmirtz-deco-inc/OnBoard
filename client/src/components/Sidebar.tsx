@@ -125,6 +125,9 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     nested: {
+      paddingLeft: theme.spacing(1),
+    },
+    nestedExp: {
       paddingLeft: theme.spacing(4),
     },
   })

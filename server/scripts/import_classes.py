@@ -27,7 +27,7 @@ def parse_file(filename):
                 'code': code,
                 'name': line['Description'],
                 'semester': sem,
-                'level': "Undergraduate" if int(code[4]) < 7 else "Postgraduate",
+                'courseLevel': "Undergraduate" if int(code[4]) < 7 else "Postgraduate",
                 'year': 2020,
                 'students': [filename.split("_")[2].split(".txt")[0]]
             })
