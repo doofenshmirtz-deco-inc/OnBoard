@@ -20,14 +20,17 @@ import { CourseGroup } from "../models/UserGroup";
 
 const addGroups = async (
   groups: {
-    [role: string]: User[];
+    [role in CourseRole]?: User[];
   },
   course: Course
 ) => {
   if (groups) {
     for (const [role, users] of Object.entries(groups)) {
-      const group = await factory(CourseGroup)({ users }).create();
-      course.addGroup(role as CourseRole, group);
+      const group = new CourseGroup();
+      await group.save();
+      await group.setUsers(users);
+      await group.save();
+      await course.addGroup(role as CourseRole, group);
     }
   }
 };
