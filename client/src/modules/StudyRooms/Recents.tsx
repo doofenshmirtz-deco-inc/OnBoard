@@ -1,65 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import MessageBox from "../../components/MessageBox";
 import RecentContacts from "../../components/RecentContacts";
-import { gql, useQuery } from "@apollo/client";
-import { MyGroups } from "../../graphql/MyGroups";
 import { LoadingPage } from "../../components/LoadingPage";
-import { MeId } from "../../graphql/MeId";
 import { useHistory, useParams } from "react-router";
-
-const GROUPS_QUERY = gql`
-  query MyGroups {
-    me {
-      groups {
-        ... on DMGroup {
-          id
-          name
-          users {
-            id
-            name
-            avatar
-          }
-        }
-        ... on ClassGroup {
-          id
-          name
-          users {
-            id
-            name
-            avatar
-          }
-        }
-        ... on CourseGroup {
-          id
-          name
-          users {
-            id
-            name
-            avatar
-          }
-        }
-        ... on StudyGroup {
-          id
-          name
-          users {
-            id
-            name
-            avatar
-          }
-        }
-      }
-    }
-  }
-`;
-
-const ME_QUERY = gql`
-  query MeId {
-    me {
-      id
-    }
-  }
-`;
+import { Messaging } from "../../hooks/useMessaging";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -77,7 +22,7 @@ export type Contact = {
   readStatus: boolean;
 };
 
-const Recents = () => {
+const Recents = (props: any) => {
   const classes = useStyles();
 
   // currently selected contact id and name.
@@ -86,38 +31,24 @@ const Recents = () => {
     name: "",
   });
 
-  // list of contacts/groups, sorted by recency.
-  const [contacts, setContacts] = useState(null as Contact[] | null);
+  // access messaging manager from context.
+  const messaging = Messaging.useContainer();
 
   const params = useParams<{ messageID?: string }>();
   const history = useHistory();
 
   // handles a click on a contact/group by selecting that contact.
   const handleClick = (item: any) => {
+    messaging.setGroupId(item.id);
     history.push("/study-rooms/recents/" + item.id);
   };
 
-  // callback handler to bump the currently selected group to the top of the list.
-  // passed to message box so it can be called when a new message is received.
-  const bumpSelectedContact = useCallback(() => {
-    if (!contacts) return;
-    const selectedContacts = contacts.filter((c) => c.id === selected.id);
-    const notSelectedContacts = contacts.filter((c) => c.id !== selected.id);
-    setContacts([...selectedContacts, ...notSelectedContacts]);
-  }, [selected, contacts]);
-  // TODO: probably sort contacts initially as well. will need to sort server-side or return times in query.
+  const uid = messaging.username;
 
-  // get my recently contacted groups
-  const { data, loading } = useQuery<MyGroups>(GROUPS_QUERY);
-  // get my id.
-  // TODO: pass uid as prop?
-  const { data: me, loading: meLoading } = useQuery<MeId>(ME_QUERY);
-  const uid = me?.me?.id;
-
-  // run when data from groups query is obtained.
-  useEffect(() => {
-    const myGroups = data?.me?.groups?.map((group: any) => {
+  const contacts = useMemo(() => {
+    return messaging.contacts?.map((group: any) => {
       return {
+        ...group,
         id: group.id,
         name: group.name,
         group: group.users.length > 2,
@@ -125,9 +56,7 @@ const Recents = () => {
         readStatus: true,
       };
     });
-
-    if (myGroups) setContacts(myGroups); // FIXME: resets order...
-  }, [data]);
+  }, [messaging.contacts]);
 
   useEffect(() => {
     if (params.messageID && contacts) {
@@ -139,30 +68,32 @@ const Recents = () => {
     }
   }, [contacts, params.messageID, selected, history]);
 
-  if (loading || meLoading || !data?.me?.groups || !uid || !contacts) {
+  const filteredContacts = useMemo(() => {
+    // console.log(contacts);
+    if (!props.messaging) {
+      return contacts?.filter((c: any) => c.__typename === "DMGroup") ?? [];
+    } else {
+      return contacts ?? [];
+    }
+  }, [contacts]);
+
+  if (!uid || !contacts || contacts.length === 0) {
     return <LoadingPage />;
   }
 
-  // TODO: NEED some way of updating messages in background. service/react context?
+  // use first contact if none is selected.
+  const selectedOrDefault = selected?.id ? selected : contacts[0];
 
   return (
     <div>
       <div className={classes.root}>
         <RecentContacts
-          contacts={contacts}
+          contacts={filteredContacts}
           handleClick={handleClick}
-          selected={selected}
+          selected={props.messaging ? selectedOrDefault : {}}
         />
-        {selected.id === "" ? (
-          <div />
-        ) : (
-          <MessageBox
-            id={selected.id}
-            name={selected.name}
-            contacts={contacts}
-            setContacts={setContacts as any}
-            onSentMessage={bumpSelectedContact}
-          />
+        {props.messaging && (
+          <MessageBox id={selectedOrDefault.id} name={selectedOrDefault.name} />
         )}
       </div>
     </div>

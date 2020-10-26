@@ -15,10 +15,12 @@ export interface OnMessageReceived_newMessages_group {
 export interface OnMessageReceived_newMessages_user {
   __typename: "User";
   id: string;
+  name: string;
 }
 
 export interface OnMessageReceived_newMessages {
   __typename: "Message";
+  id: string;
   text: string;
   group: OnMessageReceived_newMessages_group;
   user: OnMessageReceived_newMessages_user;
@@ -27,8 +29,4 @@ export interface OnMessageReceived_newMessages {
 
 export interface OnMessageReceived {
   newMessages: OnMessageReceived_newMessages;
-}
-
-export interface OnMessageReceivedVariables {
-  uid: string;
 }

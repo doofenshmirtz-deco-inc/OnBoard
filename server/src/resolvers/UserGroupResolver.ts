@@ -39,7 +39,7 @@ export class UserGroupResolver {
       where: { id },
     });
 
-    console.log(await group);
+    // console.log(await group);
 
     return group;
   }
@@ -74,7 +74,7 @@ export class UserGroupResolver {
         .leftJoinAndSelect("cgp.course", "course")
         .where("group.id = :id", { id: group.id });
       const cgp = await query.getOne();
-      return `${cgp?.course.code}: ${cgp?.course.name}`;
+      return `${cgp?.course.code} - ${cgp?.course.name}`;
     }
     if (group instanceof ClassGroup)
       return (await group.course).code + " - " + group.name;
