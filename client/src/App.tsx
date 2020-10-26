@@ -157,6 +157,7 @@ const getClient = async () => {
     storage: window.localStorage as PersistentStorage<
       PersistedData<NormalizedCacheObject>
     >,
+    debug: true,
   });
 
   return new ApolloClient({
