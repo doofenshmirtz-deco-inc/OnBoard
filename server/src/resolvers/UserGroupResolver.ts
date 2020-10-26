@@ -122,17 +122,21 @@ export class UserGroupResolver {
   @Mutation(() => ClassGroup)
   @Authorized()
   async addClassGroup(@Arg("classData") classData: ClassGroupInput) {
-    const users = User.findByIds(classData.uids);
-    const course = Course.findOne({ id: classData.courseID });
+    const users = await User.findByIds(classData.uids);
+    const course = await Course.findOne({ id: classData.courseID });
+
+    if (!course) throw new Error("Course is invalid");
 
     const group = ClassGroup.create({
-      users,
-      course,
       name: classData.name,
       type: classData.type,
       times: classData.times,
       duration: classData.duration,
     });
+    group.save();
+    group.course = Promise.resolve(course);
+
+    group.setUsers(users);
 
     return await group.save();
   }
