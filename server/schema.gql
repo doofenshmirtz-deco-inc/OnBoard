@@ -24,6 +24,13 @@ type BaseGroup {
   users: [User!]!
 }
 
+type BaseNode {
+  id: ID!
+  link: String
+  parent: FolderNode
+  title: String!
+}
+
 type ClassGroup {
   course: Course!
   duration: Float!
@@ -36,15 +43,25 @@ type ClassGroup {
   users: [User!]!
 }
 
+input ClassGroupInput {
+  courseID: ID!
+  duration: Float!
+  name: String!
+  times: [DateTime!]!
+  type: String!
+  uids: [String!]!
+}
+
 type Course {
   announcements: [Announcement!]
-  assesmentPage: FolderNode!
+  assessmentPage: FolderNode!
   code: String!
   courseLevel: String!
   coursePage: FolderNode!
   id: ID!
   name: String!
   semester: Semesters!
+  staff: [User!]!
   year: Int!
 }
 
@@ -83,14 +100,24 @@ type DMGroup {
 type FolderNode {
   children: [Node!]!
   id: ID!
+  link: String
   parent: FolderNode
   title: String!
+}
+
+input FolderNodeInput {
+  children: [String!]
+  id: Float
+  link: String
+  parent: Float
+  title: String
 }
 
 union Group = ClassGroup | CourseGroup | DMGroup | StudyGroup
 
 type HeadingNode {
   id: ID!
+  link: String
   parent: FolderNode
   title: String!
 }
@@ -109,8 +136,12 @@ input MessageInput {
 }
 
 type Mutation {
+  addClassGroup(classData: ClassGroupInput!): ClassGroup!
   addMessage(message: MessageInput!): Message!
   addStudyGroup(groupName: String!, isPublic: Boolean!, uids: [String!]!): StudyGroup!
+  deleteNode(id: Float!): BaseNode!
+  editFolderNode(data: FolderNodeInput!): FolderNode!
+  editTextNode(data: TextNodeInput!): TextNode!
   joinStudyGroup(groupID: ID!): StudyGroup!
   singleUpload(file: Upload!): String!
 }
@@ -147,14 +178,23 @@ type StudyGroup {
 }
 
 type Subscription {
-  newMessages(uid: ID!): Message!
+  newMessages: Message!
 }
 
 type TextNode {
   id: ID!
+  link: String
   parent: FolderNode
   text: String!
   title: String!
+}
+
+input TextNodeInput {
+  id: Float
+  link: String
+  parent: Float
+  text: String
+  title: String
 }
 
 """The `Upload` scalar type represents a file upload."""

@@ -18,6 +18,7 @@ export interface GetNode_node_TextNode {
   id: string;
   title: string;
   text: string;
+  link: string | null;
   parent: GetNode_node_TextNode_parent | null;
 }
 
@@ -31,6 +32,7 @@ export interface GetNode_node_HeadingNode {
   __typename: "HeadingNode";
   id: string;
   title: string;
+  link: string | null;
   parent: GetNode_node_HeadingNode_parent | null;
 }
 
@@ -72,23 +74,18 @@ export interface GetNode_node_FolderNode_children_FolderNode {
   title: string;
 }
 
-export type GetNode_node_FolderNode_children =
-  | GetNode_node_FolderNode_children_TextNode
-  | GetNode_node_FolderNode_children_HeadingNode
-  | GetNode_node_FolderNode_children_FolderNode;
+export type GetNode_node_FolderNode_children = GetNode_node_FolderNode_children_TextNode | GetNode_node_FolderNode_children_HeadingNode | GetNode_node_FolderNode_children_FolderNode;
 
 export interface GetNode_node_FolderNode {
   __typename: "FolderNode";
   id: string;
   title: string;
+  link: string | null;
   parent: GetNode_node_FolderNode_parent | null;
   children: GetNode_node_FolderNode_children[];
 }
 
-export type GetNode_node =
-  | GetNode_node_TextNode
-  | GetNode_node_HeadingNode
-  | GetNode_node_FolderNode;
+export type GetNode_node = GetNode_node_TextNode | GetNode_node_HeadingNode | GetNode_node_FolderNode;
 
 export interface GetNode {
   node: GetNode_node | null;

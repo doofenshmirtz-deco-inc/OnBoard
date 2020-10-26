@@ -94,6 +94,23 @@ define(Course, async (faker, context?: CourseFactoryContext) => {
 
   const authors = context?.groups?.[CourseRole.Coordinator];
 
+  const assessmentPage = new FolderNode();
+  assessmentPage.title = `${course.code} Assessment`;
+  await assessmentPage.save();
+  course.assessmentPage = assessmentPage;
+
+  const assessmentFolder = new FolderNode();
+  assessmentFolder.title = "Assignment 1";
+  assessmentFolder.parent = Promise.resolve(assessmentPage);
+  await assessmentFolder.save();
+
+  const assessmentText = new TextNode();
+  assessmentText.title = "Assignment 1 Details";
+  assessmentText.text =
+    "Assignment 1 is about figuring out what is the optimal way to spend the summer";
+  assessmentText.parent = Promise.resolve(assessmentFolder);
+  await assessmentText.save();
+
   /* 
   if (authors) {
     course.announcements = factory(Announcement)({

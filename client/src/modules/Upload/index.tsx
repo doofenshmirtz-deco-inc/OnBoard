@@ -3,6 +3,7 @@ import { Backup } from "@material-ui/icons";
 import { gql } from "@apollo/client/core";
 import { useMutation } from "@apollo/client/react/hooks/useMutation";
 import { SingleUpload } from "../../graphql/SingleUpload";
+import { useMessaging } from "../../hooks/useMessaging";
 
 const UPLOAD_FILE = gql`
   mutation SingleUpload($file: Upload!) {
@@ -29,7 +30,7 @@ const UploadTest = () => {
       {url && (
         <div>
           Uploaded to:{" "}
-          <a href={url} target="_blank">
+          <a href={url} target="_blank" rel="noopener noreferrer">
             {url}
           </a>
         </div>

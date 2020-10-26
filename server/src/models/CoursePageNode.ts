@@ -8,7 +8,13 @@ import {
   ManyToOne,
   OneToMany,
 } from "typeorm";
-import { ObjectType, ID, Field, createUnionType } from "type-graphql";
+import {
+  ObjectType,
+  ID,
+  Field,
+  createUnionType,
+  InputType,
+} from "type-graphql";
 import { DMGroup } from "./UserGroup";
 
 export enum CoursePageNodeTypes {
@@ -34,9 +40,13 @@ export abstract class BaseNode extends BaseEntity {
   @Field()
   title: string;
 
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+  link?: string;
+
   // TODO maybe custom type checking
   // TODO so bad v bad fix me
-  @ManyToOne(() => BaseNode, (node) => node.children)
+  @ManyToOne(() => BaseNode, (node) => node.children, { cascade: true })
   parent: Promise<BaseNode>;
 
   // TODO this is bad!!
@@ -60,6 +70,33 @@ export class HeadingNode extends BaseNode {}
 @ChildEntity(CoursePageNodeTypes.Folder)
 @ObjectType()
 export class FolderNode extends BaseNode {}
+
+@InputType()
+export abstract class BaseNodeInput {
+  @Field({ nullable: true })
+  id?: number;
+
+  @Field({ nullable: true })
+  title?: string;
+
+  @Field({ nullable: true })
+  link?: string;
+
+  @Field({ nullable: true })
+  parent?: number;
+}
+
+@InputType()
+export class TextNodeInput extends BaseNodeInput {
+  @Field({ nullable: true })
+  text?: string;
+}
+
+@InputType()
+export class FolderNodeInput extends BaseNodeInput {
+  @Field(() => [String], { nullable: true })
+  children?: string[];
+}
 
 export const Node = createUnionType({
   name: "Node",

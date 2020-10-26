@@ -26,6 +26,7 @@ import modules from "./modules";
 import Sidebar from "./components/Sidebar";
 import { Login } from "./modules/Login";
 import { LoadingPage } from "./components/LoadingPage";
+import { Messaging } from "./hooks/useMessaging";
 import { PersistedData } from "apollo3-cache-persist/lib/types";
 
 const drawerWidth = 240;
@@ -103,8 +104,12 @@ const getClient = async () => {
     },
   }) as unknown) as ApolloLink;
 
+  const getToken = async () => {
+    return await firebase.auth().currentUser?.getIdToken();
+  };
+
   const authLink = setContext(async (_, { headers }) => {
-    const token = await firebase.auth().currentUser?.getIdToken();
+    const token = await getToken();
     return {
       headers: {
         ...headers,
@@ -116,9 +121,22 @@ const getClient = async () => {
   const wsLink = new WebSocketLink({
     uri: process.env.REACT_APP_GRAPHQL_WS!,
     options: {
+      lazy: true,
       reconnect: true,
+      connectionParams: async () => ({
+        auth: await getToken(),
+      }),
     },
   });
+
+  const subscriptionMiddleware = {
+    async applyMiddleware(options: any, next: any) {
+      options.auth = await getToken();
+      next();
+    },
+  };
+
+  (wsLink as any).subscriptionClient.use([subscriptionMiddleware]);
 
   const splitLink = split(
     ({ query }) => {
@@ -129,7 +147,7 @@ const getClient = async () => {
       );
     },
     wsLink,
-    httpLink
+    authLink.concat(httpLink)
   );
 
   const cache = new InMemoryCache();
@@ -141,7 +159,7 @@ const getClient = async () => {
   });
 
   return new ApolloClient({
-    link: authLink.concat(splitLink),
+    link: splitLink,
     cache,
   });
 };
@@ -149,6 +167,8 @@ const getClient = async () => {
 export default function App() {
   const [client, setClient] = useState(null as ApolloClient<any> | null);
   const classes = useStyles();
+
+  const [mobileOsubpen, setMobileOpen] = React.useState(false);
 
   const [loaded, setLoaded] = React.useState(false);
 
@@ -184,9 +204,11 @@ export default function App() {
         <Sidebar />
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          {modules.map((module) => (
-            <Route {...module.routeProps} key={module.name} />
-          ))}
+          <Messaging.Provider>
+            {modules.map((module) => (
+              <Route {...module.routeProps} key={module.name} />
+            ))}
+          </Messaging.Provider>
         </main>
       </ApolloProvider>
     );
