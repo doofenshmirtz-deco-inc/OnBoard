@@ -45,6 +45,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { DropzoneArea } from "material-ui-dropzone";
 import Tooltip from "@material-ui/core/Tooltip";
 import ReactMarkdown from "react-markdown";
+import RemoveMD from "remove-markdown";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -230,7 +231,7 @@ function TextItem(item: any, index: number) {
           <DescriptionIcon />
         </Avatar>
       </ListItemAvatar>
-      <ListItemText primary={item.title} secondary={item.text} />
+      <ListItemText primary={item.title} secondary={RemoveMD(item.text)} />
     </ListItem>
   );
 }
