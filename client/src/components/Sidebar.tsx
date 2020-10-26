@@ -22,8 +22,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import modules from "../modules";
 import { NavLink } from "react-router-dom";
 import * as firebase from "firebase";
-import { Icon, Avatar } from "@material-ui/core";
-import { Lock, ExitToApp } from "@material-ui/icons";
+import { Icon, Avatar, Collapse } from "@material-ui/core";
+import { Lock, ExitToApp, ExpandLess, ExpandMore } from "@material-ui/icons";
 import { useQuery, gql } from "@apollo/client";
 import { Me } from "../graphql/Me";
 import Dialog from "@material-ui/core/Dialog";
@@ -32,6 +32,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
+import { ClassesSublist } from "./ClassesList";
 
 const drawerWidth = 240;
 
@@ -123,6 +124,9 @@ const useStyles = makeStyles((theme: Theme) =>
         marginLeft: 10,
       },
     },
+    nested: {
+      paddingLeft: theme.spacing(4),
+    },
   })
 );
 
@@ -140,6 +144,11 @@ export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [logoutOpen, setLogoutOpen] = React.useState(false);
+  const [classesOpen, setClassestOpen] = React.useState(false);
+
+  const handleClassesOpen = () => {
+    setClassestOpen(!classesOpen);
+  };
 
   const handleLogoutOpen = () => {
     setLogoutOpen(true);
@@ -223,19 +232,48 @@ export default function MiniDrawer() {
           </IconButton>
         </div>
         <List>
-          {modules.map((item) => (
-            <ListItem
-              button
-              key={item.name}
-              {...{ component: NavLink, to: item.routeProps.path }}
-              classes={{ gutters: clsx(classes.gutters) }}
-            >
-              <ListItemIcon className={classes.icon}>
-                {<item.icon />}
-              </ListItemIcon>
-              <ListItemText primary={item.name} />
-            </ListItem>
-          ))}
+          {modules.map((item) => {
+            if (item.name !== "My Classes") {
+              return (
+                <ListItem
+                  button
+                  key={item.name}
+                  {...{ component: NavLink, to: item.routeProps.path }}
+                  classes={{ gutters: clsx(classes.gutters) }}
+                >
+                  <ListItemIcon className={classes.icon}>
+                    {<item.icon />}
+                  </ListItemIcon>
+                  <ListItemText primary={item.name} />
+                </ListItem>
+              );
+            } else {
+              return (
+                <>
+                  <ListItem
+                    button
+                    onClick={handleClassesOpen}
+                    key={item.name}
+                    classes={{ gutters: clsx(classes.gutters) }}
+                  >
+                    <ListItemIcon className={classes.icon}>
+                      {<item.icon />}
+                    </ListItemIcon>
+                    <ListItemText primary={item.name} />
+                    {classesOpen ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
+                  <Collapse
+                    in={classesOpen}
+                    className={classes.nested}
+                    timeout="auto"
+                    unmountOnExit
+                  >
+                    <ClassesSublist noTitle />
+                  </Collapse>
+                </>
+              );
+            }
+          })}
         </List>
         <List className={classes.footer}>
           <ListItem

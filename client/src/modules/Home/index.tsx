@@ -2,7 +2,7 @@ import React from "react";
 import HomeIcon from "@material-ui/icons/Home";
 import Grid from "@material-ui/core/Grid";
 import ContactList from "../../components/ContactList";
-import ClassesList from "../../components/ClassesList";
+import { ClassesList } from "../../components/ClassesList";
 import Announcements from "../../components/Announcements";
 import Cal from "../../components/Cal";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";

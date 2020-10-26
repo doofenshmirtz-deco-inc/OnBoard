@@ -33,42 +33,47 @@ const GET_CLASSES = gql`
   }
 `;
 
-export default function ContactList() {
-  const classes = useStyles();
-
+export let ClassesSublist = (props: { noTitle?: boolean }) => {
   const { data } = useQuery<MyClasses>(GET_CLASSES);
 
-  const classListElem =
-    !data || !data.me ? (
-      <div></div>
-    ) : (
-      <List>
-        {data.me.courses.map((item: any, index: number) => (
-          <ListItem
-            button
-            key={index}
-            component={Link}
-            to={"/classes/" + item.course.id}
-          >
-            <ListItemIcon>
-              <svg width={20} height={20}>
-                <circle cx={10} cy={10} r={10} fill={item.colour}></circle>
-              </svg>
-            </ListItemIcon>
-            <ListItemText
-              primary={`${item.course.code}: ${item.course.name}`}
-            />
-          </ListItem>
-        ))}
-      </List>
-    );
+  return !data || !data.me ? (
+    <div></div>
+  ) : (
+    <List>
+      {data.me.courses.map((item: any, index: number) => (
+        <ListItem
+          button
+          key={index}
+          component={Link}
+          to={"/classes/" + item.course.id}
+        >
+          <ListItemIcon>
+            <svg width={20} height={20}>
+              <circle cx={10} cy={10} r={10} fill={item.colour}></circle>
+            </svg>
+          </ListItemIcon>
+          <ListItemText
+            primary={
+              props.noTitle
+                ? item.course.code
+                : `${item.course.code}: ${item.course.name}`
+            }
+          />
+        </ListItem>
+      ))}
+    </List>
+  );
+};
+
+export let ClassesList = () => {
+  const classes = useStyles();
 
   return (
     <Box border={1} className={classes.root}>
       <Container>
         <h2>Classes</h2>
-        {classListElem}
+        <ClassesSublist />
       </Container>
     </Box>
   );
-}
+};
