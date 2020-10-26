@@ -21,7 +21,7 @@ import {
   StudyGroup,
   ClassGroupInput,
 } from "../models/UserGroup";
-import { CourseGroupPair } from "../models/CourseGroupPair";
+import { CourseGroupPair, CourseRole } from "../models/CourseGroupPair";
 import { Course } from "../models/Course";
 
 @Resolver((of) => BaseGroup)

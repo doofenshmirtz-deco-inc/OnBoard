@@ -112,6 +112,27 @@ export class Course extends BaseEntity {
   }
 }
 
+@InputType()
+export class courseInput {
+  @Field()
+  code: string;
+
+  @Field(() => Int)
+  year: number;
+
+  @Field(() => Semesters)
+  semester: Semesters;
+
+  @Field()
+  name: string;
+
+  @Field()
+  courseLevel: CourseLevel;
+
+  @Field(() => [String])
+  students: String[];
+}
+
 @ObjectType()
 export class CourseColor {
   @Field()
