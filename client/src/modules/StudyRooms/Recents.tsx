@@ -17,7 +17,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "block",
   },
   list: {
-    // display: "flex",
     flexDirection: "column",
     display: "inline-block",
     float: "right",
@@ -101,7 +100,6 @@ const Recents = (props: any) => {
   }, [contacts, params.messageID, selected, history]);
 
   const filteredContacts = useMemo(() => {
-    // console.log(contacts);
     if (!props.messaging) {
       return contacts?.filter((c: any) => c.__typename === "DMGroup") ?? [];
     } else {
@@ -138,7 +136,6 @@ const Recents = (props: any) => {
             />
             <div
               className={collapseMembers ? classes.hide : classes.list}
-              // style={{ display: "inline-block", float: "right" }}
             >
               <h2 style={{ marginBottom: "5px" }}>Members</h2>
               <List>
