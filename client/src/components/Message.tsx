@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 
 export type MessageProps = {
   direction: "left" | "right";
-  text: string;
+  text: (string | JSX.Element)[];
   sender: string;
   group?: boolean;
 };

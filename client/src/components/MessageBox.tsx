@@ -14,6 +14,8 @@ import Message from "./Message";
 import { Contact } from "../modules/StudyRooms/Recents";
 import { useParams, useHistory } from "react-router";
 import { Messaging } from "../hooks/useMessaging";
+import GroupIcon from "@material-ui/icons/Group";
+import { TextToLinks } from "../utils/string";
 
 const renderChatMessage = (message: ChatMessage, uid: string) => {
   const key = `${message.createdAt.getTime()}-${message.sender}-${
@@ -23,7 +25,7 @@ const renderChatMessage = (message: ChatMessage, uid: string) => {
     <Message
       key={key}
       direction={message.sender === uid ? "right" : "left"}
-      text={message.text}
+      text={TextToLinks(message.text, "#0B3954")}
       sender={message.senderName}
       group={message.group}
     />
@@ -38,18 +40,26 @@ export type MessageBoxProps = {
   contacts?: Contact[]; // all the contacts
   setContacts?: Dispatch<SetStateAction<Contact[]>>; // setContacts from parent (recents.tsx)
   group?: boolean; // whether or not the chat being rendered is a group chat
+  collapseMembers?: boolean; // whether or not the members list next to the message box should be collapsed
+  setCollapse?: any; // to set the value of collapseMembers
+  full?: boolean; // whether or not the messagebox should take up the full width or 75% of the width
 };
 
 // TODO: clear input message when changing contact
 const MessageBox = (props: MessageBoxProps) => {
   const useStyles = makeStyles((theme) => ({
     container: {
-      width: "75%",
       paddingLeft: "2%",
       height: "69vh",
       overflowY: "hidden",
       display: "inline-block",
       float: "left",
+    },
+    less: {
+      width: "75%",
+    },
+    full: {
+      width: "100%",
     },
     messagingContainer: {
       overflowY: "scroll",
@@ -122,7 +132,11 @@ const MessageBox = (props: MessageBoxProps) => {
   };
 
   return (
-    <div className={classes.container}>
+    <div
+      className={`${classes.container} ${
+        props.collapseMembers || props.full ? classes.full : classes.less
+      }`}
+    >
       {props.name ? (
         <h1>
           {props.name}{" "}
@@ -130,6 +144,9 @@ const MessageBox = (props: MessageBoxProps) => {
             onClick={() => history.push("/study-rooms/video/" + props.id)}
           >
             <VideocamIcon />
+          </IconButton>
+          <IconButton onClick={() => props.setCollapse(!props.collapseMembers)}>
+            <GroupIcon />
           </IconButton>
         </h1>
       ) : (
