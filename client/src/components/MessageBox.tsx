@@ -45,7 +45,7 @@ const renderChatMessage = (message: ChatMessage, uid: string) => {
       text={TextToLinks(message.text, "#0B3954")}
       sender={message.senderName}
       group={message.group}
-      time={message.createdAt.toLocaleString('en-GB')}
+      time={message.createdAt.toLocaleString("en-GB")}
     />
   );
 };
@@ -98,7 +98,7 @@ const FileUpload = (props: FileUploadProps) => {
       props.handleClose();
     }
     props.handleClose();
-  }
+  };
 
   return (
     <Dialog
@@ -270,7 +270,11 @@ const MessageBox = (props: MessageBoxProps) => {
         )}
         <div ref={messagesEndRef} />
       </div>
-      <FileUpload open={open} handleClose={handleClose} sendMessage={sendMessage} />
+      <FileUpload
+        open={open}
+        handleClose={handleClose}
+        sendMessage={sendMessage}
+      />
       <TextField
         className={classes.sendBar}
         style={{ marginTop: "10px" }}
@@ -280,8 +284,8 @@ const MessageBox = (props: MessageBoxProps) => {
         value={messageInput}
         multiline
         onChange={(e) => {
-          setMessageInput(e.target.value)}
-        }
+          setMessageInput(e.target.value);
+        }}
         onKeyPress={(e) => {
           if (e.key === "Enter") {
             if (!e.shiftKey) {

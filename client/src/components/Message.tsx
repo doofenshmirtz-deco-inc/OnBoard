@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 import React from "react";
-import Tooltip from '@material-ui/core/Tooltip';
+import Tooltip from "@material-ui/core/Tooltip";
 
 const useStyles = makeStyles((theme) => ({
   bubbleContainer: {
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
   wrapText: {
     overflowWrap: "break-word",
-  }
+  },
 }));
 
 export type MessageProps = {
@@ -51,10 +51,17 @@ const Message = (props: MessageProps) => {
   // FIXME: is this kinda dodgy????
   // insert new lines if the user used shift+enter when sending a message
   let message = props.text;
-  if (message.length === 1 && typeof(message[0]) === "string") {
+  if (message.length === 1 && typeof message[0] === "string") {
     const split = message[0].split("\n").filter((line: string) => line !== "");
     message = split.map((line: string, i: number) =>
-      i == split.length - 1 ? <span>{line}</span> : <span>{line}<br/></span>
+      i == split.length - 1 ? (
+        <span>{line}</span>
+      ) : (
+        <span>
+          {line}
+          <br />
+        </span>
+      )
     );
   }
 
@@ -68,7 +75,11 @@ const Message = (props: MessageProps) => {
           props.direction === "left" ? classes.left : classes.right
         }`}
       >
-        <Tooltip arrow title={props.time} placement={props.direction === "left" ? "right" : "left"}>
+        <Tooltip
+          arrow
+          title={props.time}
+          placement={props.direction === "left" ? "right" : "left"}
+        >
           <div
             className={`${classes.bubble} ${
               props.direction === "left" ? classes.other : classes.me
