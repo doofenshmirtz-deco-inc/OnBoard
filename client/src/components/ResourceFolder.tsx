@@ -652,10 +652,10 @@ export default function ResourceFolder(props: {
         </Route>
         <Route path="/">
           <Grid container spacing={3}>
-            <Grid item xs={6} sm={6}>
+            <Grid item xs={12} sm={6}>
               <NodeDirectory nodeId={nodeId} {...props} />
             </Grid>
-            <Grid item xs={6} sm={6}>
+            <Grid item xs={12} sm={6}>
               <NodeContent nodeId={nodeId} {...props} />
             </Grid>
           </Grid>

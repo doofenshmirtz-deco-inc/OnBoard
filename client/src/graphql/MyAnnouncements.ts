@@ -9,6 +9,7 @@
 
 export interface MyAnnouncements_me_courses_course_announcements {
   __typename: "Announcement";
+  id: string;
   createdAt: any;
   html: string;
   title: string;
