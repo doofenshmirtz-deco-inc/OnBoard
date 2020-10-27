@@ -34,9 +34,9 @@ jobs:
       with:
         path: |
           client/node_modules
-        key: client-${{ runner.os }}-${{ hashFiles('client/yarn.lock') }}
+        key: clientx-${{ runner.os }}-${{ hashFiles('client/yarn.lock') }}
         restore-keys: |
-          client-${{ runner.os }}-
+          clientx-${{ runner.os }}-
           
     - name: Cache Cypress binary
       uses: actions/cache@v1
