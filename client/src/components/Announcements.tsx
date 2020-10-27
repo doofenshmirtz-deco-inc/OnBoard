@@ -10,6 +10,7 @@ import { gql, useQuery } from "@apollo/client";
 import moment from "moment";
 import { MyAnnouncements } from "../graphql/MyAnnouncements";
 import ReactMarkdown from "react-markdown";
+import RemoveMD from "remove-markdown";
 
 const sharedStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -97,7 +98,7 @@ const getDescription = (announcement: any, isDashboard: boolean) => {
   }
 
   return isDashboard ? (
-    <span>{TextToLinks(text, announcement.colour)}</span>
+    <span>{TextToLinks(RemoveMD(text), announcement.colour)}</span>
   ) : (
     <ReactMarkdown>{text}</ReactMarkdown>
   );
