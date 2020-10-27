@@ -7,19 +7,17 @@ import { Connection } from "typeorm";
 import { User } from "../../models/User";
 import { Semesters, CourseLevel, Course } from "../../models/Course";
 import {
-  BaseGroup,
-  GroupType,
   CourseGroup,
-  DMGroup,
   ClassGroup,
   ClassType,
   StudyGroup,
 } from "../../models/UserGroup";
-import { Announcement } from "../../models/Announcement";
-import { CourseRole, CourseGroupPair } from "../../models/CourseGroupPair";
-import { Message } from "../../models/Message";
-import Faker from "faker";
+import { CourseRole } from "../../models/CourseGroupPair";
 
+// generates some non-random data for testing purposes.
+
+// add the given course groups to the given course. the groups object maps
+// roles to lists of users, which are attached to the course.
 const addGroups = async (
   groups: {
     [role: string]: User[];
@@ -34,36 +32,8 @@ const addGroups = async (
   }
 };
 
-const generateTestAnnouncements = async (
-  context: { course: Course; author: User },
-  texts: string[]
-) => {
-  let i = 1;
-
-  for (const text of texts) {
-    const an = await Announcement.create({
-      title: context.course.code + " Announcement " + i,
-      author: context.author,
-      html: text,
-      createdAt: Faker.date.past(1, new Date(Date.now())),
-    }).save();
-
-    an.course = context.course;
-    an.author = context.author;
-    an.save();
-    i++;
-  }
-};
-
+// add test messages to the given list of users.
 const generateDMs = async (users: User[]) => {
-  const pairs = ([] as User[][]).concat(
-    ...users.map((u1, i1) => users.slice(i1 + 1).map((u2) => [u1, u2]))
-  );
-
-  const groups = pairs.map(
-    async (pair) => await factory(DMGroup)({ users: pair }).create()
-  );
-
   //groups.forEach((group) => factory(Message)({ group: group }).createMany(1));
 };
 
