@@ -26,10 +26,10 @@ import { TextToLinks } from "../utils/string";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import { DropzoneArea } from "material-ui-dropzone";
 import { gql, useMutation } from "@apollo/client";
-import { SingleUpload } from "../graphql/SingleUpload";
+import { MessageUpload } from "../graphql/MessageUpload";
 
 const UPLOAD_FILE = gql`
-  mutation SingleUpload($file: Upload!) {
+  mutation MessageUpload($file: Upload!) {
     singleUpload(file: $file)
   }
 `;
@@ -45,6 +45,7 @@ const renderChatMessage = (message: ChatMessage, uid: string) => {
       text={TextToLinks(message.text, "#0B3954")}
       sender={message.senderName}
       group={message.group}
+      time={message.createdAt.toLocaleString('en-GB')}
     />
   );
 };
@@ -78,7 +79,7 @@ const FileUpload = (props: FileUploadProps) => {
   const classes = useStyles();
 
   // get the mutation in order to upload the files
-  const [upload, { data }] = useMutation<SingleUpload>(UPLOAD_FILE);
+  const [upload, { data }] = useMutation<MessageUpload>(UPLOAD_FILE);
 
   // the url where the file is located
   const url = data?.singleUpload;
