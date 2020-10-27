@@ -134,9 +134,7 @@ const Recents = (props: any) => {
               collapseMembers={collapseMembers}
               setCollapse={setCollapsable}
             />
-            <div
-              className={collapseMembers ? classes.hide : classes.list}
-            >
+            <div className={collapseMembers ? classes.hide : classes.list}>
               <h2 style={{ marginBottom: "5px" }}>Members</h2>
               <List>
                 {selected.users
