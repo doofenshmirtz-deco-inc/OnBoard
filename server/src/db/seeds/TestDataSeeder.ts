@@ -41,13 +41,16 @@ const generateTestAnnouncements = async (
   let i = 1;
 
   for (const text of texts) {
-    await Announcement.create({
-      course: context.course,
+    const an = await Announcement.create({
       title: context.course.code + " Announcement " + i,
       author: context.author,
       html: text,
       createdAt: Faker.date.past(1, new Date(Date.now())),
     }).save();
+
+    an.course = context.course;
+    an.author = context.author;
+    an.save();
     i++;
   }
 };
@@ -175,7 +178,6 @@ export default class TestDataSeeder implements Seeder {
       edis
     );
 
-    /*
     await generateTestAnnouncements(
       {
         course: secr,
@@ -198,14 +200,14 @@ export default class TestDataSeeder implements Seeder {
       ]
     );
 
-    /* TODO: for some reason this doesnt work????
+    /*
     await generateTestAnnouncements(
       {
         course: evil,
         author: heinz,
       },
       [
-        "Doofenshmirtz Evil Incorparated!A place of evil and fighting! With Perry the Platypus too! Doofenshmirtz holding a Bucket!I don't know what it's for! Doofenshmirtz Ex-Wifes House in the Hills somewhere! Stop reminding me of her! Doofenshmirtz Wicked Witch Castle!",
+        // "Doofenshmirtz Evil Incorparated!A place of evil and fighting! With Perry the Platypus too! Doofenshmirtz holding a Bucket!I don't know what it's for! Doofenshmirtz Ex-Wifes House in the Hills somewhere! Stop reminding me of her! Doofenshmirtz Wicked Witch Castle!",
         "Doofenshmirtz Evil Dirigible It's my awesome blimp! Doofenshmirtz Evil Incorparated! I don't wanna sing anymore! So we're through!",
       ]
     );
