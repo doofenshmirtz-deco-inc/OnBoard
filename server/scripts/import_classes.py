@@ -8,6 +8,7 @@ import csv
 import pprint
 import os
 import json
+import time
 
 
 def parse_file(filename):
@@ -118,7 +119,7 @@ if __name__ == "__main__":
     pprint.pprint(merged_courses)
     pprint.pprint(merged_classes)
 
-    client = GraphQLClient('http://localhost:5000/graphql')
+    client = GraphQLClient('https://onboard.doofenshmirtz.xyz/graphql')
 
     token = json.loads(client.execute('''
     {
