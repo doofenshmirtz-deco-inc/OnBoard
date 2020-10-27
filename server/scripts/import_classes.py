@@ -53,7 +53,7 @@ def parse_file(filename):
 
             for i in range(len(date_starts)):
                 current_date = date_starts[i]
-                dates_full.append(current_date)
+                dates_full.append(current_date - datetime.timedelta(hours=10))
                 while current_date < date_ends[i]:
                     current_date += datetime.timedelta(days=7)
                     # UTC+10, dodgy lol
