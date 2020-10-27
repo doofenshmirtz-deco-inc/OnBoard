@@ -9,7 +9,6 @@ define(Announcement, async (faker, ctx?: { authors: User[] }) => {
       "Announcement factory must be given context with author users"
     );
 
-  
   const announcement = new Announcement();
   announcement.html = faker.lorem.paragraph();
   announcement.title = faker.lorem.words();
