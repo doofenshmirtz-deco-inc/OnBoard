@@ -13,7 +13,7 @@ type Announcement {
 }
 
 input AnnouncementInput {
-  courseID: Float!
+  courseID: ID!
   html: String!
   title: String!
 }
