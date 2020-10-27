@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   list: {
     // display: "flex",
     flexDirection: "column",
-    display: "inline-block", 
+    display: "inline-block",
     float: "right",
     width: "25%",
     height: "69vh",
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: "5px",
   },
   hide: {
-    display: "none"
+    display: "none",
   },
   contact: {
     display: "flex",

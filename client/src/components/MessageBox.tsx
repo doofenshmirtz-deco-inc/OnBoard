@@ -14,7 +14,7 @@ import Message from "./Message";
 import { Contact } from "../modules/StudyRooms/Recents";
 import { useParams, useHistory } from "react-router";
 import { Messaging } from "../hooks/useMessaging";
-import GroupIcon from '@material-ui/icons/Group';
+import GroupIcon from "@material-ui/icons/Group";
 
 const renderChatMessage = (message: ChatMessage, uid: string) => {
   const key = `${message.createdAt.getTime()}-${message.sender}-${
@@ -40,7 +40,7 @@ export type MessageBoxProps = {
   setContacts?: Dispatch<SetStateAction<Contact[]>>; // setContacts from parent (recents.tsx)
   group?: boolean; // whether or not the chat being rendered is a group chat
   collapseMembers?: boolean; // whether or not the members list next to the message box should be collapsed
-  setCollapse?: any; // to set the value of collapseMembers 
+  setCollapse?: any; // to set the value of collapseMembers
   full?: boolean; // whether or not the messagebox should take up the full width or 75% of the width
 };
 
@@ -131,7 +131,11 @@ const MessageBox = (props: MessageBoxProps) => {
   };
 
   return (
-    <div className={`${classes.container} ${props.collapseMembers || props.full ? classes.full : classes.less}`}>
+    <div
+      className={`${classes.container} ${
+        props.collapseMembers || props.full ? classes.full : classes.less
+      }`}
+    >
       {props.name ? (
         <h1>
           {props.name}{" "}
@@ -140,9 +144,7 @@ const MessageBox = (props: MessageBoxProps) => {
           >
             <VideocamIcon />
           </IconButton>
-          <IconButton
-            onClick={() => props.setCollapse(!props.collapseMembers)}
-          >
+          <IconButton onClick={() => props.setCollapse(!props.collapseMembers)}>
             <GroupIcon />
           </IconButton>
         </h1>
