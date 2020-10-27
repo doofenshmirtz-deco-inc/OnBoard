@@ -12,6 +12,12 @@ type Announcement {
   title: String!
 }
 
+input AnnouncementInput {
+  courseID: Float!
+  html: String!
+  title: String!
+}
+
 type AuthToken {
   token: String!
 }
@@ -136,9 +142,11 @@ input MessageInput {
 }
 
 type Mutation {
+  addAnnouncement(data: AnnouncementInput!): Announcement!
   addClassGroup(classData: ClassGroupInput!): ClassGroup!
   addMessage(message: MessageInput!): Message!
   addStudyGroup(groupName: String!, isPublic: Boolean!, uids: [String!]!): StudyGroup!
+  deleteAnnouncement(id: ID!): Announcement!
   deleteNode(id: Float!): BaseNode!
   editFolderNode(data: FolderNodeInput!): FolderNode!
   editTextNode(data: TextNodeInput!): TextNode!

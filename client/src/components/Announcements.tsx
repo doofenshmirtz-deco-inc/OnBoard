@@ -9,6 +9,7 @@ import { TextToLinks } from "../utils/string";
 import { gql, useQuery } from "@apollo/client";
 import moment from "moment";
 import { MyAnnouncements } from "../graphql/MyAnnouncements";
+import ReactMarkdown from "react-markdown";
 
 const sharedStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -95,7 +96,11 @@ const getDescription = (announcement: any, isDashboard: boolean) => {
     text = announcement.announcement.html.substring(0, CHARACTER_LIMIT) + "...";
   }
 
-  return <span>{TextToLinks(text, announcement.colour)}</span>;
+  return isDashboard ? (
+    <span>{TextToLinks(text, announcement.colour)}</span>
+  ) : (
+    <ReactMarkdown>{text}</ReactMarkdown>
+  );
 };
 
 /* Render a single announcement button. Haha any go brr */
@@ -135,12 +140,7 @@ const renderAnnouncement = (
           </Typography>
         }
         // disableTypography={true} // for later maybe idk
-        secondary={
-          <React.Fragment>
-            <Typography component="span" variant="body1" />
-            {trimmeDesc}
-          </React.Fragment>
-        }
+        secondary={trimmeDesc}
       />
     </ListItem>
   );
