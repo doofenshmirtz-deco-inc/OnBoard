@@ -153,7 +153,7 @@ const renderAnnouncement = (
               {moment(announcement.announcement.createdAt).fromNow()}
             </div>
             <br />
-            {announcement.announcement.title} - {announcement.announcement.id}
+            {announcement.announcement.title}
           </Typography>
         }
         // disableTypography={true} // for later maybe idk
