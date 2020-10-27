@@ -43,13 +43,7 @@ const GET_COLOURS = gql`
   }
 `;
 
-const defaultProps = {
-  bgcolor: "background.paper",
-  m: 1,
-  borderColor: "text.primary",
-};
-
-export default function MyCal() {
+export const MyCal = () => {
   const { data } = useQuery<MyCalendar>(GET_CALENDAR);
   const { data: courses } = useQuery<MyColours>(GET_COLOURS);
   const [myTimetable, setMyTimetable] = useState([] as any[]);
