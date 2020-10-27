@@ -7,8 +7,8 @@ import {
   ListItemText,
 } from "@material-ui/core";
 import { gql, useQuery } from "@apollo/client";
-import { CourseStaff, CourseStaff_course_staff } from "../graphql/CourseStaff";
-import { GetClassInfo_me_courses_course_staff } from "../graphql/GetClassInfo";
+import { CourseStaff, CourseStaff_course_staff } from "../../graphql/CourseStaff";
+import { GetClassInfo_me_courses_course_staff } from "../../graphql/GetClassInfo";
 
 export default (props: { staff: GetClassInfo_me_courses_course_staff[] }) => {
   return (

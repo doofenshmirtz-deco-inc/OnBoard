@@ -8,13 +8,13 @@ import Avatar from "@material-ui/core/Avatar";
 import FolderIcon from "@material-ui/icons/Folder";
 import DescriptionIcon from "@material-ui/icons/Description";
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { GetRootCoursePage } from "../graphql/GetRootCoursePage";
-import { GetRootAssessmentPage } from "../graphql/GetRootAssessmentPage";
-import { GetNode } from "../graphql/GetNode";
-import { EditTextNode } from "../graphql/EditTextNode";
-import { EditFolderNode } from "../graphql/EditFolderNode";
-import { FileUpload } from "../graphql/FileUpload";
-import { DeleteNode } from "../graphql/DeleteNode";
+import { GetRootCoursePage } from "../../graphql/GetRootCoursePage";
+import { GetRootAssessmentPage } from "../../graphql/GetRootAssessmentPage";
+import { GetNode } from "../../graphql/GetNode";
+import { EditTextNode } from "../../graphql/EditTextNode";
+import { EditFolderNode } from "../../graphql/EditFolderNode";
+import { FileUpload } from "../../graphql/FileUpload";
+import { DeleteNode } from "../../graphql/DeleteNode";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import {
   Route,

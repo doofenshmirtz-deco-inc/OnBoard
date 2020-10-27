@@ -4,12 +4,12 @@ import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
-import Announcements from "./Announcements";
+import Announcements from "../../components/Announcements";
 import { useQuery, useMutation, gql } from "@apollo/client";
 import {
   GetClassInfo,
   GetClassInfo_me_courses_course_staff,
-} from "../graphql/GetClassInfo";
+} from "../../graphql/GetClassInfo";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ResourceFolder from "./ResourceFolder";
 import {
@@ -21,7 +21,7 @@ import {
   useLocation,
   useParams,
 } from "react-router-dom";
-import { GetCoursePermissions } from "../graphql/GetCoursePermissions";
+import { GetCoursePermissions } from "../../graphql/GetCoursePermissions";
 import ClassStaff from "./ClassStaff";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
@@ -32,7 +32,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import { addAnnouncement } from "../graphql/addAnnouncement";
+import { addAnnouncement } from "../../graphql/addAnnouncement";
 
 interface TabPanelProps {
   children?: React.ReactNode;
