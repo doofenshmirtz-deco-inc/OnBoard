@@ -14,7 +14,7 @@ const config = {
 const style = {
   width: "100%",
   height: "100%",
-  "font-family": "Times New Roman",
+  "min-height": "400px",
 };
 
 interface Params {

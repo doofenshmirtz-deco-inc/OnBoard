@@ -3,71 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import { ApolloProvider } from "@apollo/client/react/context/ApolloProvider";
-import { createUploadLink } from "apollo-upload-client";
-import { ApolloLink, ApolloClient, InMemoryCache, split } from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
-import { WebSocketLink } from "@apollo/client/link/ws";
 import firebase from "firebase";
-import { getMainDefinition } from "@apollo/client/utilities";
-
-const httpLink = (createUploadLink({
-  uri: process.env.REACT_APP_GRAPHQL_URL,
-  headers: {
-    "keep-alive": "true",
-  },
-}) as unknown) as ApolloLink;
-
-const getToken = async () => {
-  return await firebase.auth().currentUser?.getIdToken();
-};
-
-const authLink = setContext(async (_, { headers }) => {
-  const token = await getToken();
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? token : "",
-    },
-  };
-});
-
-const wsLink = new WebSocketLink({
-  uri: process.env.REACT_APP_GRAPHQL_WS!,
-  options: {
-    lazy: true,
-    reconnect: true,
-    connectionParams: async () => ({
-      auth: await getToken(),
-    }),
-  },
-});
-
-const subscriptionMiddleware = {
-  async applyMiddleware(options: any, next: any) {
-    options.auth = await getToken();
-    next();
-  },
-};
-
-(wsLink as any).subscriptionClient.use([subscriptionMiddleware]);
-
-const splitLink = split(
-  ({ query }) => {
-    const definition = getMainDefinition(query);
-    return (
-      definition.kind === "OperationDefinition" &&
-      definition.operation === "subscription"
-    );
-  },
-  wsLink,
-  authLink.concat(httpLink)
-);
-
-const client = new ApolloClient({
-  link: splitLink,
-  cache: new InMemoryCache(),
-});
 
 const firebaseConfig = {
   apiKey: "AIzaSyAwD46JJ62Y_Jn-2JFV3j6-la7djOZLa1c",
@@ -80,13 +16,9 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-firebase.auth().onAuthStateChanged(() => client.resetStore());
-
 ReactDOM.render(
   <React.StrictMode>
-    <ApolloProvider client={client}>
-      <App />
-    </ApolloProvider>
+    <App />
   </React.StrictMode>,
   document.getElementById("root")
 );
@@ -94,4 +26,4 @@ ReactDOM.render(
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+serviceWorker.register();
