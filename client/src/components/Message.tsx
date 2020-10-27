@@ -58,7 +58,7 @@ const Message = (props: MessageProps) => {
             props.direction === "left" ? classes.other : classes.me
           }`}
         >
-          <div>{props.text}</div>
+          <div style={{overflowWrap: "break-word"}}>{props.text}</div>
         </div>
       </div>
     </div>

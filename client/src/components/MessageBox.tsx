@@ -5,7 +5,14 @@ import React, {
   SetStateAction,
   Dispatch,
 } from "react";
-import { Button, makeStyles, TextField, IconButton } from "@material-ui/core";
+import {
+  Button,
+  makeStyles,
+  TextField,
+  IconButton,
+  Dialog,
+  DialogTitle,
+} from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import { LoadingPage } from "./LoadingPage";
@@ -16,6 +23,16 @@ import { useParams, useHistory } from "react-router";
 import { Messaging } from "../hooks/useMessaging";
 import GroupIcon from "@material-ui/icons/Group";
 import { TextToLinks } from "../utils/string";
+import AttachFileIcon from "@material-ui/icons/AttachFile";
+import { DropzoneArea } from "material-ui-dropzone";
+import { gql, useMutation } from "@apollo/client";
+import { SingleUpload } from "../graphql/SingleUpload";
+
+const UPLOAD_FILE = gql`
+  mutation SingleUpload($file: Upload!) {
+    singleUpload(file: $file)
+  }
+`;
 
 const renderChatMessage = (message: ChatMessage, uid: string) => {
   const key = `${message.createdAt.getTime()}-${message.sender}-${
@@ -29,6 +46,86 @@ const renderChatMessage = (message: ChatMessage, uid: string) => {
       sender={message.senderName}
       group={message.group}
     />
+  );
+};
+
+type FileUploadProps = {
+  open: boolean; // whether the dialog box is open or closed
+  handleClose: () => any; // handle the closing of the dialog box
+  sendMessage: (url: string) => any; // sets the file upload message to send
+};
+
+const FileUpload = (props: FileUploadProps) => {
+  const useStyles = makeStyles((theme) => ({
+    dropzone: {
+      width: "75%",
+      margin: "0 auto 10%",
+    },
+    bold: {
+      fontWeight: 500,
+    },
+    grey: {
+      color: "#c9c9c9",
+    },
+    sendBtn: {
+      margin: "0 auto 5%",
+    },
+    noTextTransform: {
+      textTransform: "none",
+    },
+  }));
+
+  const classes = useStyles();
+  
+  // get the mutation in order to upload the files
+  const [upload, { data }] = useMutation<SingleUpload>(UPLOAD_FILE);
+
+  // the url where the file is located
+  const url = data?.singleUpload;
+
+  // upload the file to the server
+  const uploadCallback = (files: File[]) => {
+    const file = files[0];
+    if (file) upload({ variables: { file } });
+  };
+
+  // send the file to the chat as a link and close the dialog box
+  const sendFile = () => {
+    if (url) {
+      // if you are testing locally, change the URL below to http://localhost:3000
+      props.sendMessage("https://onboard.doofenshmirtz.xyz" + url);
+      props.handleClose();
+    }
+    props.handleClose();
+  }
+
+  return (
+    <Dialog
+      onClose={props.handleClose}
+      aria-labelledby="simple-dialog-title"
+      open={props.open}
+    >
+      <DialogTitle id="simple-dialog-title">Upload a File</DialogTitle>
+      <div className={classes.dropzone}>
+        <DropzoneArea
+          classes={{ icon: classes.grey }}
+          dropzoneParagraphClass={classes.grey}
+          filesLimit={1}
+          maxFileSize={52428800}
+          onChange={(files) => uploadCallback(files)}
+        />
+      </div>
+      <div className={classes.sendBtn}>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.noTextTransform}
+          onClick={sendFile}
+        >
+          Send
+        </Button>
+      </div>
+    </Dialog>
   );
 };
 
@@ -67,8 +164,9 @@ const MessageBox = (props: MessageBoxProps) => {
     },
     sendBar: {
       width: "100%",
+      verticalAlign: "middle",
       position: "relative",
-      bottom: "0",
+      bottom: "1px",
     },
     Container: {
       width: "100%",
@@ -80,6 +178,9 @@ const MessageBox = (props: MessageBoxProps) => {
     media: {
       height: 0,
       paddingTop: "56.25%", // 16:9
+    },
+    noPadding: {
+      padding: 0,
     },
     expand: {
       transform: "rotate(0deg)",
@@ -104,6 +205,8 @@ const MessageBox = (props: MessageBoxProps) => {
 
   // current message being typed in text box.
   const [messageInput, setMessageInput] = useState("");
+  // determine whether the dialog box for file upload should be opened or not
+  const [open, setOpen] = useState(false);
 
   // reference to end of messages, to scroll to bottom on new message.
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
@@ -129,6 +232,14 @@ const MessageBox = (props: MessageBoxProps) => {
       send: message,
       groupId: id,
     });
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -158,6 +269,7 @@ const MessageBox = (props: MessageBoxProps) => {
         )}
         <div ref={messagesEndRef} />
       </div>
+      <FileUpload open={open} handleClose={handleClose} sendMessage={sendMessage} />
       <TextField
         className={classes.sendBar}
         style={{ marginTop: "10px" }}
@@ -172,6 +284,14 @@ const MessageBox = (props: MessageBoxProps) => {
           }
         }}
         InputProps={{
+          classes: {
+            adornedEnd: classes.noPadding,
+          },
+          startAdornment: (
+            <IconButton onClick={handleClickOpen}>
+              <AttachFileIcon />
+            </IconButton>
+          ),
           endAdornment: (
             <Button onClick={() => sendMessage(messageInput)}>
               <SendIcon />
