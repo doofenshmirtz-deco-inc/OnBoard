@@ -38,6 +38,8 @@ export class AnnouncementResolver {
   @Mutation(() => Announcement)
   @Authorized()
   async deleteAnnouncement(@Arg("id", () => ID) id: number) {
-    return await Announcement.delete({ id });
+    const an = Announcement.find({ id });
+    await Announcement.delete({ id });
+    return await an;
   }
 }
