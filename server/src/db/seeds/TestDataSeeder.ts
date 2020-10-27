@@ -228,6 +228,14 @@ export default class TestDataSeeder implements Seeder {
       duration: 120,
     }).create();
 
+    await factory(ClassGroup)({
+      name: "Lecture One",
+      type: ClassType.Lecture,
+      course: phfe,
+      users: [heinz],
+      duration: 120,
+    }).create();
+
     await factory(StudyGroup)({
       isPublic: true,
     }).createMany(20);
