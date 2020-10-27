@@ -1,3 +1,6 @@
+/**
+ * Object to represent the middleware context
+ */
 import { Request, Response } from "express";
 
 export interface Payload {

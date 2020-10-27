@@ -1,3 +1,6 @@
+/**
+ * Verifies that the auth token is well-defined and is valid
+ */
 import admin from "firebase-admin";
 
 export const checkAuthToken = async (authorization: string | undefined) => {

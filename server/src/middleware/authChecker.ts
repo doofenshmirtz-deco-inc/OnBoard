@@ -1,10 +1,11 @@
+/**
+ * Verify the user is authorized and update the context with the UID
+ */
 import { AuthChecker } from "type-graphql";
 import { Context } from "vm";
 import { checkAuthToken } from "./checkAuthToken";
 
 export const authChecker: AuthChecker<Context> = async ({ context }) => {
-  // console.log('auth ' + context.auth);
-
   const authorization =
     context.auth ??
     (context.req
