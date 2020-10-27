@@ -178,6 +178,7 @@ export default class TestDataSeeder implements Seeder {
       edis
     );
 
+    /*
     await generateTestAnnouncements(
       {
         course: secr,
