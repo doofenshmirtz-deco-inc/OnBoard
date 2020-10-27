@@ -86,7 +86,7 @@ export class CourseResolver {
       title: course.name,
     }).save();
 
-    c.coursePage = await FolderNode.create({
+    c.assessmentPage = await FolderNode.create({
       title: `${course.name} Assesment`,
     }).save();
 
