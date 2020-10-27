@@ -38,6 +38,7 @@ const sharedStyles = makeStyles((theme: Theme) =>
     },
     classBody: {
       alignSelf: "stretch",
+      whiteSpace: "pre",
     },
     heading: {
       textAlign: "center",

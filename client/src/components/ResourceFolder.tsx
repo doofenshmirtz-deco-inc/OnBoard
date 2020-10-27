@@ -68,6 +68,9 @@ const useStyles = makeStyles((theme: Theme) =>
     inputTopMargin: {
       marginTop: "0.5rem",
     },
+    content: {
+      whiteSpace: "pre",
+    }
   })
 );
 
@@ -362,7 +365,7 @@ function NodeContent(props: {
           ) : null}
         </Grid>
       </Grid>
-      <ReactMarkdown>{contentText}</ReactMarkdown>
+      <ReactMarkdown className={classes.content}>{contentText}</ReactMarkdown>
       {data?.node?.link && (
         <Button
           variant="contained"
