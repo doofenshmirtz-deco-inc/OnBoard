@@ -43,7 +43,9 @@ const GET_COLOURS = gql`
   }
 `;
 
-export const MyCal = () => {
+let MyCal;
+
+export default MyCal = () => {
   const { data } = useQuery<MyCalendar>(GET_CALENDAR);
   const { data: courses } = useQuery<MyColours>(GET_COLOURS);
   const [myTimetable, setMyTimetable] = useState([] as any[]);
