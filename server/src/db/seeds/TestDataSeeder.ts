@@ -1,3 +1,10 @@
+/**
+ * Seeds some non-random data for testing purposes. Users are team members
+ * and some Doofenshmirtz characters as well.
+ *
+ * Creates some users, groups, courses, announcements, and study groups.
+ */
+
 import {
   Seeder,
   Factory,
@@ -13,8 +20,6 @@ import {
   StudyGroup,
 } from "../../models/UserGroup";
 import { CourseRole } from "../../models/CourseGroupPair";
-
-// generates some non-random data for testing purposes.
 
 // add the given course groups to the given course. the groups object maps
 // roles to lists of users, which are attached to the course.
