@@ -157,14 +157,13 @@ const getClient = async () => {
 
   const cache = new InMemoryCache();
 
-  const persistor = new CachePersistor({
+  await persistCache({
     cache,
     storage: window.localStorage as PersistentStorage<
       PersistedData<NormalizedCacheObject>
     >,
+    debug: true,
   });
-
-  persistor.restore();
 
   return new ApolloClient({
     link: splitLink,
