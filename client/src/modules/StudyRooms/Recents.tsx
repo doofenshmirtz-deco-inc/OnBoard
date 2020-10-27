@@ -17,13 +17,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "block",
   },
   list: {
-    display: "flex",
+    // display: "flex",
     flexDirection: "column",
+    display: "inline-block", 
+    float: "right",
     width: "25%",
     height: "69vh",
     overflowY: "scroll",
     paddingBottom: "0px",
     paddingLeft: "5px",
+  },
+  hide: {
+    display: "none"
   },
   contact: {
     display: "flex",
@@ -53,6 +58,8 @@ const Recents = (props: any) => {
     group: false,
     users: [] as any[],
   });
+
+  const [collapseMembers, setCollapsable] = useState(false);
 
   // access messaging manager from context.
   const messaging = Messaging.useContainer();
@@ -126,10 +133,12 @@ const Recents = (props: any) => {
             <MessageBox
               id={selectedOrDefault.id}
               name={selectedOrDefault.name}
+              collapseMembers={collapseMembers}
+              setCollapse={setCollapsable}
             />
             <div
-              className={classes.list}
-              style={{ display: "inline-block", float: "right" }}
+              className={collapseMembers ? classes.hide : classes.list}
+              // style={{ display: "inline-block", float: "right" }}
             >
               <h2 style={{ marginBottom: "5px" }}>Members</h2>
               <List>
