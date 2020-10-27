@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     content: {
       whiteSpace: "pre",
-    }
+    },
   })
 );
 
