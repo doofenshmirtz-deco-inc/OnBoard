@@ -7,7 +7,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import { useQuery, gql } from "@apollo/client";
-import { MyClasses } from "../graphql/MyClasses";
+import { MyClasses } from "../../graphql/MyClasses";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
