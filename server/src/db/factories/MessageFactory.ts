@@ -2,6 +2,8 @@ import { define } from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import { BaseGroup } from "../../models/UserGroup";
 import { Message } from "../../models/Message";
 
+// creates a new message to the given group, sent from a random user 
+// in the group.
 define(Message, async (faker, context?: { group: Promise<BaseGroup> }) => {
   if (!context) throw new Error("Message seeder requires group");
 

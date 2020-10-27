@@ -1,6 +1,7 @@
 import { define, factory } from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import { User } from "../../models/User";
 
+// creates a new user with random properties.
 define(User, (
   faker,
   context?: {
@@ -10,10 +11,12 @@ define(User, (
     avatar: string;
   }
 ) => {
+  // creates a new user with random names and gender.
   const gender = faker.random.number(1);
   const firstName = faker.name.firstName(gender);
   const lastName = faker.name.lastName(gender);
 
+  // attaches id, name, email, and avatar from defaults or context.
   const user = new User();
   user.id = context && context.uid ? context.uid : faker.random.uuid();
   user.name =
@@ -24,6 +27,7 @@ define(User, (
       : context && context.name
       ? `${context.name.split(" ")[0].toLowerCase()}@decodoff.net`
       : `${firstName.toLowerCase()}@decodoof.net`;
+  // default to a generic user icon.
   user.avatar =
     context && context.avatar
       ? context.avatar

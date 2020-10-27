@@ -1,6 +1,6 @@
 import { createConnection } from "typeorm";
 
-export const createTestConnection = async () => {
+export const createTestConnection = () => {
   return createConnection({
     type: "postgres",
     host: "localhost",
@@ -9,7 +9,7 @@ export const createTestConnection = async () => {
     password: "y@yCKiL2oUmJ",
     database: "onboardtest",
     synchronize: true,
-    dropSchema: true,
+    dropSchema: false,
     logging: false,
     entities: ["./src/models/*.ts"],
   });

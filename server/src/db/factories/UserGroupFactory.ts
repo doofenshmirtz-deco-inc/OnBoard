@@ -1,7 +1,5 @@
-import { define, factory } from "@doofenshmirtz-deco-inc/typeorm-seeding";
+import { define } from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import {
-  BaseGroup,
-  GroupType,
   CourseGroup,
   ClassGroup,
   DMGroup,
@@ -10,18 +8,20 @@ import {
 } from "../../models/UserGroup";
 import { User } from "../../models/User";
 import { Course } from "../../models/Course";
-import { CourseRole } from "../../models/CourseGroupPair";
 
+// user context.
 type Users = {
   users: User[];
 };
 
+// create a course group with the given users, or no users if not given.
 define(CourseGroup, async (faker, context?: Users) => {
   const group = new CourseGroup();
   group.setUsers(context?.users);
   return group;
 });
 
+// creates a dm group with the given users.
 define(DMGroup, async (faker, context?: Users) => {
   if (!context) throw new Error("Context must be defined");
   const group = DMGroup.create();
@@ -29,6 +29,8 @@ define(DMGroup, async (faker, context?: Users) => {
   return group;
 });
 
+// creates a class group with the given users. requires context of appropriate
+// properties.
 define(ClassGroup, async (
   faker,
   ctx?: {
@@ -41,6 +43,8 @@ define(ClassGroup, async (
   }
 ) => {
   if (!ctx) throw new Error("Class seeder requires course");
+  // create new class group with context and defaults.
+  // times defaults to now and 24 hours from now.
   const classGroup = await ClassGroup.create({
     name: ctx.name,
     type: ctx.type,
@@ -50,12 +54,15 @@ define(ClassGroup, async (
     duration: ctx.duration ? ctx.duration : 60,
   }).save();
 
+  // attach this class group to the given course and with the given users.
   classGroup.course = Promise.resolve(ctx.course);
   classGroup.setUsers(ctx.users);
 
   return await classGroup.save();
 });
 
+// creates a study group with the given users, name, and visibility. defaults
+// used if not specified.
 define(StudyGroup, async (
   faker,
   ctx?: {
