@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Shadows } from "@material-ui/core/styles/shadows";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {
   makeStyles,
@@ -69,7 +70,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const theme = createMuiTheme({
   // Disable shadows
-  // shadows: Array(25).fill("none") as Shadows,
+  // shadows: ["none"],
+  shadows: Array(25).fill("none") as Shadows,
   typography: {
     fontFamily: [
       "myriad-pro",

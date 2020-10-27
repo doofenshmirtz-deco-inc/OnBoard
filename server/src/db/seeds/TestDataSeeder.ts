@@ -178,6 +178,7 @@ export default class TestDataSeeder implements Seeder {
       edis
     );
 
+    /*
     await generateTestAnnouncements(
       {
         course: secr,
@@ -224,6 +225,14 @@ export default class TestDataSeeder implements Seeder {
       name: "Lecture One",
       type: ClassType.Lecture,
       course: secr,
+      users: [heinz],
+      duration: 120,
+    }).create();
+
+    await factory(ClassGroup)({
+      name: "Lecture One",
+      type: ClassType.Lecture,
+      course: phfe,
       users: [heinz],
       duration: 120,
     }).create();

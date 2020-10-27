@@ -1,0 +1,6 @@
+Subject Code	Description	Group	Activity	Day	Time	Campus	Location	Staff	Duration	Dates
+COMP3506_S2_STLUC_FD	Algorithms & Data Structures	TUT1	07	Tue	14:00	STLUC	78-343 - General Purpose South, Collaborative Room	-	2 hrs	11/8-22/9, 6/10-27/10
+DECO3801_S2_STLUC_FD	Design Computing Studio 3 - Build	STU1	06	Thu	10:00	STLUC	49-301 - Advanced Engineering Building, Design Studio	Glencross, Mashhuda	2 hrs	6/8-24/9, 8/10-29/10
+STAT2203_S2_STLUC_FD	Probability Models and Data Analysis for Engineering	LEC1	01	Mon	16:00	STLUC	-	McVinish, Ross	1 hr	3/8-21/9, 5/10-26/10
+STAT2203_S2_STLUC_FD	Probability Models and Data Analysis for Engineering	LEC2	01	Wed	10:00	STLUC	-	McVinish, Ross	1 hr	5/8-23/9, 7/10-28/10
+STAT2203_S2_STLUC_FD	Probability Models and Data Analysis for Engineering	PRA1	04	Tue	16:00	STLUC	69-520 -  Building 69,Computer Laboratory	-	1 hr	11/8-22/9, 6/10-27/10

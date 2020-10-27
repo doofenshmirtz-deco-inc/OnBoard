@@ -9,11 +9,32 @@ import {
   Ctx,
   FieldResolver,
   Root,
+  Mutation,
 } from "type-graphql";
 import { PaginationArgs, getOrder } from "./Types";
-import { Course } from "../models/Course";
+import { Course, courseInput } from "../models/Course";
 import { User } from "../models/User";
-import { CourseGroupPair } from "../models/CourseGroupPair";
+import { CourseGroupPair, CourseRole } from "../models/CourseGroupPair";
+import { factory } from "@doofenshmirtz-deco-inc/typeorm-seeding";
+import { CourseGroup } from "../models/UserGroup";
+import { FolderNode } from "../models/CoursePageNode";
+
+const addGroups = async (
+  groups: {
+    [role in CourseRole]?: User[];
+  },
+  course: Course
+) => {
+  if (groups) {
+    for (const [role, users] of Object.entries(groups)) {
+      const group = new CourseGroup();
+      await group.save();
+      await group.setUsers(users);
+      await group.save();
+      await course.addGroup(role as CourseRole, group);
+    }
+  }
+};
 
 @Resolver((of) => Course)
 export class CourseResolver {
@@ -49,5 +70,26 @@ export class CourseResolver {
       );
 
     return await query.getMany();
+  }
+
+  @Mutation(() => Course)
+  async addCourse(@Arg("course") course: courseInput): Promise<Course> {
+    const c = await Course.create(course).save();
+
+    addGroups(
+      {
+        [CourseRole.Student]: await User.findByIds(course.students),
+      },
+      c
+    );
+    c.coursePage = await FolderNode.create({
+      title: course.name,
+    }).save();
+
+    c.assessmentPage = await FolderNode.create({
+      title: `${course.name} Assesment`,
+    }).save();
+
+    return await c.save();
   }
 }
