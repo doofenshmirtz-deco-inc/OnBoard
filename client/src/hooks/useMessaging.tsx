@@ -286,8 +286,15 @@ export const useMessaging = () => {
 
         bumpContact(groupId);
 
-        if (data.user.id !== firebase.auth().currentUser?.email?.split("@")[0])
+        if (
+          data.user.id !== firebase.auth().currentUser?.email?.split("@")[0]
+        ) {
+          const text =
+            data.text.length > 20
+              ? data.text.substring(0, 20) + "..."
+              : data.text;
           enqueueSnackbar(`${data?.text} - ${data.user.name}`);
+        }
       }
     },
     [username, bumpContact]
