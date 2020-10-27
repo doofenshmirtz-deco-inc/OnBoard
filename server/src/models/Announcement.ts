@@ -51,7 +51,7 @@ export class Announcement extends BaseEntity {
 
 @InputType()
 export class AnnouncementInput {
-  @Field()
+  @Field(() => ID)
   courseID: number;
 
   @Field()
