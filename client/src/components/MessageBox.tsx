@@ -76,7 +76,7 @@ const FileUpload = (props: FileUploadProps) => {
   }));
 
   const classes = useStyles();
-  
+
   // get the mutation in order to upload the files
   const [upload, { data }] = useMutation<SingleUpload>(UPLOAD_FILE);
 
@@ -277,10 +277,17 @@ const MessageBox = (props: MessageBoxProps) => {
         id="message-send"
         label="Send message"
         value={messageInput}
-        onChange={(e) => setMessageInput(e.target.value)}
+        multiline
+        onChange={(e) => {
+          setMessageInput(e.target.value)}
+        }
         onKeyPress={(e) => {
           if (e.key === "Enter") {
-            sendMessage(messageInput);
+            if (!e.shiftKey) {
+              sendMessage(messageInput.trim());
+            } else {
+              setMessageInput(messageInput + "\n");
+            }
           }
         }}
         InputProps={{

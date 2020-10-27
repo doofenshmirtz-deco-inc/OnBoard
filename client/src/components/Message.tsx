@@ -43,6 +43,15 @@ export type MessageProps = {
 const Message = (props: MessageProps) => {
   const classes = useStyles();
 
+  // FIXME: is this kinda dodgy????
+  let message = props.text;
+  if (message.length === 1 && typeof(message[0]) === "string") {
+    const split = message[0].split("\n").filter((line: string) => line !== "");
+    message = split.map((line: string, i: number) =>
+      i == split.length - 1 ? <span>{line}</span> : <span>{line}<br/></span>
+    );
+  }
+
   return (
     <div>
       <span className={`${classes.senderName}`}>
@@ -58,7 +67,7 @@ const Message = (props: MessageProps) => {
             props.direction === "left" ? classes.other : classes.me
           }`}
         >
-          <div style={{overflowWrap: "break-word"}}>{props.text}</div>
+          <div style={{overflowWrap: "break-word"}}>{message}</div>
         </div>
       </div>
     </div>
