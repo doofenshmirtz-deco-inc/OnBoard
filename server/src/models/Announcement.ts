@@ -1,3 +1,7 @@
+/**
+ * Model to represent an announcement
+ */
+
 import {
   Column,
   PrimaryColumn,
@@ -14,7 +18,6 @@ import {
 } from "typeorm";
 import { ObjectType, ID, Field, Int, InputType } from "type-graphql";
 import { User } from "./User";
-import { BaseGroup } from "./UserGroup";
 import { Course } from "./Course";
 
 /**
