@@ -8,6 +8,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { Messaging } from "../hooks/useMessaging";
 import CreateRoomBtn from "./CreateRoomBtn";
+import * as firebase from "firebase";
 
 const RecentContacts = (props: any) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -57,8 +58,18 @@ const RecentContacts = (props: any) => {
       />
       <CreateRoomBtn contacts={contacts} handleClick={props.handleClick} />
       <List className={classes.root}>
-        {props.contacts.map((item: any) =>
-          item?.name?.toLowerCase?.().includes?.(searchTerm.toLowerCase()) ? (
+        {props.contacts.map((item: any) => {
+          const users =
+            item.users.length > 1
+              ? item.users.filter(
+                  (u: any) =>
+                    u.id !== firebase.auth().currentUser?.email?.split("@")[0]
+                )
+              : item.users;
+
+          return item?.name
+            ?.toLowerCase?.()
+            .includes?.(searchTerm.toLowerCase()) ? (
             <Button
               key={item.id}
               color="primary"
@@ -76,15 +87,15 @@ const RecentContacts = (props: any) => {
                 key={item.id}
                 name={item.name}
                 readStatus={item.readStatus}
-                contact={item.users[0]}
+                contact={users[0]}
                 buttonsOff={true}
                 group={item.users.length > 2}
-                contact2={item.users[1]}
+                contact2={users[1]}
                 contacts={item.users}
               />
             </Button>
-          ) : null
-        )}
+          ) : null;
+        })}
       </List>
     </div>
   );

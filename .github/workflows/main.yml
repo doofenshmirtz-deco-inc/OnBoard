@@ -35,6 +35,7 @@ jobs:
         path: |
           client/node_modules
           client/home/.runner/cache/Cypress
+          /home/.runner/cache/Cypress
         key: client-${{ runner.os }}-${{ hashFiles('client/yarn.lock') }}
         restore-keys: |
           client-${{ runner.os }}-
