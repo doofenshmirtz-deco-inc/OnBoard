@@ -15,6 +15,7 @@ import { Contact } from "../modules/StudyRooms/Recents";
 import { useParams, useHistory } from "react-router";
 import { Messaging } from "../hooks/useMessaging";
 import GroupIcon from "@material-ui/icons/Group";
+import { TextToLinks } from "../utils/string";
 
 const renderChatMessage = (message: ChatMessage, uid: string) => {
   const key = `${message.createdAt.getTime()}-${message.sender}-${
@@ -24,7 +25,7 @@ const renderChatMessage = (message: ChatMessage, uid: string) => {
     <Message
       key={key}
       direction={message.sender === uid ? "right" : "left"}
-      text={message.text}
+      text={TextToLinks(message.text, "#0B3954")}
       sender={message.senderName}
       group={message.group}
     />
