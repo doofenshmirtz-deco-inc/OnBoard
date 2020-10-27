@@ -223,6 +223,8 @@ function CreateAnnouncement(props: { courseId?: string }) {
         open={open}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
+        maxWidth="sm"
+        fullWidth={true}
       >
         <DialogTitle id="form-dialog-title">New announcement</DialogTitle>
         <DialogContent>
@@ -239,7 +241,7 @@ function CreateAnnouncement(props: { courseId?: string }) {
             label="Content"
             fullWidth
             multiline
-            rows={4}
+            rows={12}
             onChange={(e) => setContent(e.target.value)}
           />
         </DialogContent>
