@@ -94,7 +94,7 @@ const FileUpload = (props: FileUploadProps) => {
   const sendFile = () => {
     if (url) {
       // if you are testing locally, change the URL below to http://localhost:3000
-      props.sendMessage("https://onboard.doofenshmirtz.xyz" + url);
+      props.sendMessage(encodeURI(`https://onboard.doofenshmirtz.xyz${url}`));
       props.handleClose();
     }
     props.handleClose();
