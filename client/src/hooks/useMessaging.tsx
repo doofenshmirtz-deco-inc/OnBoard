@@ -18,6 +18,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { AddMessage, AddMessageVariables } from "../graphql/AddMessage";
 import { MyGroups, MyGroups_me_groups } from "../graphql/MyGroups";
 import { createContainer } from "unstated-next";
+import { useSnackbar } from "notistack";
 
 const MESSAGES_QUERY = gql`
   query MyMessages($groupId: ID!) {
@@ -173,6 +174,8 @@ export const useMessaging = () => {
     MESSAGES_QUERY
   );
 
+  const { enqueueSnackbar } = useSnackbar();
+
   // when selected group id changes, fetch new messages for that group.
   useEffect(() => {
     if (groupId != null) {
@@ -282,6 +285,9 @@ export const useMessaging = () => {
         }));
 
         bumpContact(groupId);
+
+        if (data.user.id !== firebase.auth().currentUser?.email?.split("@")[0])
+          enqueueSnackbar(`${data?.text} - ${data.user.name}`);
       }
     },
     [username, bumpContact]
