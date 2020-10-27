@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import CardContent from "@material-ui/core/CardContent";
 import Box from "@material-ui/core/Box";
-import Container from "@material-ui/core/Container";
 import { useQuery, gql } from "@apollo/client";
 import {
   MyCalendar,
@@ -54,29 +53,15 @@ export default function MyCal() {
   const { data } = useQuery<MyCalendar>(GET_CALENDAR);
   const { data: courses } = useQuery<MyColours>(GET_COLOURS);
   const [myTimetable, setMyTimetable] = useState([] as any[]);
-  const [classOpen, setClassOpen] = React.useState(false);
-
-  const handleClassOpen = () => {
-    setClassOpen(true);
-  };
-
-  const handleClassClose = () => {
-    setClassOpen(false);
-  };
 
   const history = useHistory();
-  const minTime = new Date();
-  minTime.setHours(8, 0, 0);
-  const maxTime = new Date();
-  maxTime.setHours(18, 0, 0);
-
-  console.log(courses);
 
   useEffect(() => {
     let calendar = data?.me?.groups?.filter(
       (e) => e.__typename == "ClassGroup"
     ) as MyCalendar_me_groups_ClassGroup[] | null;
 
+    // Get necessary data for calendar from ClassGroup data from Apollo
     let timetable = calendar?.map((e) => [
       e?.times,
       e?.duration,
@@ -113,8 +98,6 @@ export default function MyCal() {
         <Calendar
           localizer={localizer}
           events={myTimetable}
-          // min={minTime}
-          // max={maxTime}
           scrollToTime={new Date()}
           startAccessor="start"
           defaultView={"work_week"}
@@ -124,18 +107,19 @@ export default function MyCal() {
           onSelectEvent={(event) => {
             history.push("/study-rooms/video/" + event.id);
           }}
-          eventPropGetter={(event, start, end, isSelected) => {
-            console.log(event?.id);
+          eventPropGetter={(event) => {
+            // Create list of mappings from code to colour
             const colors = courses?.me?.courses.map((e) => [
               e?.course?.code,
               e?.colour,
             ]);
+            // Get colour from list of course colours
             const color =
               colors?.filter((e) => event?.title.indexOf(e[0]) !== -1)[0] !==
               undefined
                 ? colors?.filter((e) => event?.title.indexOf(e[0]) !== -1)[0][1]
                 : "#666666";
-
+            // Apply styles based on colour
             let newStyle = {
               backgroundColor: color,
               color: "white",
@@ -143,7 +127,6 @@ export default function MyCal() {
               border: "none",
               fontSize: "0.8em",
             };
-
             return {
               className: "",
               style: newStyle,
