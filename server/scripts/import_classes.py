@@ -121,13 +121,7 @@ if __name__ == "__main__":
 
     client = GraphQLClient('https://onboard.doofenshmirtz.xyz/graphql')
 
-    token = json.loads(client.execute('''
-    {
-        getTestingToken(testUID: "doof-uid") {
-            token
-        }
-    }
-    '''))['data']['getTestingToken']['token']
+    token = "INSERT_TOKEN_HERE"
 
     client.inject_token(token)
 
