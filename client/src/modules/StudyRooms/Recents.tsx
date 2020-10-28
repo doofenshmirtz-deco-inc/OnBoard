@@ -79,7 +79,7 @@ const Recents = (props: any) => {
   // toggles the collapsed state of the contacts list
   const collapseContacts = () => {
     setCollapseLeft(!collapseLeft);
-  }
+  };
 
   const uid = messaging.username;
 

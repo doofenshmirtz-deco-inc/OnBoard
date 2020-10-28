@@ -28,8 +28,8 @@ import AttachFileIcon from "@material-ui/icons/AttachFile";
 import { DropzoneArea } from "material-ui-dropzone";
 import { gql, useMutation } from "@apollo/client";
 import { MessageUpload } from "../graphql/MessageUpload";
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
 const UPLOAD_FILE = gql`
   mutation MessageUpload($file: Upload!) {
@@ -251,9 +251,10 @@ const MessageBox = (props: MessageBoxProps) => {
   // ensure the heading does not take up more space than is available
   let heading = "";
   if (props.name) {
-    heading = props.name.length > 40 ?
-      props.name.substring(0, 40).trim() + "..." :
-      props.name;
+    heading =
+      props.name.length > 40
+        ? props.name.substring(0, 40).trim() + "..."
+        : props.name;
   }
 
   return (
@@ -264,7 +265,9 @@ const MessageBox = (props: MessageBoxProps) => {
     >
       {props.name ? (
         <h1>
-          <Tooltip title={props.collapseLeft ? "Expand contacts" : "Collapse contacts"}>
+          <Tooltip
+            title={props.collapseLeft ? "Expand contacts" : "Collapse contacts"}
+          >
             <IconButton onClick={props.handleCollapseLeft}>
               {props.collapseLeft ? <ChevronRightIcon /> : <ChevronLeftIcon />}
             </IconButton>

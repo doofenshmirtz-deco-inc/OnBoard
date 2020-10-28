@@ -9,8 +9,8 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import { Messaging } from "../hooks/useMessaging";
 import CreateRoomBtn from "./CreateRoomBtn";
 import * as firebase from "firebase";
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import { IconButton } from "@material-ui/core";
 
 const RecentContacts = (props: any) => {
@@ -41,7 +41,7 @@ const RecentContacts = (props: any) => {
     },
     hide: {
       display: "none",
-    }
+    },
   }));
 
   const classes = useStyles();
