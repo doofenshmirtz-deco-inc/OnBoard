@@ -12,6 +12,7 @@ import {
   IconButton,
   Dialog,
   DialogTitle,
+  Tooltip,
 } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import VideocamIcon from "@material-ui/icons/Videocam";
@@ -27,6 +28,8 @@ import AttachFileIcon from "@material-ui/icons/AttachFile";
 import { DropzoneArea } from "material-ui-dropzone";
 import { gql, useMutation } from "@apollo/client";
 import { MessageUpload } from "../graphql/MessageUpload";
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 const UPLOAD_FILE = gql`
   mutation MessageUpload($file: Upload!) {
@@ -141,6 +144,8 @@ export type MessageBoxProps = {
   collapseMembers?: boolean; // whether or not the members list next to the message box should be collapsed
   setCollapse?: any; // to set the value of collapseMembers
   full?: boolean; // whether or not the messagebox should take up the full width or 75% of the width
+  collapseLeft?: boolean; // whether or not to collapse the contacts list on the left hand side
+  handleCollapseLeft?: any; // handler for collapsing the left contacts list
 };
 
 // TODO: clear input message when changing contact
@@ -169,10 +174,10 @@ const MessageBox = (props: MessageBoxProps) => {
       position: "relative",
       bottom: "1px",
     },
-    Container: {
-      width: "100%",
-      display: "flex",
-    },
+    // Container: {
+    //   width: "100%",
+    //   display: "flex",
+    // },
     root: {
       maxWidth: 345,
     },
@@ -206,7 +211,7 @@ const MessageBox = (props: MessageBoxProps) => {
 
   // current message being typed in text box.
   const [messageInput, setMessageInput] = useState("");
-  // determine whether the dialog box for file upload should be opened or not
+  // whether the dialog box for file upload should be opened or not
   const [open, setOpen] = useState(false);
 
   // reference to end of messages, to scroll to bottom on new message.
@@ -243,6 +248,14 @@ const MessageBox = (props: MessageBoxProps) => {
     setOpen(false);
   };
 
+  // ensure the heading does not take up more space than is available
+  let heading = "";
+  if (props.name) {
+    heading = props.name.length > 40 ?
+      props.name.substring(0, 40).trim() + "..." :
+      props.name;
+  }
+
   return (
     <div
       className={`${classes.container} ${
@@ -251,7 +264,12 @@ const MessageBox = (props: MessageBoxProps) => {
     >
       {props.name ? (
         <h1>
-          {props.name}{" "}
+          <Tooltip title={props.collapseLeft ? "Expand contacts" : "Collapse contacts"}>
+            <IconButton onClick={props.handleCollapseLeft}>
+              {props.collapseLeft ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            </IconButton>
+          </Tooltip>
+          {heading}{" "}
           <IconButton
             onClick={() => history.push("/study-rooms/video/" + props.id)}
           >
