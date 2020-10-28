@@ -1,6 +1,6 @@
 /**
  * Checks the authorisation from the request context. Context may come from
- * various places, so we need to check all of those. Sets the uid onto the 
+ * various places, so we need to check all of those. Sets the uid onto the
  * payload.
  */
 
