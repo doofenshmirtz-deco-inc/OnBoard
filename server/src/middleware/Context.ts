@@ -1,3 +1,7 @@
+/**
+ * Types for the context and payload object provided to inner server functions.
+ */
+
 import { Request, Response } from "express";
 
 // context payload provided to internal functions.

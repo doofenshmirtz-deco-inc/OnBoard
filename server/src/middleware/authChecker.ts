@@ -1,3 +1,9 @@
+/**
+ * Checks the authorisation from the request context. Context may come from
+ * various places, so we need to check all of those. Sets the uid onto the 
+ * payload.
+ */
+
 import { AuthChecker } from "type-graphql";
 import { Context } from "vm";
 import { checkAuthToken } from "./checkAuthToken";
