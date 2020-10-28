@@ -1,8 +1,8 @@
 import React from "react";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
-import ClassesTabs from "../../components/ClassView";
+import ClassesTabs from "./ClassView";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
-import { ClassesList } from "../../components/ClassesList";
+import { ClassesList } from "./ClassesList";
 
 // const Classes = (props: RouteComponentProps) => (
 //   <>

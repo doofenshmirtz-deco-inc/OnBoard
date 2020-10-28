@@ -50,7 +50,7 @@ const StudyRooms = () => {
               <VideoChat />
             </Grid>
             <Grid item xs={12} md={3}>
-              <MessageBox />
+              <MessageBox full />
             </Grid>
           </Grid>
         </Route>

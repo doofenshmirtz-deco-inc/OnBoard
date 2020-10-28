@@ -17,6 +17,7 @@ import { User } from "../models/User";
 import { CourseGroupPair, CourseRole } from "../models/CourseGroupPair";
 import { factory } from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import { CourseGroup } from "../models/UserGroup";
+import { FolderNode } from "../models/CoursePageNode";
 
 const addGroups = async (
   groups: {
@@ -81,6 +82,13 @@ export class CourseResolver {
       },
       c
     );
+    c.coursePage = await FolderNode.create({
+      title: course.name,
+    }).save();
+
+    c.assessmentPage = await FolderNode.create({
+      title: `${course.name} Assesment`,
+    }).save();
 
     return await c.save();
   }

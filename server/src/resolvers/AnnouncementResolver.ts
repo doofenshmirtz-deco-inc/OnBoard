@@ -18,24 +18,29 @@ import { Context } from "../middleware/Context";
 export class AnnouncementResolver {
   @Mutation(() => Announcement)
   @Authorized()
-  async createAnnouncement(
-    @Arg("annoucementInput") data: AnnouncementInput,
+  async addAnnouncement(
+    @Arg("data") data: AnnouncementInput,
     @Ctx() ctx: Context
   ) {
-    const user = User.findOne({ id: ctx.payload.uid });
-    const course = Course.findOne({ id: data.courseID });
-
+    if (!ctx.payload) throw new Error("Invalid payload");
+    const user = await User.findOne({ id: ctx.payload.uid });
+    const course = await Course.findOne({ id: data.courseID });
     if (!user || !course) throw new Error("User or course are invalid");
 
     return await Announcement.create({
       title: data.title,
       html: data.html,
+      author: user,
+      course,
     }).save();
   }
 
   @Mutation(() => Announcement)
   @Authorized()
-  async createAnnouncement(@Arg("id", () => ID) id: number) {
-    return await Announcement.delete({ id });
+  async deleteAnnouncement(@Arg("id", () => ID) id: number) {
+    const an = await Announcement.findOne({ id });
+    console.log(an);
+    await Announcement.delete({ id });
+    return an;
   }
 }

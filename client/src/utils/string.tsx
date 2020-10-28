@@ -7,7 +7,7 @@ export const TextToLinks = (text: string, color: string) => {
     i % 2 === 0 ? (
       text
     ) : (
-      <a style={{ color: color }} href={text}>
+      <a style={{ color: color }} href={text} target="_blank">
         {text}
       </a>
     )

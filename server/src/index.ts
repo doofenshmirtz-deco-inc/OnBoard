@@ -9,6 +9,7 @@ import firebase from "firebase/app";
 import { CourseResolver } from "./resolvers/CourseResolver";
 import { UserGroupResolver } from "./resolvers/UserGroupResolver";
 import { MessageResolver } from "./resolvers/MessageResolver";
+import { AnnouncementResolver } from "./resolvers/AnnouncementResolver";
 import { createServer } from "http";
 import { AppPubSub } from "./resolvers/AppPubSub";
 import {
@@ -58,6 +59,7 @@ async function main() {
       UploadResolver,
       FolderNodeResolver,
       NodeResolver,
+      AnnouncementResolver,
     ],
     emitSchemaFile: true,
     pubSub: AppPubSub,
