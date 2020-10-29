@@ -59,7 +59,7 @@ const Recents = (props: any) => {
   });
 
   // collapse the list that allows the user to view all the members in a chat
-  const [collapseMembers, setCollapsable] = useState(false);
+  const [collapseMembers, setCollapsable] = useState(true);
   // collapse the list of contacts on the left hand side
   const [collapseLeft, setCollapseLeft] = useState(false);
 
