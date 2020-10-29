@@ -55,7 +55,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paper: {
       padding: theme.spacing(2),
-      color: theme.palette.text.primary,
+      // boxShadow: "1px 1px 1px 1px #ccc",
+      backgroundColor: "transparent",
+      // color: theme.palette.text.primary,
+      borderRadius: "0px",
+      border: "1px solid lightgrey",
     },
     uploadDropZone: {
       marginTop: "0.5rem",

@@ -209,7 +209,7 @@ function CreateAnnouncement(props: { courseId?: string }) {
 
   return (
     <div>
-      <Tooltip title="New Annocunement">
+      <Tooltip title="New Announcement">
         <IconButton className={classes.addButton} aria-label="add">
           <AddIcon fontSize="small" onClick={handleClickOpen} />
         </IconButton>
