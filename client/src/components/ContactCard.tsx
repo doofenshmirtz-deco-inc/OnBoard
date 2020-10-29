@@ -1,3 +1,8 @@
+/**
+ * Contact card, used for contacts list and recent groups list. Renders one
+ * avatar for single user and two avatars for multiple users.
+ */
+
 import React from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
@@ -34,7 +39,16 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function ContactCard(props: any) {
+type ContactCardProps = {
+  buttonsOff: boolean, // whether to display call buttons.
+  contact: any, 
+  contact2?: any,
+  readStatus: boolean, // read status, true if read.
+  name: string, // group or contact name
+  group?: boolean, // whether this is a group
+}
+
+export default function ContactCard(props: ContactCardProps) {
   const classes = useStyles();
   let buttons, action;
 

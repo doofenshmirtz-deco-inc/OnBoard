@@ -54,7 +54,6 @@ const ContactsList = (props: any) => {
               buttonsOff={true}
               group={item.users.length > 2}
               contact2={item.users[1]}
-              contacts={item.users}
             />
           </Button>
         ) : null

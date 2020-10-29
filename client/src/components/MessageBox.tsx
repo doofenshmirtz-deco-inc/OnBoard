@@ -1,3 +1,8 @@
+/**
+ * Message box component renders a list of messages and input for sending
+ * messages or files.
+ */
+
 import React, {
   useState,
   useLayoutEffect,
@@ -37,6 +42,7 @@ const UPLOAD_FILE = gql`
   }
 `;
 
+// renders a single chat message.
 const renderChatMessage = (message: ChatMessage, uid: string) => {
   const key = `${message.createdAt.getTime()}-${message.sender}-${
     message.groupId
@@ -142,10 +148,10 @@ export type MessageBoxProps = {
   setContacts?: Dispatch<SetStateAction<Contact[]>>; // setContacts from parent (recents.tsx)
   group?: boolean; // whether or not the chat being rendered is a group chat
   collapseMembers?: boolean; // whether or not the members list next to the message box should be collapsed
-  setCollapse?: any; // to set the value of collapseMembers
+  setCollapse?: (collapse: boolean) => any; // to set the value of collapseMembers
   full?: boolean; // whether or not the messagebox should take up the full width or 75% of the width
   collapseLeft?: boolean; // whether or not to collapse the contacts list on the left hand side
-  handleCollapseLeft?: any; // handler for collapsing the left contacts list
+  handleCollapseLeft?: () => any; // handler for collapsing the left contacts list
 };
 
 // TODO: clear input message when changing contact
@@ -278,7 +284,7 @@ const MessageBox = (props: MessageBoxProps) => {
           >
             <VideocamIcon />
           </IconButton>
-          <IconButton onClick={() => props.setCollapse(!props.collapseMembers)}>
+          <IconButton onClick={() => props.setCollapse?.(!props.collapseMembers)}>
             <GroupIcon />
           </IconButton>
         </h1>

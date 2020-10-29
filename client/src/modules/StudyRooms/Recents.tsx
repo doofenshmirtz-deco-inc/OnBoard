@@ -156,7 +156,6 @@ const Recents = (props: any) => {
                       <ContactCard
                         buttonsOff
                         name={user.name}
-                        avatar={user.avatar}
                         contact={{
                           name: user.name,
                           avatar: user.avatar,

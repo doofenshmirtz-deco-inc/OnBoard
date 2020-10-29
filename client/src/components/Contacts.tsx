@@ -1,3 +1,8 @@
+/**
+ * Contacts component used on dashboard. Renders a small box around the Recents
+ * component.
+ */
+
 import React from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
@@ -21,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Contacts = (props: any) => {
+const Contacts = (props: {dashboard: boolean}) => {
   const classes = useStyles();
 
   return (

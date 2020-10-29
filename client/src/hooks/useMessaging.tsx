@@ -1,3 +1,11 @@
+/**
+ * Messaging context which provides functions and information from the 
+ * messaging subscription system. Also provides a list of contacts, sorted by
+ * recency. 
+ * 
+ * Use with the hook: Messaging.useContainer().
+ */
+
 import {
   FetchResult,
   gql,

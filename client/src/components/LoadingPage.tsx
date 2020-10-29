@@ -1,3 +1,7 @@
+/**
+ * Simple spinner to use as a placeholder on loading pages.
+ */
+
 import React from "react";
 import { makeStyles, CircularProgress, Grid } from "@material-ui/core";
 
