@@ -1,5 +1,10 @@
+/**
+ * Shows the tab panel and the appropriate page for the selected tab for a class.
+ * Used on the class page when given a class id to route to.
+ */
+
 import React from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -36,17 +41,11 @@ import { addAnnouncement } from "../../graphql/addAnnouncement";
 
 interface TabPanelProps {
   children?: React.ReactNode;
-  index: any;
+  index: number;
 }
 
 interface ClassViewProps {
-  classId: any;
-}
-
-interface MenuBarComponent {
-  name: any;
-  path: any;
-  content: React.ReactElement;
+  classId: string;
 }
 
 function TabPanel(props: TabPanelProps) {
@@ -253,7 +252,7 @@ function CreateAnnouncement(props: { courseId?: string }) {
   );
 }
 
-function AnnouncementPage(props: { courseId?: string; editable?: boolean }) {
+const AnnouncementPage = (props: { courseId?: string; editable?: boolean }) => {
   return (
     <>
       {props.editable && <CreateAnnouncement {...props} />}
@@ -264,7 +263,7 @@ function AnnouncementPage(props: { courseId?: string; editable?: boolean }) {
       />
     </>
   );
-}
+};
 
 export default function ClassView() {
   const classes = useStyles();

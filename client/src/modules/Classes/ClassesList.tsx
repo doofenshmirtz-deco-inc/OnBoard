@@ -1,3 +1,8 @@
+/**
+ * ClassList shows the list of classes that the user is registered in.
+ * Used to display the clases on the dashboard and on the empty class route.
+ */
+
 import React from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
