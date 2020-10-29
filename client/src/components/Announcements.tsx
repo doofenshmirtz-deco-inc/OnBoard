@@ -22,6 +22,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Tooltip from "@material-ui/core/Tooltip";
 import Button from "@material-ui/core/Button";
 import { deleteAnnouncement } from "../graphql/deleteAnnouncement";
+import { useHistory } from "react-router";
 
 const sharedStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -125,20 +126,25 @@ const renderAnnouncement = (
   announcement: {
     announcement: { id: number; title: string; createdAt: Date; html: string };
     colour: string;
+    courseID: string;
   },
   classes: any,
   key: number,
   isDashboard: boolean,
-  deletable?: boolean
+  deletable?: boolean,
+  history?: any
 ) => {
   let trimmeDesc = getDescription(announcement, isDashboard);
   return (
     <ListItem
-      button
+      button={isDashboard as true}
       className={clsx(classes.enrolledClass, {
         [classes.classItemMargin]: isDashboard,
       })}
       key={key}
+      onClick={() =>
+        history.push(`/classes/${announcement.courseID}/annoucements`)
+      }
       style={{
         borderLeft: `5px solid ${announcement.colour}`,
         fontWeight: "bolder",
@@ -157,7 +163,6 @@ const renderAnnouncement = (
             {announcement.announcement.title}
           </Typography>
         }
-        // disableTypography={true} // for later maybe idk
         secondary={trimmeDesc}
       />
       {deletable && (
@@ -261,6 +266,8 @@ export default (props: {
   const classes = props.isDashboard ? dashboardStyles() : notDashboardStyles();
   const { loading, error, data } = useQuery<MyAnnouncements>(GET_ANNOUNCEMENTS);
 
+  const history = useHistory();
+
   let announcements = data?.me?.courses
     .filter((element) => !props.courseId || element.course.id == props.courseId)
     .map((item) => {
@@ -268,6 +275,7 @@ export default (props: {
         return {
           announcement,
           colour: item.colour,
+          courseID: item.course.id,
         };
       });
     })
@@ -286,7 +294,8 @@ export default (props: {
           classesShared,
           index,
           props.isDashboard,
-          props.deletable
+          props.deletable,
+          history
         )
       )}
     </List>

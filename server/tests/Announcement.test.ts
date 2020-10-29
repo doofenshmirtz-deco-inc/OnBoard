@@ -35,7 +35,7 @@ describe("Announcements Resolver", () => {
     const course = await Course.findOne({ code: "SECR1000" });
     if (!course) fail();
 
-    annoucementResolver.addAnnouncement(
+    const ann = await annoucementResolver.addAnnouncement(
       {
         title: "Test Title",
         html: "Test Text",
@@ -49,9 +49,6 @@ describe("Announcements Resolver", () => {
       }
     );
 
-    const ann = (
-      await (await courseResolver.course(course.id))!.announcements
-    )[0];
     expect(ann.title).toBe("Test Title");
     expect(ann.html).toBe("Test Text");
   });
