@@ -39,7 +39,6 @@ export class AnnouncementResolver {
   @Authorized()
   async deleteAnnouncement(@Arg("id", () => ID) id: number) {
     const an = await Announcement.findOne({ id });
-    console.log(an);
     await Announcement.delete({ id });
     return an;
   }

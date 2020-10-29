@@ -84,6 +84,7 @@ const Message = (props: MessageProps) => {
             className={`${classes.bubble} ${
               props.direction === "left" ? classes.other : classes.me
             }`}
+            data-cy="message"
           >
             <div className={classes.wrapText}>{message}</div>
           </div>
