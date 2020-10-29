@@ -278,7 +278,7 @@ export default (props: {
       a.announcement.createdAt < b.announcement.createdAt ? 1 : -1
     );
 
-  const annoucementsList = !data ? (
+  const announcementsList = !data ? (
     <div></div>
   ) : (
     <List className={classes.classList}>
@@ -297,7 +297,7 @@ export default (props: {
   return (
     <div className={classes.root}>
       {props.isDashboard ? <h2>Announcements</h2> : ""}
-      {annoucementsList}
+      {announcementsList}
     </div>
   );
 };
