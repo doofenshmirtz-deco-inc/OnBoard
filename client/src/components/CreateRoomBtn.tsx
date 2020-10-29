@@ -1,3 +1,8 @@
+/**
+ * Button to create a room, shows a pop up which allows creating a room with
+ * a name and various users.
+ */
+
 import React, { useState, ChangeEvent } from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { gql, useMutation, useQuery } from "@apollo/client";
@@ -22,6 +27,7 @@ import { useHistory } from "react-router";
 import { GetMyId } from "../graphql/GetMyId";
 import { LoadingPage } from "./LoadingPage";
 import { Messaging } from "../hooks/useMessaging";
+import { Contacts_me_groups } from "../graphql/Contacts";
 
 const addStudyGroup = gql`
   mutation AddStudyGroup(
@@ -63,8 +69,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-// TODO: PopUp props type definition
-const PopUp = (props: any) => {
+type CreateRoomBtnProps = {
+  explore?: boolean;
+  contacts?: Contacts_me_groups[] | undefined;
+  handleClick?: (x: { id: string; name: string }) => any;
+};
+
+const CreateRoomBtn = (props: CreateRoomBtnProps) => {
   const [open, setOpen] = useState(false);
   const [studyRoomName, setRoomName] = useState("");
   const [selectedContacts, setSelectedContacts] = useState([] as any[]);
@@ -112,7 +123,7 @@ const PopUp = (props: any) => {
 
       const usersString = users.map((x) => x.name).join(", ");
       messaging.sendMessage({ groupId, send: "Created new room!" });
-      props.handleClick({ id: groupId, name: studyRoomName });
+      props.handleClick?.({ id: groupId, name: studyRoomName });
       setOpen(false);
     });
   };
@@ -148,7 +159,7 @@ const PopUp = (props: any) => {
               className={classes.margins}
               multiple
               id="tags-outlined"
-              options={props.contacts}
+              options={props.contacts!}
               getOptionLabel={(option: any) => option.name}
               filterSelectedOptions
               onChange={(e: any, newValue: any | null) => {
@@ -192,4 +203,4 @@ const PopUp = (props: any) => {
   );
 };
 
-export default PopUp;
+export default CreateRoomBtn;

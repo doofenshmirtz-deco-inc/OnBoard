@@ -1,3 +1,7 @@
+/**
+ * Displays a study room with buttons to join.
+ */
+
 import React from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import PersonIcon from "@material-ui/icons/Person";

@@ -1,3 +1,8 @@
+/**
+ * Message bubble component. Renders a chat message with different styles
+ * depending on the sender (e.g. colour, position).
+ */
+
 import { makeStyles } from "@material-ui/core";
 import React from "react";
 import Tooltip from "@material-ui/core/Tooltip";

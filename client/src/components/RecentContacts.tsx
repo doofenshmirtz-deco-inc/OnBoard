@@ -1,3 +1,8 @@
+/**
+ * Contacts list with searching for contacts and a button for creating a new
+ * study room.
+ */
+
 import React, { useState } from "react";
 import List from "@material-ui/core/List";
 import { makeStyles, Theme } from "@material-ui/core/styles";
@@ -9,17 +14,12 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import { Messaging } from "../hooks/useMessaging";
 import CreateRoomBtn from "./CreateRoomBtn";
 import * as firebase from "firebase";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import { IconButton } from "@material-ui/core";
 
 const RecentContacts = (props: any) => {
   // search for contacts within the contacts list
   const [searchTerm, setSearchTerm] = useState("");
-  // whether or not the contacts list should collapse (only to be used when not on dashboard)
-  const [collapse, setCollapse] = useState(false);
 
-  const useStyles = makeStyles((theme: Theme) => ({
+  const useStyles = makeStyles(() => ({
     root: {
       display: "flex",
       flexDirection: "column",
@@ -96,7 +96,7 @@ const RecentContacts = (props: any) => {
                 backgroundColor:
                   props.selected.id === item.id ? "#e3e1e1" : "#fafafa",
               }}
-              onClick={(e) => {
+              onClick={() => {
                 props.handleClick(item);
               }}
               className={classes.contact}
@@ -109,7 +109,6 @@ const RecentContacts = (props: any) => {
                 buttonsOff={true}
                 group={item.users.length > 2}
                 contact2={users[1]}
-                contacts={item.users}
               />
             </Button>
           ) : null;
