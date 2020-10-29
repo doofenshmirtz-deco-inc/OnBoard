@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       height: "100%",
+      border: "1px solid lightgrey",
     },
     title: {},
     searchBar: {
@@ -30,7 +31,7 @@ const Contacts = (props: { dashboard: boolean }) => {
   const classes = useStyles();
 
   return (
-    <Box border={1} className={classes.root}>
+    <Box className={classes.root}>
       <Container>
         <h2 className={classes.title}>Contacts</h2>
         <Recents dashboard={props.dashboard} />

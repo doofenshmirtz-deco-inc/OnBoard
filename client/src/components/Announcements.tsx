@@ -6,6 +6,7 @@
 import React from "react";
 import clsx from "clsx";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import Card from "@material-ui/core/Card";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -31,31 +32,39 @@ import { deleteAnnouncement } from "../graphql/deleteAnnouncement";
 const sharedStyles = makeStyles((theme: Theme) =>
   createStyles({
     enrolledClass: {
+      backgroundColor: "transparent",
       // height: 300, // Subject to change
       minWidth: 250,
-      border: "1px solid black",
+      // boxShadow: "1px 1px 1px 1px #ccc",
+      borderRadius: "0px",
       overflow: "hidden",
+      marginBottom: "10px",
+      border: "1px solid lightgrey",
+      borderBottom: "1px solid lightgrey",
+      borderRight: "1px solid lightgrey",
     },
     enrolledDashClass: {
       // height: 300, // Subject to change
       minWidth: 250,
-      border: "1px solid black",
+      // border: "1px solid black",
     },
     classBody: {
       alignSelf: "stretch",
       whiteSpace: "pre",
+      padding: theme.spacing(2),
     },
     heading: {
       textAlign: "center",
     },
     date: {
-      position: "absolute",
-      top: 0,
-      right: 10,
+      // position: "absolute",
+      // top: 0,
+      // right: 10,
       fontSize: "0.75rem",
       color: "grey",
-      padding: 0,
-      margin: 0,
+      textAlign: "right",
+      // padding: 0,
+      // margin: 0,
     },
     classItemMargin: {
       marginLeft: "5px",
@@ -67,13 +76,15 @@ const sharedStyles = makeStyles((theme: Theme) =>
 const dashboardStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      backgroundColor: theme.palette.background.paper,
+      // backgroundColor: theme.palette.background.paper,
       overflow: "hidden",
-      border: "1px solid black",
+      border: "1px solid lightgrey",
       height: "100%",
       display: "flex",
       flexFlow: "column",
-      padding: theme.spacing(2),
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+      paddingBottom: theme.spacing(2),
     },
     classList: {
       overflow: "auto",
@@ -81,7 +92,7 @@ const dashboardStyles = makeStyles((theme: Theme) =>
       width: "100%",
       maxWidth: `calc(100vw - ${100}px)`,
       flex: 1,
-      alignItems: "strech",
+      alignItems: "stretch",
     },
   })
 );
@@ -91,6 +102,7 @@ const notDashboardStyles = makeStyles((theme: Theme) =>
     root: {
       // backgroundColor: theme.palette.background.paper,
       height: "100%",
+      marginBottom: "3px",
     },
     classList: {
       // overflow: "auto",
@@ -143,8 +155,7 @@ const renderAnnouncement = (
 ) => {
   let trimmeDesc = getDescription(announcement, isDashboard);
   return (
-    <ListItem
-      button
+    <Card
       className={clsx(classes.enrolledClass, {
         [classes.classItemMargin]: isDashboard,
       })}
@@ -153,7 +164,7 @@ const renderAnnouncement = (
         borderLeft: `5px solid ${announcement.colour}`,
         fontWeight: "bolder",
         fontSize: "1.1rem",
-        borderTop: key != 0 && !isDashboard ? 0 : undefined,
+        // borderTop: key != 0 && !isDashboard ? 0 : undefined,
       }}
     >
       <ListItemText
@@ -163,6 +174,9 @@ const renderAnnouncement = (
             <div className={classes.date}>
               {moment(announcement.announcement.createdAt).fromNow()}
             </div>
+            {deletable && (
+              <DeleteAnnouncement announceId={announcement.announcement.id} />
+            )}
             <br />
             {announcement.announcement.title}
           </Typography>
@@ -170,12 +184,7 @@ const renderAnnouncement = (
         // disableTypography={true} // for later maybe idk
         secondary={trimmeDesc}
       />
-      {deletable && (
-        <ListItemSecondaryAction>
-          <DeleteAnnouncement announceId={announcement.announcement.id} />
-        </ListItemSecondaryAction>
-      )}
-    </ListItem>
+    </Card>
   );
 };
 
@@ -209,7 +218,12 @@ function DeleteAnnouncement(props: { announceId: number }) {
   return (
     <div>
       <Tooltip title="Delete Announcement">
-        <IconButton edge="end" aria-label="delete" onClick={handleClickOpen}>
+        <IconButton
+          edge="end"
+          style={{ marginTop: "-2em", marginLeft: "-0.5em" }}
+          aria-label="delete"
+          onClick={handleClickOpen}
+        >
           <DeleteIcon />
         </IconButton>
       </Tooltip>
@@ -288,7 +302,7 @@ export default (props: {
       a.announcement.createdAt < b.announcement.createdAt ? 1 : -1
     );
 
-  const annoucementsList = !data ? (
+  const announcementsList = !data ? (
     <div></div>
   ) : (
     <List className={classes.classList}>
@@ -306,12 +320,8 @@ export default (props: {
 
   return (
     <div className={classes.root}>
-      {props.isDashboard ? (
-        <h2 className={classesShared.heading}>Announcements</h2>
-      ) : (
-        ""
-      )}
-      {annoucementsList}
+      {props.isDashboard ? <h2>Announcements</h2> : ""}
+      {announcementsList}
     </div>
   );
 };

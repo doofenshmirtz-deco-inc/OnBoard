@@ -69,6 +69,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const theme = createMuiTheme({
+  shadows: Array(25).fill("none") as Shadows,
   typography: {
     fontFamily: [
       "myriad-pro",

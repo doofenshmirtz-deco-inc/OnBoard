@@ -36,7 +36,7 @@ const RecentContacts = (props: any) => {
     },
     searchBar: {
       width: "70%",
-      margin: "2px 0 0 0",
+      margin: "8px 0 0 0",
       paddingLeft: 10,
     },
     hide: {
@@ -59,7 +59,7 @@ const RecentContacts = (props: any) => {
       <TextField
         className={classes.searchBar}
         id="contacts-search"
-        label="Search"
+        placeholder="Search"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         InputProps={{

@@ -26,6 +26,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     cardBackground: {
       backgroundColor: "transparent",
+      borderRadius: "0px",
+      shadows: "none",
     },
     // TODO: change this so that it's maybe something different for new messages, idk, testing might help with this
     newMessage: {
