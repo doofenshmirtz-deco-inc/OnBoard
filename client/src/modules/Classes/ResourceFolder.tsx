@@ -1,3 +1,8 @@
+/**
+ * ResourceFolder renders a folder and its content inside items.
+ * Used on the class pages for learning resources and assessment.
+ */
+
 import React from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
@@ -55,7 +60,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paper: {
       padding: theme.spacing(2),
-      color: theme.palette.text.primary,
+      // boxShadow: "1px 1px 1px 1px #ccc",
+      backgroundColor: "transparent",
+      // color: theme.palette.text.primary,
+      borderRadius: "0px",
+      border: "1px solid lightgrey",
     },
     uploadDropZone: {
       marginTop: "0.5rem",
@@ -75,7 +84,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface NodeProps {
-  nodeId: any;
+  nodeId: string;
 }
 
 const ROOT_COURSE_FOLDER = gql`
@@ -213,7 +222,8 @@ const DELETE_NODE = gql`
   }
 `;
 
-function FolderItem(item: any, index: number) {
+// Renders a list item for a folder node.
+const FolderItem = (item: any, index: number) => {
   return (
     <ListItem
       button
@@ -230,9 +240,10 @@ function FolderItem(item: any, index: number) {
       <ListItemText primary={item.title} />
     </ListItem>
   );
-}
+};
 
-function TextItem(item: any, index: number) {
+// Renders a list item for a text node.
+const TextItem = (item: any, index: number) => {
   return (
     <ListItem
       button
@@ -249,9 +260,10 @@ function TextItem(item: any, index: number) {
       <ListItemText primary={item.title} secondary={RemoveMD(item.text)} />
     </ListItem>
   );
-}
+};
 
-function HeadingItem(item: any, index: number) {
+// Renders a list item for a heading node.
+const HeadingItem = (item: any, index: number) => {
   return (
     <ListItem button key={index} component={RouterLink} to={`${item.id}`}>
       <ListItemAvatar>
@@ -262,18 +274,21 @@ function HeadingItem(item: any, index: number) {
       <ListItemText primary={item.title} />
     </ListItem>
   );
-}
+};
 
-function NodeDirectory(props: {
+// Renders the directory of a node.
+// If given a folder node, renders that folder.
+// If given any other type of node, renders the parent folder.
+const NodeDirectory = (props: {
   courseId?: string;
   nodeId?: string;
   colour?: string;
   editable?: boolean;
-}) {
+}) => {
   const classes = useStyles();
   let { nodeId } = useParams<NodeProps>();
 
-  const { loading, data, error } = useQuery<GetNode>(GET_NODE, {
+  const { data } = useQuery<GetNode>(GET_NODE, {
     variables: {
       nodeID: props.nodeId ? parseInt(props.nodeId) : parseInt(nodeId),
     },
@@ -338,19 +353,20 @@ function NodeDirectory(props: {
     );
   }
   return <></>;
-}
+};
 
-function NodeContent(props: {
+// Renders the content of the given node.
+const NodeContent = (props: {
   courseId?: string;
   nodeId?: string;
   editable?: boolean;
-}) {
+}) => {
   const classes = useStyles();
   let { nodeId } = useParams<NodeProps>();
 
   let checkedNodeId = props.nodeId ? parseInt(props.nodeId) : parseInt(nodeId);
 
-  const { loading, data, error } = useQuery<GetNode>(GET_NODE, {
+  const { data } = useQuery<GetNode>(GET_NODE, {
     variables: {
       nodeID: checkedNodeId,
     },
@@ -391,9 +407,10 @@ function NodeContent(props: {
       )}
     </Paper>
   );
-}
+};
 
-function AddItem(props: { nodeId: string }) {
+// Component to add an item to the folder.
+const AddItem = (props: { nodeId: string }) => {
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
@@ -557,9 +574,10 @@ function AddItem(props: { nodeId: string }) {
       </Dialog>
     </div>
   );
-}
+};
 
-function DeleteItem(props: { nodeId: number; hasChildren: boolean }) {
+// Component to delete the current node.
+const DeleteItem = (props: { nodeId: number; hasChildren: boolean }) => {
   const [open, setOpen] = React.useState(false);
   const history = useHistory();
 
@@ -618,7 +636,7 @@ function DeleteItem(props: { nodeId: number; hasChildren: boolean }) {
       </Dialog>
     </div>
   );
-}
+};
 
 export default function ResourceFolder(props: {
   courseId?: string;
@@ -626,20 +644,18 @@ export default function ResourceFolder(props: {
 }) {
   const classes = useStyles();
 
-  const { data: coursePage, error: courseError } = useQuery<GetRootCoursePage>(
-    ROOT_COURSE_FOLDER,
+  const { data: coursePage } = useQuery<GetRootCoursePage>(ROOT_COURSE_FOLDER, {
+    variables: { courseID: props.courseId },
+    skip: props.assessmentPage,
+  });
+
+  const { data: assessmentPage } = useQuery<GetRootAssessmentPage>(
+    ROOT_ASSESSMENT_FOLDER,
     {
       variables: { courseID: props.courseId },
-      skip: props.assessmentPage,
+      skip: !props.assessmentPage,
     }
   );
-
-  const { data: assessmentPage, error: assessmentError } = useQuery<
-    GetRootAssessmentPage
-  >(ROOT_ASSESSMENT_FOLDER, {
-    variables: { courseID: props.courseId },
-    skip: !props.assessmentPage,
-  });
 
   let nodeId;
   if (props.assessmentPage) {

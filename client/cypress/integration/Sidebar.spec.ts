@@ -3,7 +3,7 @@ describe("Sidebar Test", () => {
     cy.get(".MuiDrawer-root")
       .get(".MuiList-root")
       .within(() => {
-        cy.get(".MuiListItemIcon-root").its("length").should("be.eq", 6);
+        cy.get(".MuiListItemIcon-root").its("length").should("be.eq", 5);
       });
   });
 

@@ -1,3 +1,8 @@
+/**
+ * ClassList shows the list of classes that the user is registered in.
+ * Used to display the clases on the dashboard and on the empty class route.
+ */
+
 import React from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
@@ -14,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       height: "100%",
+      border: "1px solid lightgrey",
     },
   })
 );
@@ -69,7 +75,7 @@ export let ClassesList = () => {
   const classes = useStyles();
 
   return (
-    <Box border={1} className={classes.root}>
+    <Box className={classes.root}>
       <Container>
         <h2>Classes</h2>
         <ClassesSublist />

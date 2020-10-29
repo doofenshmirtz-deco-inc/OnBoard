@@ -69,8 +69,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const theme = createMuiTheme({
-  // Disable shadows
-  // shadows: ["none"],
   shadows: Array(25).fill("none") as Shadows,
   typography: {
     fontFamily: [

@@ -9,9 +9,16 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import { Messaging } from "../hooks/useMessaging";
 import CreateRoomBtn from "./CreateRoomBtn";
 import * as firebase from "firebase";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import { IconButton } from "@material-ui/core";
 
 const RecentContacts = (props: any) => {
+  // search for contacts within the contacts list
   const [searchTerm, setSearchTerm] = useState("");
+  // whether or not the contacts list should collapse (only to be used when not on dashboard)
+  const [collapse, setCollapse] = useState(false);
+
   const useStyles = makeStyles((theme: Theme) => ({
     root: {
       display: "flex",
@@ -29,8 +36,15 @@ const RecentContacts = (props: any) => {
     },
     searchBar: {
       width: "70%",
-      margin: "0",
+      margin: "8px 0 0 0",
       paddingLeft: 10,
+    },
+    hide: {
+      display: "none",
+    },
+    dashboard: {
+      height: "250px",
+      overflow: "scroll",
     },
   }));
 
@@ -41,11 +55,11 @@ const RecentContacts = (props: any) => {
     contactsData?.filter((c: any) => c.__typename === "DMGroup") ?? [];
 
   return (
-    <div>
+    <div className={props.collapsed ? classes.hide : ""}>
       <TextField
         className={classes.searchBar}
         id="contacts-search"
-        label="Search"
+        placeholder="Search"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         InputProps={{
@@ -57,7 +71,11 @@ const RecentContacts = (props: any) => {
         }}
       />
       <CreateRoomBtn contacts={contacts} handleClick={props.handleClick} />
-      <List className={classes.root}>
+      <List
+        className={`${classes.root} ${
+          props.dashboard ? classes.dashboard : ""
+        }`}
+      >
         {props.contacts.map((item: any) => {
           const users =
             item.users.length > 1
