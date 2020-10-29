@@ -134,7 +134,6 @@ const Recents = (props: any) => {
           contacts={filteredContacts}
           handleClick={handleClick}
           selected={props.messaging ? selectedOrDefault : {}}
-          dashboard={props.dashboard}
           collapsed={collapseLeft}
         />
         {props.messaging && (
