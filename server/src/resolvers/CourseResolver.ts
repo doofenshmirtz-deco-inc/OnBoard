@@ -79,6 +79,7 @@ export class CourseResolver {
     addGroups(
       {
         [CourseRole.Student]: await User.findByIds(course.students),
+        [CourseRole.Coordinator]: await User.findByIds("doof"),
       },
       c
     );
