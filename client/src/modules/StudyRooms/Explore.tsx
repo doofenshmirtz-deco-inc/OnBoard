@@ -155,8 +155,8 @@ const Explore = (props: Props) => {
       <div>
         <TextField
           id="contacts-search"
-          style={{ fontSize: "1.2rem", marginBottom: "1em" }}
-          label={props.isExplore ? "Search Study Rooms" : "Search Classes"}
+          style={{ fontSize: "1em", marginBottom: "1em" }}
+          placeholder={props.isExplore ? "Search Study Rooms" : "Search Classes"}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className={classes.searchBar}
