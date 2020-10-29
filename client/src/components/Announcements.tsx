@@ -227,7 +227,7 @@ function DeleteAnnouncement(props: { announceId: number }) {
           edge="end"
           style={{ marginTop: "-2em", marginLeft: "-0.5em" }}
           aria-label="delete"
-          onClick={handleClickOpen}
+          onClick={handleConfirm}
         >
           <DeleteIcon />
         </IconButton>

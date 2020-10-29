@@ -269,5 +269,5 @@ if __name__ == "__main__":
 
     merged_courses, merged_classes = merge_courses_classes(all_courses, all_classes)
     token = input("Paste token here: ")
-    push_to_db("http://localhost:5000/graphql", token, merged_courses, merged_classes)
+    push_to_db("https://onboard.doofenshmirtz.xyz/graphql", token, merged_courses, merged_classes)
     print("Import complete!")
