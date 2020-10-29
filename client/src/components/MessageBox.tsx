@@ -334,7 +334,10 @@ const MessageBox = (props: MessageBoxProps) => {
             </IconButton>
           ),
           endAdornment: (
-            <Button onClick={() => sendMessage(messageInput)}>
+            <Button
+              onClick={() => sendMessage(messageInput)}
+              data-cy="message-send"
+            >
               <SendIcon />
             </Button>
           ),

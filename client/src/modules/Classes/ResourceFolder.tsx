@@ -225,7 +225,13 @@ const DELETE_NODE = gql`
 // Renders a list item for a folder node.
 const FolderItem = (item: any, index: number) => {
   return (
-    <ListItem button key={index} component={RouterLink} to={`${item.id}`}>
+    <ListItem
+      button
+      key={index}
+      component={RouterLink}
+      to={`${item.id}`}
+      data-cy="folder-node"
+    >
       <ListItemAvatar>
         <Avatar>
           <FolderIcon />
@@ -239,7 +245,13 @@ const FolderItem = (item: any, index: number) => {
 // Renders a list item for a text node.
 const TextItem = (item: any, index: number) => {
   return (
-    <ListItem button key={index} component={RouterLink} to={`${item.id}`}>
+    <ListItem
+      button
+      key={index}
+      component={RouterLink}
+      to={`${item.id}`}
+      data-cy="text-node"
+    >
       <ListItemAvatar>
         <Avatar>
           <DescriptionIcon />
