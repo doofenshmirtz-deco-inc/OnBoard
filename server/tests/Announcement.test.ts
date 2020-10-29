@@ -49,7 +49,9 @@ describe("Announcements Resolver", () => {
       }
     );
 
-    const ann = (await courseResolver.course(course.id))!.announcements[0];
+    const ann = (
+      await (await courseResolver.course(course.id))!.announcements
+    )[0];
     expect(ann.title).toBe("Test Title");
     expect(ann.html).toBe("Test Text");
   });
