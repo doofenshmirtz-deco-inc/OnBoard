@@ -252,8 +252,8 @@ const MessageBox = (props: MessageBoxProps) => {
   let heading = "";
   if (props.name) {
     heading =
-      props.name.length > 40
-        ? props.name.substring(0, 40).trim() + "..."
+      props.name.length > 30
+        ? props.name.substring(0, 30).trim() + "..."
         : props.name;
   }
 
