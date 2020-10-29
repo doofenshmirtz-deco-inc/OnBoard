@@ -32,7 +32,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
-import { ClassesSublist } from "./ClassesList";
+import { ClassesSublist } from "../modules/Classes/ClassesList";
 
 const drawerWidth = 240;
 

@@ -293,7 +293,8 @@ export const useMessaging = () => {
             data.text.length > 20
               ? data.text.substring(0, 20) + "..."
               : data.text;
-          enqueueSnackbar(`${data?.text} - ${data.user.name}`);
+          // TODO: try to get data.group.name
+          enqueueSnackbar(`${data.user.name}: ${text}`);
         }
       }
     },

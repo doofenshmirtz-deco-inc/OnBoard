@@ -3,3 +3,4 @@ dateparser
 graphene>=2.0
 requests
 graphqlclient
+black

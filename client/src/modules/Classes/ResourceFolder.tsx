@@ -8,13 +8,13 @@ import Avatar from "@material-ui/core/Avatar";
 import FolderIcon from "@material-ui/icons/Folder";
 import DescriptionIcon from "@material-ui/icons/Description";
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { GetRootCoursePage } from "../graphql/GetRootCoursePage";
-import { GetRootAssessmentPage } from "../graphql/GetRootAssessmentPage";
-import { GetNode } from "../graphql/GetNode";
-import { EditTextNode } from "../graphql/EditTextNode";
-import { EditFolderNode } from "../graphql/EditFolderNode";
-import { FileUpload } from "../graphql/FileUpload";
-import { DeleteNode } from "../graphql/DeleteNode";
+import { GetRootCoursePage } from "../../graphql/GetRootCoursePage";
+import { GetRootAssessmentPage } from "../../graphql/GetRootAssessmentPage";
+import { GetNode } from "../../graphql/GetNode";
+import { EditTextNode } from "../../graphql/EditTextNode";
+import { EditFolderNode } from "../../graphql/EditFolderNode";
+import { FileUpload } from "../../graphql/FileUpload";
+import { DeleteNode } from "../../graphql/DeleteNode";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import {
   Route,
@@ -67,6 +67,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     inputTopMargin: {
       marginTop: "0.5rem",
+    },
+    content: {
+      whiteSpace: "pre",
     },
   })
 );
@@ -362,7 +365,7 @@ function NodeContent(props: {
           ) : null}
         </Grid>
       </Grid>
-      <ReactMarkdown>{contentText}</ReactMarkdown>
+      <ReactMarkdown className={classes.content}>{contentText}</ReactMarkdown>
       {data?.node?.link && (
         <Button
           variant="contained"
@@ -652,10 +655,10 @@ export default function ResourceFolder(props: {
         </Route>
         <Route path="/">
           <Grid container spacing={3}>
-            <Grid item xs={6} sm={6}>
+            <Grid item xs={12} sm={6}>
               <NodeDirectory nodeId={nodeId} {...props} />
             </Grid>
-            <Grid item xs={6} sm={6}>
+            <Grid item xs={12} sm={6}>
               <NodeContent nodeId={nodeId} {...props} />
             </Grid>
           </Grid>

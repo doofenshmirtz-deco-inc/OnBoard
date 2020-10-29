@@ -1,15 +1,15 @@
 import React from "react";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
-import Announcements from "./Announcements";
-import { useQuery, gql } from "@apollo/client";
+import Announcements from "../../components/Announcements";
+import { useQuery, useMutation, gql } from "@apollo/client";
 import {
   GetClassInfo,
   GetClassInfo_me_courses_course_staff,
-} from "../graphql/GetClassInfo";
+} from "../../graphql/GetClassInfo";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ResourceFolder from "./ResourceFolder";
 import {
@@ -21,9 +21,18 @@ import {
   useLocation,
   useParams,
 } from "react-router-dom";
-import { GetCoursePermissions } from "../graphql/GetCoursePermissions";
+import { GetCoursePermissions } from "../../graphql/GetCoursePermissions";
 import ClassStaff from "./ClassStaff";
-import { CourseStaff_course_staff } from "../graphql/CourseStaff";
+import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@material-ui/core/IconButton";
+import AddIcon from "@material-ui/icons/Add";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogActions from "@material-ui/core/DialogActions";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import { addAnnouncement } from "../../graphql/addAnnouncement";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -82,6 +91,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   tabs: {
     textTransform: "none",
   },
+  addButton: {
+    float: "right",
+    display: "block",
+  },
 }));
 
 let tabPages = (staff: GetClassInfo_me_courses_course_staff[]) => {
@@ -89,7 +102,7 @@ let tabPages = (staff: GetClassInfo_me_courses_course_staff[]) => {
     {
       name: "Announcements",
       path: "announcements/",
-      content: <Announcements isDashboard={false} />,
+      content: <AnnouncementPage />,
     },
     {
       name: "Learning Resources",
@@ -151,6 +164,107 @@ const COURSE_PERMISSIONS = gql`
     }
   }
 `;
+
+const ADD_ANNOUNCEMENT = gql`
+  mutation addAnnouncement($courseID: ID!, $title: String!, $html: String!) {
+    addAnnouncement(data: { courseID: $courseID, title: $title, html: $html }) {
+      id
+    }
+  }
+`;
+
+function CreateAnnouncement(props: { courseId?: string }) {
+  const classes = useStyles();
+
+  const [open, setOpen] = React.useState(false);
+
+  const [title, setTitle] = React.useState("");
+  const [content, setContent] = React.useState("");
+
+  const [addAnnouncement] = useMutation<addAnnouncement>(ADD_ANNOUNCEMENT, {
+    update(cache) {
+      cache.reset();
+    },
+  });
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleConfirm = () => {
+    addAnnouncement({
+      variables: {
+        courseID: props.courseId,
+        title: title,
+        html: content,
+      },
+    });
+
+    setOpen(false);
+  };
+
+  return (
+    <div>
+      <Tooltip title="New Annocunement">
+        <IconButton className={classes.addButton} aria-label="add">
+          <AddIcon fontSize="small" onClick={handleClickOpen} />
+        </IconButton>
+      </Tooltip>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+        maxWidth="sm"
+        fullWidth={true}
+      >
+        <DialogTitle id="form-dialog-title">New announcement</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            id="title"
+            label="Title"
+            fullWidth
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <TextField
+            autoFocus
+            id="content"
+            label="Content"
+            fullWidth
+            multiline
+            rows={12}
+            onChange={(e) => setContent(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleConfirm} color="primary">
+            Add
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+}
+
+function AnnouncementPage(props: { courseId?: string; editable?: boolean }) {
+  return (
+    <>
+      {props.editable && <CreateAnnouncement {...props} />}
+      <Announcements
+        isDashboard={false}
+        courseId={props.courseId}
+        deletable={props.editable}
+      />
+    </>
+  );
+}
 
 export default function ClassView() {
   const classes = useStyles();
