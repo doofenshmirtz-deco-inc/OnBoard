@@ -260,7 +260,7 @@ const HeadingItem = (item: any, index: number) => {
   );
 };
 
-// Renders the directory of a node. 
+// Renders the directory of a node.
 // If given a folder node, renders that folder.
 // If given any other type of node, renders the parent folder.
 const NodeDirectory = (props: {
@@ -628,20 +628,18 @@ export default function ResourceFolder(props: {
 }) {
   const classes = useStyles();
 
-  const { data: coursePage } = useQuery<GetRootCoursePage>(
-    ROOT_COURSE_FOLDER,
+  const { data: coursePage } = useQuery<GetRootCoursePage>(ROOT_COURSE_FOLDER, {
+    variables: { courseID: props.courseId },
+    skip: props.assessmentPage,
+  });
+
+  const { data: assessmentPage } = useQuery<GetRootAssessmentPage>(
+    ROOT_ASSESSMENT_FOLDER,
     {
       variables: { courseID: props.courseId },
-      skip: props.assessmentPage,
+      skip: !props.assessmentPage,
     }
   );
-
-  const { data: assessmentPage } = useQuery<
-    GetRootAssessmentPage
-  >(ROOT_ASSESSMENT_FOLDER, {
-    variables: { courseID: props.courseId },
-    skip: !props.assessmentPage,
-  });
 
   let nodeId;
   if (props.assessmentPage) {
