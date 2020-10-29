@@ -1,3 +1,7 @@
+/**
+ * Model to denote the nodes in a course or assessment page
+ */
+
 import {
   Column,
   BaseEntity,
@@ -15,7 +19,6 @@ import {
   createUnionType,
   InputType,
 } from "type-graphql";
-import { DMGroup } from "./UserGroup";
 
 export enum CoursePageNodeTypes {
   Text = "text",
@@ -44,13 +47,10 @@ export abstract class BaseNode extends BaseEntity {
   @Field({ nullable: true })
   link?: string;
 
-  // TODO maybe custom type checking
-  // TODO so bad v bad fix me
+  // TODO: This could benifit from runtime type checking
   @ManyToOne(() => BaseNode, (node) => node.children, { cascade: true })
   parent: Promise<BaseNode>;
 
-  // TODO this is bad!!
-  // TODO maybe custom type checking lmao
   @OneToMany(() => BaseNode, (node) => node.parent)
   children: Promise<BaseNode[]>;
 }

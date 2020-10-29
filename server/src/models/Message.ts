@@ -1,3 +1,9 @@
+/**
+ * Model representing a message.
+ *
+ * Includes an AfterInsert hook which broadcasts to the subscription.
+ */
+
 import {
   BaseEntity,
   Entity,

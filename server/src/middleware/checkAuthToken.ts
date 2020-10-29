@@ -1,7 +1,6 @@
 /**
- * Checks the given auth token with firebase.
+ * Verifies that the auth token is well-defined and is valid
  */
-
 import admin from "firebase-admin";
 
 // checks the given auth token with firebase. returns decoded token if success

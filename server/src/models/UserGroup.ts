@@ -1,9 +1,11 @@
+/**
+ * Model for a base group and its children classes.
+ */
+
 import {
   Column,
-  PrimaryColumn,
   BaseEntity,
   Entity,
-  OneToMany,
   ManyToMany,
   JoinTable,
   PrimaryGeneratedColumn,
@@ -18,17 +20,13 @@ import {
   ObjectType,
   ID,
   Field,
-  Int,
   registerEnumType,
   createUnionType,
-  FieldResolver,
-  Ctx,
   InputType,
 } from "type-graphql";
 import { User } from "./User";
 import { Course } from "./Course";
-import { CourseGroupPair, CourseRole } from "./CourseGroupPair";
-import { Context } from "../middleware/Context";
+import { CourseGroupPair } from "./CourseGroupPair";
 
 export enum ClassType {
   Lecture = "Lecture",

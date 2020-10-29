@@ -119,11 +119,6 @@ let tabPages = (staff: GetClassInfo_me_courses_course_staff[]) => {
       path: "staff/",
       content: <ClassStaff staff={staff} />,
     },
-    {
-      name: "Course Profile (ECP)",
-      path: "profile/",
-      content: <p>Course Profile (ECP)</p>,
-    },
   ];
 };
 

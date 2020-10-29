@@ -1,3 +1,7 @@
+/**
+ * Model and associated enums to represent a course
+ */
+
 import {
   Column,
   PrimaryColumn,
