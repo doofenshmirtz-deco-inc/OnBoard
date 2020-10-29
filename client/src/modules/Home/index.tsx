@@ -19,6 +19,9 @@ const useStyles = makeStyles((theme: Theme) =>
     control: {
       padding: theme.spacing(2),
     },
+    fixHeight: {
+      height: 400,
+    },
   })
 );
 
@@ -33,9 +36,9 @@ const Home = () => {
         <ClassesList />
       </Grid>
       <Grid item xs={12} md={8}>
-        <Announcements isDashboard={true} />
+        <Announcements isDashboard />
       </Grid>
-      <Grid item xs={12} md={4}>
+      <Grid item xs={12} md={4} className={classes.fixHeight}>
         <ContactList dashboard />
       </Grid>
     </Grid>

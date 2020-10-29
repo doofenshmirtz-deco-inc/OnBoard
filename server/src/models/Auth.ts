@@ -1,6 +1,9 @@
+/**
+ * Model to represent a test auth token (only used in development)
+ */
+
 import { ObjectType, Field } from "type-graphql";
 
-// TODO this may need to be modified to fit the front end
 @ObjectType()
 export class AuthToken {
   @Field()

@@ -3,8 +3,6 @@ import { createTestConnection } from "./TestDatabase";
 import { useSeeding, runSeeder } from "@doofenshmirtz-deco-inc/typeorm-seeding";
 import { UserResolver } from "../src/resolvers/UserResolver";
 import TestDataSeeder from "../src/db/seeds/TestDataSeeder";
-import UserSeeder from "../src/db/seeds/UserSeeder";
-import CourseSeeder from "../src/db/seeds/CourseSeeder";
 
 const emptyReqRes = {
   req: {} as any,

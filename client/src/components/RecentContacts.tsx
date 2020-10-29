@@ -42,6 +42,10 @@ const RecentContacts = (props: any) => {
     hide: {
       display: "none",
     },
+    dashboard: {
+      height: "250px",
+      overflow: "scroll",
+    },
   }));
 
   const classes = useStyles();
@@ -67,7 +71,11 @@ const RecentContacts = (props: any) => {
         }}
       />
       <CreateRoomBtn contacts={contacts} handleClick={props.handleClick} />
-      <List className={classes.root}>
+      <List
+        className={`${classes.root} ${
+          props.dashboard ? classes.dashboard : ""
+        }`}
+      >
         {props.contacts.map((item: any) => {
           const users =
             item.users.length > 1

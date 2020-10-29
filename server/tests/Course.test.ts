@@ -1,8 +1,6 @@
 import { Connection, getConnection } from "typeorm";
 import { createTestConnection } from "./TestDatabase";
 import { useSeeding, runSeeder } from "@doofenshmirtz-deco-inc/typeorm-seeding";
-import UserSeeder from "../src/db/seeds/UserSeeder";
-import CourseSeeder from "../src/db/seeds/CourseSeeder";
 import TestDataSeeder from "../src/db/seeds/TestDataSeeder";
 import { CourseResolver } from "../src/resolvers/CourseResolver";
 import { Semesters } from "../src/models/Course";
