@@ -51,7 +51,7 @@ const sharedStyles = makeStyles((theme: Theme) =>
     classBody: {
       alignSelf: "stretch",
       whiteSpace: "pre",
-      padding: theme.spacing(2),
+      // padding: theme.spacing(2),
     },
     heading: {
       textAlign: "center",
