@@ -98,6 +98,8 @@ export default MyCal = () => {
   }, [data]);
 
   const classes = useStyles();
+  const currentTime = new Date();
+  currentTime.setHours(currentTime.getHours() - 2);
 
   return (
     <Box className={classes.root}>
@@ -105,7 +107,7 @@ export default MyCal = () => {
         <Calendar
           localizer={localizer}
           events={myTimetable}
-          scrollToTime={new Date()}
+          scrollToTime={currentTime}
           startAccessor="start"
           defaultView={"work_week"}
           views={["month", "work_week"]}

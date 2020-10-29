@@ -164,6 +164,9 @@ const renderAnnouncement = (
             <div className={classes.date}>
               {moment(announcement.announcement.createdAt).fromNow()}
             </div>
+            {deletable && (
+              <DeleteAnnouncement announceId={announcement.announcement.id} />
+            )}
             <br />
             {announcement.announcement.title}
           </Typography>
@@ -171,11 +174,6 @@ const renderAnnouncement = (
         // disableTypography={true} // for later maybe idk
         secondary={trimmeDesc}
       />
-      {deletable && (
-        <ListItemSecondaryAction>
-          <DeleteAnnouncement announceId={announcement.announcement.id} />
-        </ListItemSecondaryAction>
-      )}
     </Card>
   );
 };
@@ -208,7 +206,12 @@ function DeleteAnnouncement(props: { announceId: number }) {
   return (
     <div>
       <Tooltip title="Delete Announcement">
-        <IconButton edge="end" aria-label="delete" onClick={handleClickOpen}>
+        <IconButton
+          edge="end"
+          style={{ marginTop: "-2em", marginLeft: "-0.5em" }}
+          aria-label="delete"
+          onClick={handleClickOpen}
+        >
           <DeleteIcon />
         </IconButton>
       </Tooltip>
