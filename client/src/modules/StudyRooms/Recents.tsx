@@ -58,7 +58,10 @@ const Recents = (props: any) => {
     users: [] as any[],
   });
 
+  // collapse the list that allows the user to view all the members in a chat
   const [collapseMembers, setCollapsable] = useState(false);
+  // collapse the list of contacts on the left hand side
+  const [collapseLeft, setCollapseLeft] = useState(false);
 
   // access messaging manager from context.
   const messaging = Messaging.useContainer();
@@ -71,6 +74,11 @@ const Recents = (props: any) => {
     messaging.setGroupId(item.id);
     history.push("/study-rooms/recents/" + item.id);
     setSelectedState(item);
+  };
+
+  // toggles the collapsed state of the contacts list
+  const collapseContacts = () => {
+    setCollapseLeft(!collapseLeft);
   };
 
   const uid = messaging.username;
@@ -126,6 +134,7 @@ const Recents = (props: any) => {
           contacts={filteredContacts}
           handleClick={handleClick}
           selected={props.messaging ? selectedOrDefault : {}}
+          collapsed={collapseLeft}
         />
         {props.messaging && (
           <div style={{ width: "100%" }}>
@@ -134,6 +143,8 @@ const Recents = (props: any) => {
               name={selectedOrDefault.name}
               collapseMembers={collapseMembers}
               setCollapse={setCollapsable}
+              collapseLeft={collapseLeft}
+              handleCollapseLeft={collapseContacts}
             />
             <div className={collapseMembers ? classes.hide : classes.list}>
               <h2 style={{ marginBottom: "5px" }}>Members</h2>

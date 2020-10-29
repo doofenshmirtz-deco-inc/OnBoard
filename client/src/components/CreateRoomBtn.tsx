@@ -45,7 +45,7 @@ const meId = gql`
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
-    margin: theme.spacing(1),
+    margin: "5px 2px 5px 5px",
     width: "16%",
     textTransform: "none",
   },
@@ -103,8 +103,6 @@ const PopUp = (props: any) => {
       (c: any) => c.users.filter((user: any) => user.id !== uid)[0]
     );
 
-    console.log(uids);
-    console.log(selectedContacts);
     createStudyRoom({
       variables: { uids: uids, groupName: studyRoomName, isPublic: isPublic },
     }).then(({ data }) => {
@@ -117,12 +115,6 @@ const PopUp = (props: any) => {
       props.handleClick({ id: groupId, name: studyRoomName });
       setOpen(false);
     });
-    // while (loading) {
-    //   console.log("hello");
-    // }
-    // TODO: get data to work
-
-    // window.location.href = "/study-rooms/recents/" + groupID;
   };
 
   return (
