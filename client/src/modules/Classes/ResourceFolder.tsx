@@ -213,7 +213,7 @@ const DELETE_NODE = gql`
   }
 `;
 
-function FolderItem(item: any, index: number) {
+const FolderItem = (item: any, index: number) => {
   return (
     <ListItem button key={index} component={RouterLink} to={`${item.id}`}>
       <ListItemAvatar>
@@ -226,7 +226,7 @@ function FolderItem(item: any, index: number) {
   );
 }
 
-function TextItem(item: any, index: number) {
+const TextItem = (item: any, index: number) => {
   return (
     <ListItem button key={index} component={RouterLink} to={`${item.id}`}>
       <ListItemAvatar>
@@ -239,7 +239,7 @@ function TextItem(item: any, index: number) {
   );
 }
 
-function HeadingItem(item: any, index: number) {
+const HeadingItem = (item: any, index: number) => {
   return (
     <ListItem button key={index} component={RouterLink} to={`${item.id}`}>
       <ListItemAvatar>
@@ -252,12 +252,12 @@ function HeadingItem(item: any, index: number) {
   );
 }
 
-function NodeDirectory(props: {
+const NodeDirectory = (props: {
   courseId?: string;
   nodeId?: string;
   colour?: string;
   editable?: boolean;
-}) {
+}) => {
   const classes = useStyles();
   let { nodeId } = useParams<NodeProps>();
 
@@ -328,11 +328,11 @@ function NodeDirectory(props: {
   return <></>;
 }
 
-function NodeContent(props: {
+const NodeContent = (props: {
   courseId?: string;
   nodeId?: string;
   editable?: boolean;
-}) {
+}) => {
   const classes = useStyles();
   let { nodeId } = useParams<NodeProps>();
 
@@ -381,7 +381,7 @@ function NodeContent(props: {
   );
 }
 
-function AddItem(props: { nodeId: string }) {
+const AddItem = (props: { nodeId: string }) => {
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
@@ -547,7 +547,7 @@ function AddItem(props: { nodeId: string }) {
   );
 }
 
-function DeleteItem(props: { nodeId: number; hasChildren: boolean }) {
+const DeleteItem = (props: { nodeId: number; hasChildren: boolean }) => {
   const [open, setOpen] = React.useState(false);
   const history = useHistory();
 

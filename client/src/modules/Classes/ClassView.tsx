@@ -49,7 +49,7 @@ interface MenuBarComponent {
   content: React.ReactElement;
 }
 
-function TabPanel(props: TabPanelProps) {
+const TabPanel = (props: TabPanelProps) => {
   const { children, index, ...other } = props;
 
   return (
@@ -64,14 +64,14 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-function a11yProps(index: any) {
+const a11yProps = (index: any) => {
   return {
     id: `scrollable-auto-tab-${index}`,
     "aria-controls": `scrollable-auto-tabpanel-${index}`,
   };
 }
 
-function classNotFound() {
+const classNotFound = () => {
   return (
     <>
       <h1>Well, that didn't work</h1>
@@ -173,7 +173,7 @@ const ADD_ANNOUNCEMENT = gql`
   }
 `;
 
-function CreateAnnouncement(props: { courseId?: string }) {
+const CreateAnnouncement = (props: { courseId?: string }) => {
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
@@ -253,7 +253,7 @@ function CreateAnnouncement(props: { courseId?: string }) {
   );
 }
 
-function AnnouncementPage(props: { courseId?: string; editable?: boolean }) {
+const AnnouncementPage = (props: { courseId?: string; editable?: boolean }) => {
   return (
     <>
       {props.editable && <CreateAnnouncement {...props} />}

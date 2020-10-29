@@ -169,7 +169,7 @@ const renderAnnouncement = (
   );
 };
 
-function DeleteAnnouncement(props: { announceId: number }) {
+const DeleteAnnouncement = (props: { announceId: number }) => {
   const [open, setOpen] = React.useState(false);
 
   const [deleteAnnouncement] = useMutation<deleteAnnouncement>(

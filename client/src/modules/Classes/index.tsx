@@ -4,13 +4,7 @@ import ClassesTabs from "./ClassView";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { ClassesList } from "./ClassesList";
 
-// const Classes = (props: RouteComponentProps) => (
-//   <>
-
-//   </>
-// );
-
-function Classes() {
+const Classes = () => {
   let { url } = useRouteMatch();
 
   return (

@@ -12,9 +12,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   rootMessaging: {
     flexGrow: 3,
     display: "flex",
+    paddingTop: "2%"
   },
   rootDashboard: {
     display: "block",
+    paddingTop: "2%"
   },
   list: {
     flexDirection: "column",

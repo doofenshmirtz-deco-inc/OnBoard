@@ -157,6 +157,7 @@ const MessageBox = (props: MessageBoxProps) => {
       overflowY: "hidden",
       display: "inline-block",
       float: "left",
+      paddingTop: "1%"
     },
     less: {
       width: "75%",
