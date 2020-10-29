@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       height: "100%",
+      border: "1px solid lightgrey",
     },
   })
 );
@@ -69,7 +70,7 @@ export let ClassesList = () => {
   const classes = useStyles();
 
   return (
-    <Box border={1} className={classes.root}>
+    <Box className={classes.root}>
       <Container>
         <h2>Classes</h2>
         <ClassesSublist />

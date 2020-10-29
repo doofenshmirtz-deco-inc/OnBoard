@@ -1,5 +1,6 @@
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import CardContent from "@material-ui/core/CardContent";
@@ -11,6 +12,14 @@ import {
 } from "../graphql/MyCalendar";
 import { MyColours } from "../graphql/MyColours";
 import { useHistory } from "react-router";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      border: "1px solid lightgrey",
+    },
+  })
+);
 
 const localizer = momentLocalizer(moment);
 
@@ -88,8 +97,10 @@ export default MyCal = () => {
     setMyTimetable(events);
   }, [data]);
 
+  const classes = useStyles();
+
   return (
-    <Box border={1}>
+    <Box className={classes.root}>
       <CardContent>
         <Calendar
           localizer={localizer}
