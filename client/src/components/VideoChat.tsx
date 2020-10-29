@@ -1,5 +1,8 @@
+/**
+ * Main video chat component
+ */
+
 import React from "react";
-import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import Jitsi from "react-jitsi";
 import { gql, useQuery } from "@apollo/client";
 import { useHistory, useParams } from "react-router";

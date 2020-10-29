@@ -1,3 +1,8 @@
+/**
+ * Announcements component to render announcements with colours and markdown.
+ * This is reused for both the dashboard and individual course pages.
+ */
+
 import React from "react";
 import clsx from "clsx";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
@@ -111,9 +116,17 @@ const notDashboardStyles = makeStyles((theme: Theme) =>
   })
 );
 
+type Announcement = {
+  announcement: { id: number; title: string; createdAt: Date; html: string };
+  colour: string;
+};
+
+// character limit on dashboard.
 const CHARACTER_LIMIT: number = 225;
 
-const getDescription = (announcement: any, isDashboard: boolean) => {
+// gets description text for the announcement. if is dashboard, truncates to
+// the CHARACTER_LIMIT.
+const getDescription = (announcement: Announcement, isDashboard: boolean) => {
   let text;
   if (
     announcement.announcement.html.length <= CHARACTER_LIMIT ||
@@ -132,13 +145,10 @@ const getDescription = (announcement: any, isDashboard: boolean) => {
   );
 };
 
-/* Render a single announcement button. Haha any go brr */
+/* Render a single announcement button. */
 const renderAnnouncement = (
-  announcement: {
-    announcement: { id: number; title: string; createdAt: Date; html: string };
-    colour: string;
-  },
-  classes: any,
+  announcement: Announcement,
+  classes: any, // shared styles from parent component.
   key: number,
   isDashboard: boolean,
   deletable?: boolean
@@ -178,6 +188,8 @@ const renderAnnouncement = (
   );
 };
 
+// component for deleting an announcement. shows a button and pops up a
+// confirmation query.
 function DeleteAnnouncement(props: { announceId: number }) {
   const [open, setOpen] = React.useState(false);
 

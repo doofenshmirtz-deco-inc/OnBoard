@@ -1,3 +1,7 @@
+/**
+ * Type interface for chat messages. Contains all information needed to render
+ * a chat message, including sender, position, group, time, and others.
+ */
 interface ChatMessage {
   text: string;
   sender: string;

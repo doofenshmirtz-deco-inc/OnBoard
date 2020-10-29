@@ -1,3 +1,8 @@
+/**
+ * Main sidebar component. Contains links to all the pages and a collapsible
+ * list of courses, with colours. A logout button is at the bottom.
+ */
+
 import React from "react";
 import clsx from "clsx";
 import {
@@ -22,8 +27,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import modules from "../modules";
 import { NavLink } from "react-router-dom";
 import * as firebase from "firebase";
-import { Icon, Avatar, Collapse } from "@material-ui/core";
-import { Lock, ExitToApp, ExpandLess, ExpandMore } from "@material-ui/icons";
+import { Avatar, Collapse } from "@material-ui/core";
+import { ExitToApp, ExpandLess, ExpandMore } from "@material-ui/icons";
 import { useQuery, gql } from "@apollo/client";
 import { Me } from "../graphql/Me";
 import Dialog from "@material-ui/core/Dialog";

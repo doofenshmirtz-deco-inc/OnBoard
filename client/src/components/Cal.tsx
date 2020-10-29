@@ -1,3 +1,8 @@
+/**
+ * Calendar component, used for dashboard and the dedicated calendar home page.
+ * Queries and displays timetables from the server.
+ */
+
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
@@ -52,12 +57,17 @@ const GET_COLOURS = gql`
   }
 `;
 
-let MyCal;
+type Event = {
+  start: Date;
+  end: Date;
+  title: string;
+  id: string;
+};
 
-export default MyCal = () => {
+export default () => {
   const { data } = useQuery<MyCalendar>(GET_CALENDAR);
   const { data: courses } = useQuery<MyColours>(GET_COLOURS);
-  const [myTimetable, setMyTimetable] = useState([] as any[]);
+  const [myTimetable, setMyTimetable] = useState<Event[]>([]);
 
   const history = useHistory();
 
@@ -67,15 +77,11 @@ export default MyCal = () => {
     ) as MyCalendar_me_groups_ClassGroup[] | null;
 
     // Get necessary data for calendar from ClassGroup data from Apollo
-    let timetable = calendar?.map((e) => [
-      e?.times,
-      e?.duration,
-      e?.name,
-      e?.type,
-      e?.id,
-    ]);
+    let timetable = calendar?.map(
+      (e) => [e?.times, e?.duration, e?.name, e?.type, e?.id] as const
+    );
 
-    let events = [] as any[];
+    let events: Event[] = [];
 
     timetable?.forEach((e) => {
       let times = e[0] as Array<String>;
