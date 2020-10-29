@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Contacts = (props: {dashboard: boolean}) => {
+const Contacts = (props: { dashboard: boolean }) => {
   const classes = useStyles();
 
   return (

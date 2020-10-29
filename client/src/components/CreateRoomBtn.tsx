@@ -70,10 +70,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 type CreateRoomBtnProps = {
-  explore?: boolean,
-  contacts?: Contacts_me_groups[] | undefined,
-  handleClick?: (x: {id: string, name: string}) => any,
-}
+  explore?: boolean;
+  contacts?: Contacts_me_groups[] | undefined;
+  handleClick?: (x: { id: string; name: string }) => any;
+};
 
 const CreateRoomBtn = (props: CreateRoomBtnProps) => {
   const [open, setOpen] = useState(false);

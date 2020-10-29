@@ -133,7 +133,6 @@ const getDescription = (announcement: Announcement, isDashboard: boolean) => {
   );
 };
 
-
 /* Render a single announcement button. */
 const renderAnnouncement = (
   announcement: Announcement,

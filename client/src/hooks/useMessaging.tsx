@@ -1,8 +1,8 @@
 /**
- * Messaging context which provides functions and information from the 
+ * Messaging context which provides functions and information from the
  * messaging subscription system. Also provides a list of contacts, sorted by
- * recency. 
- * 
+ * recency.
+ *
  * Use with the hook: Messaging.useContainer().
  */
 

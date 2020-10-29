@@ -284,7 +284,9 @@ const MessageBox = (props: MessageBoxProps) => {
           >
             <VideocamIcon />
           </IconButton>
-          <IconButton onClick={() => props.setCollapse?.(!props.collapseMembers)}>
+          <IconButton
+            onClick={() => props.setCollapse?.(!props.collapseMembers)}
+          >
             <GroupIcon />
           </IconButton>
         </h1>

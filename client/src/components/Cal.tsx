@@ -49,11 +49,11 @@ const GET_COLOURS = gql`
 `;
 
 type Event = {
-  start: Date,
-  end: Date,
-  title: string,
-  id: string,
-}
+  start: Date;
+  end: Date;
+  title: string;
+  id: string;
+};
 
 export default () => {
   const { data } = useQuery<MyCalendar>(GET_CALENDAR);
@@ -68,13 +68,9 @@ export default () => {
     ) as MyCalendar_me_groups_ClassGroup[] | null;
 
     // Get necessary data for calendar from ClassGroup data from Apollo
-    let timetable = calendar?.map((e) => [
-      e?.times,
-      e?.duration,
-      e?.name,
-      e?.type,
-      e?.id,
-    ] as const);
+    let timetable = calendar?.map(
+      (e) => [e?.times, e?.duration, e?.name, e?.type, e?.id] as const
+    );
 
     let events: Event[] = [];
 

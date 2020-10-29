@@ -40,13 +40,13 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type ContactCardProps = {
-  buttonsOff: boolean, // whether to display call buttons.
-  contact: any, 
-  contact2?: any,
-  readStatus: boolean, // read status, true if read.
-  name: string, // group or contact name
-  group?: boolean, // whether this is a group
-}
+  buttonsOff: boolean; // whether to display call buttons.
+  contact: any;
+  contact2?: any;
+  readStatus: boolean; // read status, true if read.
+  name: string; // group or contact name
+  group?: boolean; // whether this is a group
+};
 
 export default function ContactCard(props: ContactCardProps) {
   const classes = useStyles();
