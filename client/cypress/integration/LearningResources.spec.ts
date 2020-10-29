@@ -26,7 +26,7 @@ describe("Learning Resouce Test", () => {
     cy.get(".MuiBreadcrumbs-ol")
       .contains("/")
       .eq(0)
-      .get("li")
+      .get("l")
       .first()
       .click()
       .should("not.contain", "/");
