@@ -68,7 +68,9 @@ const dashboardStyles = makeStyles((theme: Theme) =>
       height: "100%",
       display: "flex",
       flexFlow: "column",
-      padding: theme.spacing(2),
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+      paddingBottom: theme.spacing(2),
     },
     classList: {
       overflow: "auto",
@@ -294,11 +296,7 @@ export default (props: {
 
   return (
     <div className={classes.root}>
-      {props.isDashboard ? (
-        <h2 className={classesShared.heading}>Announcements</h2>
-      ) : (
-        ""
-      )}
+      {props.isDashboard ? <h2>Announcements</h2> : ""}
       {annoucementsList}
     </div>
   );
