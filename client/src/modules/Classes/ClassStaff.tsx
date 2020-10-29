@@ -1,3 +1,8 @@
+/**
+ * Shows the staff for the given class.
+ * Used on the staff tab on a class page.
+ */
+
 import React from "react";
 import {
   List,

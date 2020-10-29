@@ -1,14 +1,13 @@
+/**
+ * Component for the page that displays classes. Uses route paths
+ * to determine what class to display.
+ */
+
 import React from "react";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ClassesTabs from "./ClassView";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { ClassesList } from "./ClassesList";
-
-// const Classes = (props: RouteComponentProps) => (
-//   <>
-
-//   </>
-// );
 
 function Classes() {
   let { url } = useRouteMatch();
