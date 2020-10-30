@@ -166,9 +166,10 @@ export default function MiniDrawer() {
     setLogoutOpen(false);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setLogoutOpen(false);
-    firebase.auth().signOut();
+    await firebase.auth().signOut();
+    window.location.reload();
   };
 
   const handleDrawerOpen = () => {

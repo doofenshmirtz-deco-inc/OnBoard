@@ -28,7 +28,8 @@ describe("Sidebar Test", () => {
       .click();
     cy.get(".MuiButton-root")
       .contains("OK")
-      .click();
+      .click()
+      .wait(500);
     cy.get("h1").contains("Welcome");
   });
 });

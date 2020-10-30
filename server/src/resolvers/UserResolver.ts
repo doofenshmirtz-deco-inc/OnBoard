@@ -71,7 +71,11 @@ export class UserResolver {
       .leftJoinAndSelect("cgp.course", "course")
       .leftJoinAndSelect("group.users", "user")
       .where("user.id = :uid", { uid: user.id });
-    if (role) query = query.where("cgp.role = :role", { role });
+    if (role)
+      query = query.where("cgp.role = :role AND user.id = :uid", {
+        role,
+        uid: user.id,
+      });
     return (await query.getMany()).map((p, i) => {
       return {
         course: p.course,

@@ -73,7 +73,7 @@ jobs:
       working-directory: server
       run: |
         # yarn test
-        echo("Skipping")
+        echo "Skipping"
 
     - name: Start server for client tests
       working-directory: server

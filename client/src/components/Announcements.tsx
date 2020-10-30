@@ -51,7 +51,7 @@ const sharedStyles = makeStyles((theme: Theme) =>
     classBody: {
       alignSelf: "stretch",
       whiteSpace: "pre",
-      padding: theme.spacing(2),
+      // padding: theme.spacing(2),
     },
     heading: {
       textAlign: "center",
@@ -227,7 +227,7 @@ function DeleteAnnouncement(props: { announceId: number }) {
           edge="end"
           style={{ marginTop: "-2em", marginLeft: "-0.5em" }}
           aria-label="delete"
-          onClick={handleClickOpen}
+          onClick={handleConfirm}
         >
           <DeleteIcon />
         </IconButton>
