@@ -1,4 +1,4 @@
-![Logo](https://i.imgur.com/xSKv6dm.png)
+![Logo](https://i.imgur.com/j48RrSq.png)
 
 # OnBoard
 
