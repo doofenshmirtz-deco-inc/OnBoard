@@ -9,6 +9,7 @@ import firebase from "firebase/app";
 import { CourseResolver } from "./resolvers/CourseResolver";
 import { UserGroupResolver } from "./resolvers/UserGroupResolver";
 import { MessageResolver } from "./resolvers/MessageResolver";
+import { AnnouncementResolver } from "./resolvers/AnnouncementResolver";
 import { createServer } from "http";
 import { AppPubSub } from "./resolvers/AppPubSub";
 import {
@@ -58,6 +59,7 @@ async function main() {
       UploadResolver,
       FolderNodeResolver,
       NodeResolver,
+      AnnouncementResolver,
     ],
     emitSchemaFile: true,
     pubSub: AppPubSub,
@@ -67,7 +69,22 @@ async function main() {
   const app = express();
   const apolloServer = new ApolloServer({
     schema,
-    context: ({ req, res, connection }) => ({ req, res, connection }),
+    context: async ({ req, res, connection, payload }: any) => {
+      // console.log(req);
+      // console.log(res);
+      // console.log(connection);
+      // console.log(payload?.auth);
+      return { req, res, connection, auth: payload?.auth };
+    },
+    subscriptions: {
+      onConnect: (params, ws, context) => {
+        // console.log('auth', (params as any).auth);
+        return {
+          ...context,
+          auth: (params as any).auth,
+        };
+      },
+    },
     uploads: false,
   });
 

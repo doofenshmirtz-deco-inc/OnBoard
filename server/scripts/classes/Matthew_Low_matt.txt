@@ -1,0 +1,10 @@
+Subject Code	Description	Group	Activity	Day	Time	Campus	Location	Staff	Duration	Dates
+DECO3801_S2_STLUC_FD	Design Computing Studio 3 - Build	STU1	06	Thu	10:00	STLUC	49-301 - Advanced Engineering Building, Design Studio	Glencross, Mashhuda	2 hrs	6/8-24/9, 8/10-29/10
+MATH4405_S2_STLUC_FD	Measure Theory	LEC1	01	Tue	11:00	STLUC	-	Pulemotov, Artem	1 hr	4/8-22/9, 6/10-27/10
+MATH4405_S2_STLUC_FD	Measure Theory	LEC2	01	Wed	12:00	STLUC	-	Pulemotov, Artem	1 hr	5/8-23/9, 7/10-28/10
+MATH4405_S2_STLUC_FD	Measure Theory	TUT1	01	Mon	09:00	STLUC	35-207 - Chamberlain Building, Tutorial Room	Pulemotov, Artem	1 hr	10/8-21/9, 5/10-26/10
+STAT4402_S2_STLUC_FD	Advanced Statistics II	LEC1	01	Mon	13:00	STLUC	-	Ye, Nan	1 hr	3/8-21/9, 5/10-26/10
+STAT4402_S2_STLUC_FD	Advanced Statistics II	LEC2	01	Tue	14:00	STLUC	-	Ye, Nan	1 hr	4/8-22/9, 6/10-27/10
+STAT4402_S2_STLUC_FD	Advanced Statistics II	LEC3	01	Wed	11:00	STLUC	-	Ye, Nan	1 hr	5/8-23/9, 7/10-28/10
+STAT4402_S2_STLUC_FD	Advanced Statistics II	PRA1	01	Thu	09:00	STLUC	69-209 -  Building 69,Computer Laboratory	Ye, Nan	1 hr	6/8-24/9, 8/10-29/10
+STAT4402_S2_STLUC_FD	Advanced Statistics II	TUT1	01	Tue	15:00	STLUC	07-326 - Parnell Building, Tutorial Room	Ye, Nan	1 hr	11/8-22/9, 6/10-27/10

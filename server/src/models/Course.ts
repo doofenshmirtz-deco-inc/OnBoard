@@ -1,3 +1,7 @@
+/**
+ * Model and associated enums to represent a course
+ */
+
 import {
   Column,
   PrimaryColumn,
@@ -90,7 +94,7 @@ export class Course extends BaseEntity {
   @OneToOne(() => FolderNode, { eager: true })
   @JoinColumn()
   @Field(() => FolderNode)
-  assesmentPage: FolderNode;
+  assessmentPage: FolderNode;
 
   // TODO validation that user groups are disjoint
 
@@ -110,6 +114,27 @@ export class Course extends BaseEntity {
     });
     return pair.save();
   }
+}
+
+@InputType()
+export class courseInput {
+  @Field()
+  code: string;
+
+  @Field(() => Int)
+  year: number;
+
+  @Field(() => Semesters)
+  semester: Semesters;
+
+  @Field()
+  name: string;
+
+  @Field()
+  courseLevel: CourseLevel;
+
+  @Field(() => [String])
+  students: String[];
 }
 
 @ObjectType()

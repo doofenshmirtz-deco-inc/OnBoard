@@ -1,110 +1,174 @@
+/**
+ * Message box component renders a list of messages and input for sending
+ * messages or files.
+ */
+
 import React, {
   useState,
   useLayoutEffect,
   useEffect,
-  useCallback,
   SetStateAction,
   Dispatch,
 } from "react";
-import { Button, makeStyles, TextField, IconButton } from "@material-ui/core";
+import {
+  Button,
+  makeStyles,
+  TextField,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  Tooltip,
+} from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import VideocamIcon from "@material-ui/icons/Videocam";
-import {
-  gql,
-  OnSubscriptionDataOptions,
-  useMutation,
-  useQuery,
-  useSubscription,
-} from "@apollo/client";
 import { LoadingPage } from "./LoadingPage";
-import { MyMessages } from "../graphql/MyMessages";
 import ChatMessage from "./ChatMessage";
 import Message from "./Message";
-import {
-  OnMessageReceived,
-  OnMessageReceived_newMessages,
-} from "../graphql/OnMessageReceived";
 import { Contact } from "../modules/StudyRooms/Recents";
-import * as firebase from "firebase";
 import { useParams, useHistory } from "react-router";
+import { Messaging } from "../hooks/useMessaging";
+import GroupIcon from "@material-ui/icons/Group";
+import { TextToLinks } from "../utils/string";
+import AttachFileIcon from "@material-ui/icons/AttachFile";
+import { DropzoneArea } from "material-ui-dropzone";
+import { gql, useMutation } from "@apollo/client";
+import { MessageUpload } from "../graphql/MessageUpload";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
-const MESSAGES_QUERY = gql`
-  query MyMessages($groupId: ID!) {
-    getMessages(groupID: $groupId) {
-      text
-      user {
-        id
-        name
-      }
-      group {
-        id
-      }
-      createdAt
-    }
+const UPLOAD_FILE = gql`
+  mutation MessageUpload($file: Upload!) {
+    singleUpload(file: $file)
   }
 `;
 
-const ADD_MESSAGE = gql`
-  mutation AddMessage($send: String!, $groupId: ID!) {
-    addMessage(message: { text: $send, groupID: $groupId }) {
-      id
-    }
-  }
-`;
-
-const MESSAGES_SUBSCRIPTION = gql`
-  subscription OnMessageReceived($uid: ID!) {
-    newMessages(uid: $uid) {
-      text
-      group {
-        id
-      }
-      user {
-        id
-      }
-      createdAt
-    }
-  }
-`;
-
-// note that this takes an OnMessageReceived_newMessages, but the queries are
-// written such that MyMessages_getMessages has the exact same type.
-const toChatMessage = (
-  data: OnMessageReceived_newMessages,
-  uid: string
-): ChatMessage => {
-  return {
-    sender: data.user.id,
-    text: data.text,
-    direction: data.user.id === uid ? "right" : "left",
-    groupId: data.group.id,
-    createdAt: new Date(data.createdAt),
-  };
+// renders a single chat message.
+const renderChatMessage = (message: ChatMessage, uid: string) => {
+  const key = `${message.createdAt.getTime()}-${message.sender}-${
+    message.groupId
+  }`;
+  return (
+    <Message
+      key={key}
+      direction={message.sender === uid ? "right" : "left"}
+      text={TextToLinks(message.text, "#0B3954")}
+      sender={message.senderName}
+      group={message.group}
+      time={message.createdAt.toLocaleString("en-GB")}
+    />
+  );
 };
 
-const renderChatMessage = (message: ChatMessage) => {
-  const key = `${message.createdAt}-${message.sender}-${message.groupId}`;
+type FileUploadProps = {
+  open: boolean; // whether the dialog box is open or closed
+  handleClose: () => any; // handle the closing of the dialog box
+  sendMessage: (url: string) => any; // sets the file upload message to send
+};
+
+const FileUpload = (props: FileUploadProps) => {
+  const useStyles = makeStyles((theme) => ({
+    dropzone: {
+      width: "75%",
+      margin: "0 auto 10%",
+    },
+    bold: {
+      fontWeight: 500,
+    },
+    grey: {
+      color: "#c9c9c9",
+    },
+    sendBtn: {
+      margin: "0 auto 5%",
+    },
+    noTextTransform: {
+      textTransform: "none",
+    },
+  }));
+
+  const classes = useStyles();
+
+  // get the mutation in order to upload the files
+  const [upload, { data }] = useMutation<MessageUpload>(UPLOAD_FILE);
+
+  // the url where the file is located
+  const url = data?.singleUpload;
+
+  // upload the file to the server
+  const uploadCallback = (files: File[]) => {
+    const file = files[0];
+    if (file) upload({ variables: { file } });
+  };
+
+  // send the file to the chat as a link and close the dialog box
+  const sendFile = () => {
+    if (url) {
+      // if you are testing locally, change the URL below to http://localhost:3000
+      props.sendMessage(encodeURI(`https://onboard.doofenshmirtz.xyz${url}`));
+      props.handleClose();
+    }
+    props.handleClose();
+  };
+
   return (
-    <Message key={key} direction={message.direction} text={message.text} />
+    <Dialog
+      onClose={props.handleClose}
+      aria-labelledby="simple-dialog-title"
+      open={props.open}
+    >
+      <DialogTitle id="simple-dialog-title">Upload a File</DialogTitle>
+      <div className={classes.dropzone}>
+        <DropzoneArea
+          classes={{ icon: classes.grey }}
+          dropzoneParagraphClass={classes.grey}
+          filesLimit={1}
+          maxFileSize={52428800}
+          onChange={(files) => uploadCallback(files)}
+        />
+      </div>
+      <div className={classes.sendBtn}>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.noTextTransform}
+          onClick={sendFile}
+        >
+          Send
+        </Button>
+      </div>
+    </Dialog>
   );
 };
 
 export type MessageBoxProps = {
+  uid?: string; // uid of the user currently logged in
   id?: string; // group id of chat.
   name?: string; // name of group
   onSentMessage?: () => any; // to be called when new message is received.
   contacts?: Contact[]; // all the contacts
   setContacts?: Dispatch<SetStateAction<Contact[]>>; // setContacts from parent (recents.tsx)
+  group?: boolean; // whether or not the chat being rendered is a group chat
+  collapseMembers?: boolean; // whether or not the members list next to the message box should be collapsed
+  setCollapse?: (collapse: boolean) => any; // to set the value of collapseMembers
+  full?: boolean; // whether or not the messagebox should take up the full width or 75% of the width
+  collapseLeft?: boolean; // whether or not to collapse the contacts list on the left hand side
+  handleCollapseLeft?: () => any; // handler for collapsing the left contacts list
 };
 
 // TODO: clear input message when changing contact
 const MessageBox = (props: MessageBoxProps) => {
   const useStyles = makeStyles((theme) => ({
     container: {
-      width: "100%",
       paddingLeft: "2%",
       height: "69vh",
       overflowY: "hidden",
+      display: "inline-block",
+      float: "left",
+    },
+    less: {
+      width: "75%",
+    },
+    full: {
+      width: "100%",
     },
     messagingContainer: {
       overflowY: "scroll",
@@ -112,49 +176,49 @@ const MessageBox = (props: MessageBoxProps) => {
     },
     sendBar: {
       width: "100%",
+      verticalAlign: "middle",
       position: "relative",
-      bottom: "0",
+      bottom: "1px",
     },
-    bubbleContainer: {
-      width: "100%",
-      display: "flex",
+    // Container: {
+    //   width: "100%",
+    //   display: "flex",
+    // },
+    root: {
+      maxWidth: 345,
     },
-    bubble: {
-      borderRadius: "20px",
-      margin: "1px",
-      padding: "10px",
-      display: "inline-block",
-      maxWidth: "40%",
-      marginRight: "10px",
+    media: {
+      height: 0,
+      paddingTop: "56.25%", // 16:9
     },
-    right: {
-      justifyContent: "flex-end",
+    noPadding: {
+      padding: 0,
     },
-    left: {
-      justifyContent: "flex-start",
-    },
-    me: {
-      backgroundColor: "#c9c9c9",
-    },
-    other: {
-      backgroundColor: theme.palette.secondary.main,
+    expand: {
+      transform: "rotate(0deg)",
+      marginLeft: "auto",
+      transition: theme.transitions.create("transform", {
+        duration: theme.transitions.duration.shortest,
+      }),
     },
   }));
 
   const classes = useStyles();
 
-  const { groupID } = useParams();
+  const { groupID } = useParams<any>();
   const history = useHistory();
-
-  const uid = firebase.auth().currentUser?.uid;
   const id = props.id ? props.id : groupID;
+
+  const msgBox = Messaging.useContainer();
+
+  useEffect(() => {
+    msgBox.setGroupId(id);
+  }, [id]);
 
   // current message being typed in text box.
   const [messageInput, setMessageInput] = useState("");
-  // existing chat messages as ChatMessage items.
-  const [oldMessages, setOldMessages] = useState([] as ChatMessage[]);
-  // new messages obtained via subscription.
-  const [newMessages, setNewMessages] = useState([] as ChatMessage[]);
+  // whether the dialog box for file upload should be opened or not
+  const [open, setOpen] = useState(false);
 
   // reference to end of messages, to scroll to bottom on new message.
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
@@ -164,78 +228,7 @@ const MessageBox = (props: MessageBoxProps) => {
     }
   });
 
-  // mutation to send a new message to the server.
-  const [sendToServer] = useMutation(ADD_MESSAGE);
-
-  // get my messages for a specific contact group.
-  const { data, loading, refetch } = useQuery<MyMessages>(MESSAGES_QUERY, {
-    variables: { groupId: id },
-  });
-
-  // FIXME: i feel like this is dodgy :/
-  let contact = props.contacts
-    ? props.contacts.filter((c) => c.id === id)[0]
-    : null;
-  if (contact && !contact.readStatus) {
-    contact.readStatus = true;
-    if (props.setContacts)
-      props.setContacts([
-        contact,
-        ...props.contacts!.filter((c) => c.id !== id),
-      ]);
-  }
-
-  // subscription handler to add a new received message.
-  const handleNewMessage = useCallback(
-    (options: OnSubscriptionDataOptions<OnMessageReceived>) => {
-      const data = options.subscriptionData.data?.newMessages;
-
-      if (data) {
-        if (data.group.id !== id && props.contacts) {
-          // FIXME: i feel like this is dodgy :/ (perhaps abstract to a function?)
-          let contact = props.contacts.filter((c) => c.id === data.group.id)[0];
-          contact.readStatus = false;
-          if (props.setContacts)
-            props.setContacts([
-              contact,
-              ...props.contacts.filter((c) => c.id !== data.group.id),
-            ]);
-          return; // not the selected group
-        }
-        setNewMessages([...newMessages, toChatMessage(data, uid!)]);
-      }
-    },
-    [newMessages, uid]
-  );
-
-  // subscribe to incoming messages with the above handler.
-  const { data: subData } = useSubscription<OnMessageReceived>(
-    MESSAGES_SUBSCRIPTION,
-    {
-      variables: { uid },
-      onSubscriptionData: handleNewMessage,
-    }
-  );
-
-  // when data changes, update oldMessages.
-  useEffect(() => {
-    if (!data) return;
-
-    const oldMessages: ChatMessage[] =
-      data?.getMessages?.map((x) => toChatMessage(x, uid!)) ?? [];
-
-    oldMessages.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
-
-    setOldMessages(oldMessages);
-  }, [data, uid]);
-
-  // reset cached messages when group id changes.
-  useEffect(() => {
-    refetch();
-    setNewMessages([]);
-  }, [id]);
-
-  if (!data || loading) {
+  if (!msgBox.groupMessages || !msgBox.username) {
     return <LoadingPage />;
   }
 
@@ -244,47 +237,73 @@ const MessageBox = (props: MessageBoxProps) => {
       return;
     }
 
-    setNewMessages([
-      ...newMessages,
-      {
-        text: message,
-        sender: uid!,
-        direction: "right",
-        groupId: id,
-        createdAt: new Date(),
-      },
-    ]);
-
     setMessageInput("");
     props.onSentMessage?.();
 
-    sendToServer({
-      variables: {
-        send: message,
-        groupId: id,
-      },
+    msgBox.sendMessage({
+      send: message,
+      groupId: id,
     });
   };
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  // ensure the heading does not take up more space than is available
+  let heading = "";
+  if (props.name) {
+    heading =
+      props.name.length > 30
+        ? props.name.substring(0, 30).trim() + "..."
+        : props.name;
+  }
+
   return (
-    <div className={classes.container}>
+    <div
+      className={`${classes.container} ${
+        props.collapseMembers || props.full ? classes.full : classes.less
+      }`}
+    >
       {props.name ? (
         <h1>
-          {props.name}{" "}
+          <Tooltip
+            title={props.collapseLeft ? "Expand contacts" : "Collapse contacts"}
+          >
+            <IconButton onClick={props.handleCollapseLeft}>
+              {props.collapseLeft ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            </IconButton>
+          </Tooltip>
+          {heading}{" "}
           <IconButton
             onClick={() => history.push("/study-rooms/video/" + props.id)}
           >
             <VideocamIcon />
+          </IconButton>
+          <IconButton
+            onClick={() => props.setCollapse?.(!props.collapseMembers)}
+          >
+            <GroupIcon />
           </IconButton>
         </h1>
       ) : (
         <> </>
       )}
       <div className={classes.messagingContainer}>
-        {oldMessages.map(renderChatMessage)}
-        {newMessages.map(renderChatMessage)}
+        {msgBox.groupMessages.map((y) =>
+          renderChatMessage(y, msgBox.username!)
+        )}
         <div ref={messagesEndRef} />
       </div>
+      <FileUpload
+        open={open}
+        handleClose={handleClose}
+        sendMessage={sendMessage}
+      />
       <TextField
         className={classes.sendBar}
         style={{ marginTop: "10px" }}
@@ -292,15 +311,33 @@ const MessageBox = (props: MessageBoxProps) => {
         id="message-send"
         label="Send message"
         value={messageInput}
-        onChange={(e) => setMessageInput(e.target.value)}
+        multiline
+        onChange={(e) => {
+          setMessageInput(e.target.value);
+        }}
         onKeyPress={(e) => {
           if (e.key === "Enter") {
-            sendMessage(messageInput);
+            if (!e.shiftKey) {
+              sendMessage(messageInput.trim());
+            } else {
+              setMessageInput(messageInput + "\n");
+            }
           }
         }}
         InputProps={{
+          classes: {
+            adornedEnd: classes.noPadding,
+          },
+          startAdornment: (
+            <IconButton onClick={handleClickOpen}>
+              <AttachFileIcon />
+            </IconButton>
+          ),
           endAdornment: (
-            <Button onClick={() => sendMessage(messageInput)}>
+            <Button
+              onClick={() => sendMessage(messageInput)}
+              data-cy="message-send"
+            >
               <SendIcon />
             </Button>
           ),

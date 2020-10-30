@@ -1,3 +1,7 @@
+/**
+ * Model for a user
+ */
+
 import {
   Column,
   PrimaryColumn,

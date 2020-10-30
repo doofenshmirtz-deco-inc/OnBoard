@@ -23,7 +23,6 @@ const StudyRooms = () => {
   const useStyles = makeStyles((theme: Theme) => ({
     root: {
       flexGrow: 1,
-      backgroundColor: theme.palette.background.paper,
     },
     tabs: {
       textTransform: "none",
@@ -51,7 +50,7 @@ const StudyRooms = () => {
               <VideoChat />
             </Grid>
             <Grid item xs={12} md={3}>
-              <MessageBox />
+              <MessageBox full />
             </Grid>
           </Grid>
         </Route>
@@ -74,7 +73,7 @@ const StudyRooms = () => {
               />
               <Tab
                 className={classes.tabs}
-                label="Explore"
+                label="Public Study Rooms"
                 value="/study-rooms/explore"
               />
               <Tab
@@ -87,7 +86,7 @@ const StudyRooms = () => {
           <Switch>
             <Route
               path="/study-rooms/recents/:messageID?"
-              render={() => <Recents />}
+              render={() => <Recents messaging />}
             />
             <Route
               path="/study-rooms/explore"

@@ -5,8 +5,6 @@ import TextField from "@material-ui/core/TextField";
 import StudyRoomButton from "../../components/StudyRoomButton";
 import SearchIcon from "@material-ui/icons/Search";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import AddIcon from "@material-ui/icons/Add";
-import Button from "@material-ui/core/Button";
 import { gql, useQuery, useMutation } from "@apollo/client";
 import { StudyRooms, StudyRooms_studyRooms } from "../../graphql/StudyRooms";
 import { LoadingPage } from "../../components/LoadingPage";
@@ -16,23 +14,8 @@ import {
   JoinStudyGroupVariables,
 } from "../../graphql/JoinStudyGroup";
 import { useHistory } from "react-router";
-import {
-  Checkbox,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  FormControl,
-  FormControlLabel,
-  FormHelperText,
-  Input,
-  InputLabel,
-} from "@material-ui/core";
-import Autocomplete from "@material-ui/lab/Autocomplete/Autocomplete";
 import { Contacts } from "../../graphql/Contacts";
-import { AddStudyGroup } from "../../graphql/AddStudyGroup";
-import firebase from "firebase";
+import CreateRoomBtn from "../../components/CreateRoomBtn";
 
 interface Props {
   isExplore: boolean;
@@ -91,21 +74,8 @@ const joinStudyGroupMutation = gql`
   }
 `;
 
-const addStudyGroup = gql`
-  mutation AddStudyGroup(
-    $uids: [String!]!
-    $isPublic: Boolean!
-    $groupName: String!
-  ) {
-    addStudyGroup(uids: $uids, isPublic: $isPublic, groupName: $groupName) {
-      id
-    }
-  }
-`;
-
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.palette.background.paper,
     display: "flex",
     flexDirection: "column",
   },
@@ -133,110 +103,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: "40%",
   },
 }));
-
-// TODO: PopUp props type definition
-const PopUp = (props: any) => {
-  const [open, setOpen] = useState(false);
-  const [studyRoomName, setRoomName] = useState("");
-  const [selectedContacts, setSelectedContacts] = useState([] as any[]);
-  const [isPublic, setIsPublic] = useState(false);
-
-  const [createStudyRoom, { data }] = useMutation(addStudyGroup);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const uid = firebase.auth().currentUser?.uid;
-
-  const handleCreate = () => {
-    let uids = selectedContacts.map((c: any) => c.users.slice(-1)[0].id);
-    uids.push(uid);
-    createStudyRoom({
-      variables: { uids: uids, groupName: studyRoomName, isPublic: isPublic },
-    });
-    handleClose();
-  };
-
-  const classes = useStyles();
-
-  return (
-    <div className={classes.inline}>
-      <Button
-        variant="contained"
-        color="secondary"
-        className={classes.button}
-        startIcon={<AddIcon />}
-        onClick={handleClickOpen}
-      >
-        Create Study Room
-      </Button>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-        classes={{ paperWidthSm: classes.big }}
-      >
-        <DialogTitle id="form-dialog-title">Create Study Room</DialogTitle>
-        <DialogContent>
-          <FormControl className={classes.full}>
-            <InputLabel htmlFor="study-room-name">Study Room Name</InputLabel>
-            <Input
-              id="study-room-name"
-              aria-describedby="my-helper-text"
-              onChange={(e) => setRoomName(e.target.value)}
-            />
-            <Autocomplete
-              className={classes.margins}
-              multiple
-              id="tags-outlined"
-              options={props.contacts}
-              getOptionLabel={(option: any) => option.name}
-              filterSelectedOptions
-              onChange={(e: any, newValue: any | null) => {
-                setSelectedContacts(newValue);
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  variant="outlined"
-                  label="Add Contacts to Study Room"
-                  placeholder="Add Contacts"
-                />
-              )}
-            />
-            <FormControlLabel
-              value="start"
-              control={
-                <Checkbox
-                  checked={isPublic}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    setIsPublic(e.target.checked);
-                  }}
-                  name="isPublic"
-                  color="primary"
-                />
-              }
-              label="Public"
-            />
-          </FormControl>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleCreate} color="primary">
-            Create
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  );
-};
 
 const Explore = (props: Props) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -289,8 +155,10 @@ const Explore = (props: Props) => {
       <div>
         <TextField
           id="contacts-search"
-          style={{ fontSize: "1.2rem", marginBottom: "1em" }}
-          label={props.isExplore ? "Search Study Rooms" : "Search Classes"}
+          style={{ fontSize: "1em", marginBottom: "1em" }}
+          placeholder={
+            props.isExplore ? "Search Study Rooms" : "Search Classes"
+          }
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className={classes.searchBar}
@@ -303,10 +171,11 @@ const Explore = (props: Props) => {
           }}
         />
         {props.isExplore ? (
-          <PopUp
+          <CreateRoomBtn
             contacts={contactsData.data?.me?.groups.filter(
               (c: any) => c.__typename === "DMGroup"
             )}
+            explore
           />
         ) : (
           <> </>

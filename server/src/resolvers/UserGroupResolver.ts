@@ -1,11 +1,8 @@
 import {
   Resolver,
   Query,
-  Args,
   Arg,
   ID,
-  Int,
-  UseMiddleware,
   Ctx,
   FieldResolver,
   Root,
@@ -13,7 +10,6 @@ import {
   Mutation,
 } from "type-graphql";
 import { User } from "../models/User";
-import { PaginationArgs, getOrder } from "./Types";
 import { Context } from "../middleware/Context";
 import {
   BaseGroup,
@@ -23,8 +19,10 @@ import {
   DMGroup,
   Group,
   StudyGroup,
+  ClassGroupInput,
 } from "../models/UserGroup";
-import { CourseGroupPair } from "../models/CourseGroupPair";
+import { CourseGroupPair, CourseRole } from "../models/CourseGroupPair";
+import { Course } from "../models/Course";
 
 @Resolver((of) => BaseGroup)
 export class UserGroupResolver {
@@ -41,7 +39,7 @@ export class UserGroupResolver {
       where: { id },
     });
 
-    console.log(await group);
+    // console.log(await group);
 
     return group;
   }
@@ -76,7 +74,7 @@ export class UserGroupResolver {
         .leftJoinAndSelect("cgp.course", "course")
         .where("group.id = :id", { id: group.id });
       const cgp = await query.getOne();
-      return `${cgp?.course.code}: ${cgp?.course.name}`;
+      return `${cgp?.course.code} - ${cgp?.course.name}`;
     }
     if (group instanceof ClassGroup)
       return (await group.course).code + " - " + group.name;
@@ -118,6 +116,27 @@ export class UserGroupResolver {
     });
 
     await group.setUsers(users);
+    return await group.save();
+  }
+
+  @Mutation(() => ClassGroup)
+  @Authorized()
+  async addClassGroup(@Arg("classData") classData: ClassGroupInput) {
+    const users = await User.findByIds(classData.uids);
+    const course = await Course.findOne({ id: classData.courseID });
+
+    if (!course) throw new Error("Course is invalid");
+
+    const group = ClassGroup.create({
+      name: classData.name,
+      type: classData.type,
+      times: classData.times,
+      duration: classData.duration,
+    });
+    group.course = Promise.resolve(course);
+
+    group.setUsers(users);
+
     return await group.save();
   }
 }

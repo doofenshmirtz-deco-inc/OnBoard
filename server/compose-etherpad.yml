@@ -1,17 +1,24 @@
 version: '3.8'
 services:
   etherpad:
-    image: docker.pkg.github.com/doofenshmirtz-deco-inc/onboard/etherpad:0.2
-    restart: ${RESTART_POLICY}
-    #volumes:
-    #  - /opt/etherpad-lite/var:/opt/etherpad-lite/var
-    #  - /opt/etherpad-lite/node_modules:/opt/etherpad-lite/node_modules
+    image: docker.pkg.github.com/doofenshmirtz-deco-inc/onboard/etherpad:0.6.3
+    restart: unless-stopped
     ports:
       - "9001:9001"
     environment:
-      # - ADMIN_PASSWORD=ETHERPAD_PASSWORD
-      - ADMIN_PASSWORD=pass
-      - ETHERPAD_PLUGINS="ep_whiteboard"
+      - ADMIN_PASSWORD=lkSLdkDK1kD(<eXi#
+      - ETHERPAD_PLUGINS="ep_draw"
+    networks:
+      jitsi:
+        aliases:
+          - "etherpad.jitsi"
+  wbo:
+    image: lovasoa/wbo:latest
+    restart: unless-stopped
+    ports:
+      - "5001:80"
+    volumes:
+      - ./wbo/wbo-boards:/opt/app/server-data <- you might choose a different local directory to store stuff
     networks:
       jitsi:
         aliases:

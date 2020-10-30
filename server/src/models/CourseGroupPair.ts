@@ -1,11 +1,13 @@
+/**
+ * Model to represent the relationship between a course and student, including the role a student has in a course.
+ */
+
 import {
   Entity,
   BaseEntity,
   PrimaryColumn,
   JoinColumn,
-  OneToMany,
   ManyToOne,
-  JoinTable,
   OneToOne,
 } from "typeorm";
 import { Course } from "./Course";

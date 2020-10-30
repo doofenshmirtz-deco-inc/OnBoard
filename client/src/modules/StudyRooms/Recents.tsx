@@ -1,71 +1,41 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import MessageBox from "../../components/MessageBox";
 import RecentContacts from "../../components/RecentContacts";
-import { gql, useQuery } from "@apollo/client";
-import { MyGroups } from "../../graphql/MyGroups";
 import { LoadingPage } from "../../components/LoadingPage";
-import { MeId } from "../../graphql/MeId";
 import { useHistory, useParams } from "react-router";
-
-const GROUPS_QUERY = gql`
-  query MyGroups {
-    me {
-      groups {
-        ... on DMGroup {
-          id
-          name
-          users {
-            id
-            name
-            avatar
-          }
-        }
-        ... on ClassGroup {
-          id
-          name
-          users {
-            id
-            name
-            avatar
-          }
-        }
-        ... on CourseGroup {
-          id
-          name
-          users {
-            id
-            name
-            avatar
-          }
-        }
-        ... on StudyGroup {
-          id
-          name
-          users {
-            id
-            name
-            avatar
-          }
-        }
-      }
-    }
-  }
-`;
-
-const ME_QUERY = gql`
-  query MeId {
-    me {
-      id
-    }
-  }
-`;
+import { Messaging } from "../../hooks/useMessaging";
+import { List } from "@material-ui/core";
+import ContactCard from "../../components/ContactCard";
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
+  rootMessaging: {
     flexGrow: 3,
-    backgroundColor: theme.palette.background.paper,
     display: "flex",
+  },
+  rootDashboard: {
+    display: "block",
+  },
+  list: {
+    flexDirection: "column",
+    display: "inline-block",
+    float: "right",
+    width: "25%",
+    height: "69vh",
+    overflowY: "scroll",
+    paddingBottom: "0px",
+    paddingLeft: "5px",
+  },
+  hide: {
+    display: "none",
+  },
+  contact: {
+    display: "flex",
+    textTransform: "none",
+    textAlign: "left",
+    padding: "0",
+    flexDirection: "column",
+    width: "100%",
   },
 }));
 
@@ -77,47 +47,46 @@ export type Contact = {
   readStatus: boolean;
 };
 
-const Recents = () => {
+const Recents = (props: any) => {
   const classes = useStyles();
 
   // currently selected contact id and name.
   const [selected, setSelectedState] = useState({
     id: "",
     name: "",
+    group: false,
+    users: [] as any[],
   });
 
-  // list of contacts/groups, sorted by recency.
-  const [contacts, setContacts] = useState(null as Contact[] | null);
+  // collapse the list that allows the user to view all the members in a chat
+  const [collapseMembers, setCollapsable] = useState(true);
+  // collapse the list of contacts on the left hand side
+  const [collapseLeft, setCollapseLeft] = useState(false);
+
+  // access messaging manager from context.
+  const messaging = Messaging.useContainer();
 
   const params = useParams<{ messageID?: string }>();
   const history = useHistory();
 
   // handles a click on a contact/group by selecting that contact.
   const handleClick = (item: any) => {
+    messaging.setGroupId(item.id);
     history.push("/study-rooms/recents/" + item.id);
+    setSelectedState(item);
   };
 
-  // callback handler to bump the currently selected group to the top of the list.
-  // passed to message box so it can be called when a new message is received.
-  const bumpSelectedContact = useCallback(() => {
-    if (!contacts) return;
-    const selectedContacts = contacts.filter((c) => c.id === selected.id);
-    const notSelectedContacts = contacts.filter((c) => c.id !== selected.id);
-    setContacts([...selectedContacts, ...notSelectedContacts]);
-  }, [selected, contacts]);
-  // TODO: probably sort contacts initially as well. will need to sort server-side or return times in query.
+  // toggles the collapsed state of the contacts list
+  const collapseContacts = () => {
+    setCollapseLeft(!collapseLeft);
+  };
 
-  // get my recently contacted groups
-  const { data, loading } = useQuery<MyGroups>(GROUPS_QUERY);
-  // get my id.
-  // TODO: pass uid as prop?
-  const { data: me, loading: meLoading } = useQuery<MeId>(ME_QUERY);
-  const uid = me?.me?.id;
+  const uid = messaging.username;
 
-  // run when data from groups query is obtained.
-  useEffect(() => {
-    const myGroups = data?.me?.groups?.map((group: any) => {
+  const contacts = useMemo(() => {
+    return messaging.contacts?.map((group: any) => {
       return {
+        ...group,
         id: group.id,
         name: group.name,
         group: group.users.length > 2,
@@ -125,44 +94,80 @@ const Recents = () => {
         readStatus: true,
       };
     });
-
-    if (myGroups) setContacts(myGroups); // FIXME: resets order...
-  }, [data]);
+  }, [messaging.contacts]);
 
   useEffect(() => {
     if (params.messageID && contacts) {
-      const selectedContact = contacts.filter(
+      let selectedContact = contacts.filter(
         (c) => c.id === params.messageID
       )[0];
+      selected.group = selectedContact.users.length > 2;
       if (!selectedContact) history.push("/study-rooms/recents");
       else setSelectedState(selectedContact);
     }
   }, [contacts, params.messageID, selected, history]);
 
-  if (loading || meLoading || !data?.me?.groups || !uid || !contacts) {
+  const filteredContacts = useMemo(() => {
+    if (!props.messaging) {
+      return contacts?.filter((c: any) => c.__typename === "DMGroup") ?? [];
+    } else {
+      return contacts ?? [];
+    }
+  }, [contacts]);
+
+  if (!uid || !contacts || contacts.length === 0) {
     return <LoadingPage />;
   }
 
-  // TODO: NEED some way of updating messages in background. service/react context?
+  // use first contact if none is selected.
+  const selectedOrDefault = selected?.id ? selected : contacts[0];
 
   return (
     <div>
-      <div className={classes.root}>
+      <div
+        className={
+          props.dashboard ? classes.rootDashboard : classes.rootMessaging
+        }
+      >
         <RecentContacts
-          contacts={contacts}
+          dashboard={props.dashboard}
+          contacts={filteredContacts}
           handleClick={handleClick}
-          selected={selected}
+          selected={props.messaging ? selectedOrDefault : {}}
+          collapsed={collapseLeft}
         />
-        {selected.id === "" ? (
-          <div />
-        ) : (
-          <MessageBox
-            id={selected.id}
-            name={selected.name}
-            contacts={contacts}
-            setContacts={setContacts as any}
-            onSentMessage={bumpSelectedContact}
-          />
+        {props.messaging && (
+          <div style={{ width: "100%" }}>
+            <MessageBox
+              id={selectedOrDefault.id}
+              name={selectedOrDefault.name}
+              collapseMembers={collapseMembers}
+              setCollapse={setCollapsable}
+              collapseLeft={collapseLeft}
+              handleCollapseLeft={collapseContacts}
+            />
+            <div className={collapseMembers ? classes.hide : classes.list}>
+              <h2 style={{ marginBottom: "5px" }}>Members</h2>
+              <List>
+                {selected.users
+                  .filter((u: any) => u.id !== uid)
+                  .map((user: any) => (
+                    <span className={classes.contact}>
+                      <ContactCard
+                        buttonsOff
+                        name={user.name}
+                        contact={{
+                          name: user.name,
+                          avatar: user.avatar,
+                        }}
+                        readStatus
+                        key={user.name}
+                      />
+                    </span>
+                  ))}
+              </List>
+            </div>
+          </div>
         )}
       </div>
     </div>

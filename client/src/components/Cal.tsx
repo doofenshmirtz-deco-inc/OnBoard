@@ -1,15 +1,30 @@
+/**
+ * Calendar component, used for dashboard and the dedicated calendar home page.
+ * Queries and displays timetables from the server.
+ */
+
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import CardContent from "@material-ui/core/CardContent";
 import Box from "@material-ui/core/Box";
-import Container from "@material-ui/core/Container";
 import { useQuery, gql } from "@apollo/client";
 import {
   MyCalendar,
   MyCalendar_me_groups_ClassGroup,
 } from "../graphql/MyCalendar";
+import { MyColours } from "../graphql/MyColours";
+import { useHistory } from "react-router";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      border: "1px solid lightgrey",
+    },
+  })
+);
 
 const localizer = momentLocalizer(moment);
 
@@ -29,29 +44,44 @@ const GET_CALENDAR = gql`
   }
 `;
 
-const defaultProps = {
-  bgcolor: "background.paper",
-  m: 1,
-  borderColor: "text.primary",
+const GET_COLOURS = gql`
+  query MyColours {
+    me {
+      courses {
+        colour
+        course {
+          code
+        }
+      }
+    }
+  }
+`;
+
+type Event = {
+  start: Date;
+  end: Date;
+  title: string;
+  id: string;
 };
 
-export default function MyCal() {
+export default () => {
   const { data } = useQuery<MyCalendar>(GET_CALENDAR);
-  const [myTimetable, setMyTimetable] = useState([]);
+  const { data: courses } = useQuery<MyColours>(GET_COLOURS);
+  const [myTimetable, setMyTimetable] = useState<Event[]>([]);
+
+  const history = useHistory();
 
   useEffect(() => {
     let calendar = data?.me?.groups?.filter(
       (e) => e.__typename == "ClassGroup"
     ) as MyCalendar_me_groups_ClassGroup[] | null;
 
-    let timetable = calendar?.map((e) => [
-      e?.times,
-      e?.duration,
-      e?.name,
-      e?.type,
-    ]);
+    // Get necessary data for calendar from ClassGroup data from Apollo
+    let timetable = calendar?.map(
+      (e) => [e?.times, e?.duration, e?.name, e?.type, e?.id] as const
+    );
 
-    let events = [] as any[];
+    let events: Event[] = [];
 
     timetable?.forEach((e) => {
       let times = e[0] as Array<String>;
@@ -65,39 +95,61 @@ export default function MyCal() {
             .add(duration as number, "minutes")
             .toDate(),
           title: `${type}: ${title}`,
+          id: e[4],
         })
       );
     });
 
-    setMyTimetable(events as never[]);
+    setMyTimetable(events);
   }, [data]);
 
+  const classes = useStyles();
+  const currentTime = new Date();
+  currentTime.setHours(currentTime.getHours() - 2);
+
   return (
-    <Box border={1}>
+    <Box className={classes.root}>
       <CardContent>
         <Calendar
           localizer={localizer}
           events={myTimetable}
+          scrollToTime={currentTime}
           startAccessor="start"
           defaultView={"work_week"}
           views={["month", "work_week"]}
           endAccessor="end"
           style={{ height: 446 }}
-          eventPropGetter={(event, start, end, isSelected) => {
+          onSelectEvent={(event) => {
+            history.push("/study-rooms/video/" + event.id);
+          }}
+          eventPropGetter={(event) => {
+            // Create list of mappings from code to colour
+            const colors = courses?.me?.courses.map((e) => [
+              e?.course?.code,
+              e?.colour,
+            ]);
+            // Get colour from list of course colours
+            const color =
+              colors?.filter((e) => event?.title.indexOf(e[0]) !== -1)[0] !==
+              undefined
+                ? colors?.filter((e) => event?.title.indexOf(e[0]) !== -1)[0][1]
+                : "#666666";
+            // Apply styles based on colour
             let newStyle = {
-              backgroundColor: "#6B2BC6",
+              backgroundColor: color,
               color: "white",
               borderRadius: "0px",
               border: "none",
+              fontSize: "0.8em",
             };
-
             return {
               className: "",
               style: newStyle,
             };
           }}
+          popup
         />
       </CardContent>
     </Box>
   );
-}
+};

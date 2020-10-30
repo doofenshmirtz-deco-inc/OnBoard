@@ -1,3 +1,7 @@
+/**
+ * Model to represent an announcement
+ */
+
 import {
   Column,
   PrimaryColumn,
@@ -12,9 +16,8 @@ import {
   OneToOne,
   JoinColumn,
 } from "typeorm";
-import { ObjectType, ID, Field, Int } from "type-graphql";
+import { ObjectType, ID, Field, Int, InputType } from "type-graphql";
 import { User } from "./User";
-import { BaseGroup } from "./UserGroup";
 import { Course } from "./Course";
 
 /**
@@ -45,6 +48,18 @@ export class Announcement extends BaseEntity {
   title: string;
 
   @Column()
+  @Field()
+  html: string;
+}
+
+@InputType()
+export class AnnouncementInput {
+  @Field(() => ID)
+  courseID: number;
+
+  @Field()
+  title: string;
+
   @Field()
   html: string;
 }

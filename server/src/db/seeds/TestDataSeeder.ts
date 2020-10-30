@@ -1,3 +1,10 @@
+/**
+ * Seeds some non-random data for testing purposes. Users are team members
+ * and some Doofenshmirtz characters as well.
+ *
+ * Creates some users, groups, courses, announcements, and study groups.
+ */
+
 import {
   Seeder,
   Factory,
@@ -7,19 +14,15 @@ import { Connection } from "typeorm";
 import { User } from "../../models/User";
 import { Semesters, CourseLevel, Course } from "../../models/Course";
 import {
-  BaseGroup,
-  GroupType,
   CourseGroup,
-  DMGroup,
   ClassGroup,
   ClassType,
   StudyGroup,
 } from "../../models/UserGroup";
-import { Announcement } from "../../models/Announcement";
-import { CourseRole, CourseGroupPair } from "../../models/CourseGroupPair";
-import { Message } from "../../models/Message";
-import Faker from "faker";
+import { CourseRole } from "../../models/CourseGroupPair";
 
+// add the given course groups to the given course. the groups object maps
+// roles to lists of users, which are attached to the course.
 const addGroups = async (
   groups: {
     [role: string]: User[];
@@ -34,33 +37,8 @@ const addGroups = async (
   }
 };
 
-const generateTestAnnouncements = async (
-  context: { course: Course; author: User },
-  texts: string[]
-) => {
-  let i = 1;
-
-  for (const text of texts) {
-    await Announcement.create({
-      course: context.course,
-      title: context.course.code + " Announcement " + i,
-      author: context.author,
-      html: text,
-      createdAt: Faker.date.past(1, new Date(Date.now())),
-    }).save();
-    i++;
-  }
-};
-
+// add test messages to the given list of users.
 const generateDMs = async (users: User[]) => {
-  const pairs = ([] as User[][]).concat(
-    ...users.map((u1, i1) => users.slice(i1 + 1).map((u2) => [u1, u2]))
-  );
-
-  const groups = pairs.map(
-    async (pair) => await factory(DMGroup)({ users: pair }).create()
-  );
-
   //groups.forEach((group) => factory(Message)({ group: group }).createMany(1));
 };
 
@@ -84,31 +62,43 @@ export default class TestDataSeeder implements Seeder {
     const tom = await factory(User)({
       uid: "tom",
       name: "Tom Cranitch",
+      avatar:
+        "https://onboard.doofenshmirtz.xyz/api/uploads/H7U7woAF0/119029097_658777401415540_3584320142183412369_n.jpg",
     }).create();
 
     const kenton = await factory(User)({
       uid: "kenton",
       name: "Kenton Lam",
+      avatar:
+        "https://onboard.doofenshmirtz.xyz/api/uploads/79e3gZVAH/118886179_707789733143369_8050551153264937934_n.jpg",
     }).create();
 
     const matt = await factory(User)({
       uid: "matt",
       name: "Matthew Low",
+      avatar:
+        "https://onboard.doofenshmirtz.xyz/api/uploads/R3o_SUCpR/119667941_4387400197967648_3416189252965666527_n.png",
     }).create();
 
     const james = await factory(User)({
       uid: "james",
       name: "James Dearlove",
+      avatar:
+        "https://onboard.doofenshmirtz.xyz/api/uploads/Qu8f6UngR/119047745_671172086826576_8205359725655325991_n.jpg",
     }).create();
 
     const sanni = await factory(User)({
       uid: "sanni",
       name: "Sanni Bosamia",
+      avatar:
+        "https://onboard.doofenshmirtz.xyz/api/uploads/xXuKCfIOZ/118786576_951468675334793_3873917074362174615_n.png",
     }).create();
 
     const nat = await factory(User)({
       uid: "nat",
       name: "Natalie Hong",
+      avatar:
+        "https://onboard.doofenshmirtz.xyz/api/uploads/KfgvYDRuo/118785481_4424886224250722_505129378704425508_n.png",
     }).create();
 
     generateDMs([heinz, perry, tom, kenton, matt, james, sanni, nat]);
@@ -163,6 +153,7 @@ export default class TestDataSeeder implements Seeder {
       edis
     );
 
+    /*
     await generateTestAnnouncements(
       {
         course: secr,
@@ -185,14 +176,14 @@ export default class TestDataSeeder implements Seeder {
       ]
     );
 
-    /* TODO: for some reason this doesnt work????
+    /*
     await generateTestAnnouncements(
       {
         course: evil,
         author: heinz,
       },
       [
-        "Doofenshmirtz Evil Incorparated!A place of evil and fighting! With Perry the Platypus too! Doofenshmirtz holding a Bucket!I don't know what it's for! Doofenshmirtz Ex-Wifes House in the Hills somewhere! Stop reminding me of her! Doofenshmirtz Wicked Witch Castle!",
+        // "Doofenshmirtz Evil Incorparated!A place of evil and fighting! With Perry the Platypus too! Doofenshmirtz holding a Bucket!I don't know what it's for! Doofenshmirtz Ex-Wifes House in the Hills somewhere! Stop reminding me of her! Doofenshmirtz Wicked Witch Castle!",
         "Doofenshmirtz Evil Dirigible It's my awesome blimp! Doofenshmirtz Evil Incorparated! I don't wanna sing anymore! So we're through!",
       ]
     );
@@ -209,6 +200,14 @@ export default class TestDataSeeder implements Seeder {
       name: "Lecture One",
       type: ClassType.Lecture,
       course: secr,
+      users: [heinz],
+      duration: 120,
+    }).create();
+
+    await factory(ClassGroup)({
+      name: "Lecture One",
+      type: ClassType.Lecture,
+      course: phfe,
       users: [heinz],
       duration: 120,
     }).create();
