@@ -101,6 +101,13 @@ export default class TestDataSeeder implements Seeder {
         "https://onboard.doofenshmirtz.xyz/api/uploads/KfgvYDRuo/118785481_4424886224250722_505129378704425508_n.png",
     }).create();
 
+    const admin = await factory(User)({
+      uid: "admin",
+      name: "Admin",
+      avatar:
+        "https://probonoaustralia.com.au/wp-content/uploads/2019/09/UQ_Lockup-Stacked_Purple_RGB-WHITE.jpg",
+    }).create();
+
     generateDMs([heinz, perry, tom, kenton, matt, james, sanni, nat]);
 
     const secr = await factory(Course)({
@@ -110,7 +117,10 @@ export default class TestDataSeeder implements Seeder {
       level: CourseLevel.Undergrad,
       year: 2018,
     }).create();
-    addGroups({ [CourseRole.Coordinator]: [heinz] }, secr);
+    addGroups(
+      { [CourseRole.Coordinator]: [heinz], [CourseRole.Student]: [perry] },
+      secr
+    );
 
     const phfe = await factory(Course)({
       code: "PHFE2001",
@@ -139,55 +149,10 @@ export default class TestDataSeeder implements Seeder {
     }).create();
     addGroups(
       {
-        [CourseRole.Student]: [
-          heinz,
-          perry,
-          tom,
-          kenton,
-          james,
-          sanni,
-          nat,
-          matt,
-        ],
+        [CourseRole.Student]: [heinz, perry],
       },
       edis
     );
-
-    /*
-    await generateTestAnnouncements(
-      {
-        course: secr,
-        author: heinz,
-      },
-      [
-        "Following the invention of the Combine-inator one may find it necassasary to protect their inventions. This course will investigate how to protect your evil inventions.",
-        "There are no more classes info because I don't feel like turning up info here http://protected.evil.inc",
-      ]
-    );
-
-    await generateTestAnnouncements(
-      {
-        course: phfe,
-        author: heinz,
-      },
-      [
-        "Good luck hope you don't fail :)",
-        "Summers vacation is a long time, heres how to spend it!!",
-      ]
-    );
-
-    /*
-    await generateTestAnnouncements(
-      {
-        course: evil,
-        author: heinz,
-      },
-      [
-        // "Doofenshmirtz Evil Incorparated!A place of evil and fighting! With Perry the Platypus too! Doofenshmirtz holding a Bucket!I don't know what it's for! Doofenshmirtz Ex-Wifes House in the Hills somewhere! Stop reminding me of her! Doofenshmirtz Wicked Witch Castle!",
-        "Doofenshmirtz Evil Dirigible It's my awesome blimp! Doofenshmirtz Evil Incorparated! I don't wanna sing anymore! So we're through!",
-      ]
-    );
-    */
 
     await factory(ClassGroup)({
       name: "Tutorial One",
@@ -217,9 +182,9 @@ export default class TestDataSeeder implements Seeder {
     }).createMany(20);
 
     await factory(StudyGroup)({
-      users: [heinz, perry, tom, james, sanni, kenton, matt, nat],
+      users: [tom, james, sanni, kenton, matt, nat],
       isPublic: false,
-      name: "EDIS3801 Study Group",
+      name: "DECO3801 Study Group",
     }).create();
 
     await factory(StudyGroup)({
