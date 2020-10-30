@@ -6,11 +6,11 @@ Apollo.
 ## Getting started
 
 1. Install `npm`, `yarn` and `docker` however you'd like (see below for WSL).
+2. Install the custom packages with the instructions in "Installing Github Packages".
 2. `cd server` and install dependencies with `yarn`.
 3. Start the database with `yarn db:start`.
 4. Sync schema with `yarn typeorm schema:sync`.
 5. Seed the database with `yarn db:seed`.
-6. Start the supporting docker containers with `yarn docker:up`.
 7. Start the backend server with `yarn start`. It should print this:
 
 ```bash
