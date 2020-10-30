@@ -1,8 +1,8 @@
-![Screenshot](https://i.imgur.com/ua82bui.png)
+![Logo](https://i.imgur.com/xSKv6dm.png)
 
 # OnBoard
 
-![Logo](https://i.imgur.com/xSKv6dm.png)
+![Screenshot](https://i.imgur.com/ua82bui.png)
 
 > Students today require various softwares and tools in order to obtain a tertiary education. This is where OnBoard comes in. OnBoard provides everything students and academic staff need, all on a singular platform!
 
