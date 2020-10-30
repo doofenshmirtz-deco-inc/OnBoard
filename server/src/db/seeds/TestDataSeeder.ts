@@ -18,6 +18,7 @@ import {
   ClassGroup,
   ClassType,
   StudyGroup,
+  DMGroup,
 } from "../../models/UserGroup";
 import { CourseRole } from "../../models/CourseGroupPair";
 
@@ -37,9 +38,14 @@ const addGroups = async (
   }
 };
 
-// add test messages to the given list of users.
 const generateDMs = async (users: User[]) => {
-  //groups.forEach((group) => factory(Message)({ group: group }).createMany(1));
+  const pairs = ([] as User[][]).concat(
+    ...users.map((u1, i1) => users.slice(i1 + 1).map((u2) => [u1, u2]))
+  );
+
+  const groups = pairs.map(
+    async (pair) => await factory(DMGroup)({ users: pair }).create()
+  );
 };
 
 export default class TestDataSeeder implements Seeder {
