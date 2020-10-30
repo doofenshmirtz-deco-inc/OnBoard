@@ -1,5 +1,30 @@
 # OnBoard Client
 
+This is the frontend for OnBoard, making use of React, Material UI, Firebase,
+and GraphQL with Apollo.
+
+## Getting Started
+
+1. Install `npm` and `yarn` (see server's README.md for more details).
+2. Install dependencies with `yarn`.
+3. Start the dev server for the client with `yarn start`.
+4. To "create an optimised production build", run `yarn build`. This may take some time.
+
+## Project Structure
+
+- The entry point for the project is at index.tsx, and the main root component is
+App.tsx.
+- Main pages (e.g. those on the sidebar) are in the modules/ directory at index.tsx.
+These may have components in the same folder.
+- Smaller reusable components are located in components/.
+- React hooks are stored in hooks/.
+- Auto-generated GraphQL types are in graphql/ (see wiki).
+
+
+-------------------
+
+# OnBoard Client
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
